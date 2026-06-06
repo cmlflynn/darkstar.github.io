@@ -12,6 +12,7 @@
       "Solar Distance (R₀)": "8.275 kpc"
     },
     "luminosity": "1.81e+08 L⊙",
+    "paper_url": "https://ui.adsabs.harvard.edu/abs/2025MNRAS.537.3730H/abstract",
     "plot_url": "assets/staf256_density_profile.png",
     "code_url": "assets/staf256_density_model.py"
   },
@@ -32,6 +33,7 @@
       "Tilt (Pitch)": "25°"
     },
     "luminosity": "2.41e+08 L⊙",
+    "paper_url": "https://ui.adsabs.harvard.edu/abs/2022AJ....164..249H/abstract",
     "plot_url": "assets/han2022_density_profile.png",
     "code_url": "assets/han2022_density_model.py"
   }

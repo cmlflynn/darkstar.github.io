@@ -22,6 +22,9 @@ function router() {
     } else if (hash.startsWith('#/model/')) {
         const id = hash.replace('#/model/', '');
         renderDetail(id);
+    } else if (hash.startsWith('#/code/')) {
+        const id = hash.replace('#/code/', '');
+        renderCodeView(id);
     }
 }
 
@@ -31,7 +34,8 @@ function renderHome() {
         <div class="model-grid">
             ${modelData.map(model => `
                 <div class="model-card">
-                    <h2>${model.title}</h2>
+                    <h2>${model.paper_url ? `<a href="${model.paper_url}" target="_blank">${model.title}</a>` : model.title}</h2>
+                    <p class="subtitle">Paper title: ${model.subtitle}</p>
                     <p>${model.summary}</p>
                     <a href="#/model/${model.id}" class="btn">Explore Model</a>
                 </div>
@@ -56,8 +60,8 @@ function renderDetail(id) {
     let html = `
         <div class="model-detail">
             <a href="#/" class="back-link">&larr; Back to all models</a>
-            <h2>Paper title: ${model.title}</h2>
-            <p class="subtitle">${model.subtitle}</p>
+            <h2>${model.paper_url ? `<a href="${model.paper_url}" target="_blank">${model.title}</a>` : model.title}</h2>
+            <p class="subtitle">Paper title: ${model.subtitle}</p>
             
             <div class="content-wrapper">
                 <div class="description-section">
@@ -79,7 +83,8 @@ function renderDetail(id) {
                         </div>
 
                         <div class="code-footer">
-                            <a href="${model.code_url}" class="btn" target="_blank">View Python Source Code</a>
+                            <a href="#/code/${model.id}" class="btn secondary">View Python Source Code</a>
+                            <a href="${model.code_url}" class="btn" download>Download Python Source Code</a>
                         </div>
                     </div>
                     
@@ -99,4 +104,31 @@ function renderDetail(id) {
 }
 
 window.addEventListener('hashchange', router);
+
+async function renderCodeView(id) {
+    const model = modelData.find(m => m.id === id);
+    if (!model) {
+        app.innerHTML = `<h2>Model not found</h2><a href="#/">Back to home</a>`;
+        return;
+    }
+
+    app.innerHTML = `
+        <div class="code-page">
+            <a href="#/model/${model.id}" class="back-link">&larr; Back to model details</a>
+            <h2>Python Source Code: ${model.title}</h2>
+            <div class="code-viewer-container">
+                <pre><code id="code-content-loading">Loading source code...</code></pre>
+            </div>
+        </div>
+    `;
+
+    try {
+        const response = await fetch(model.code_url);
+        const code = await response.text();
+        document.getElementById('code-content-loading').textContent = code;
+    } catch (err) {
+        document.getElementById('code-content-loading').textContent = 'Error loading source code.';
+    }
+}
+
 init();
