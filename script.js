@@ -71,6 +71,13 @@ function renderDetail(id) {
 
                 <div class="data-section">
                     <div class="info-pane">
+                        ${model.eqn_url ? `
+                        <div class="equation-container">
+                            <h3>Model Equation</h3>
+                            <img src="${model.eqn_url}" alt="Mathematical equation for ${model.title}" class="equation-img">
+                        </div>
+                        ` : ''}
+                        
                         <h3>Model Parameters</h3>
                         <table class="parameters-table">
                             ${paramRows}

@@ -14,6 +14,7 @@
     "luminosity": "1.81e+08 L⊙",
     "paper_url": "https://ui.adsabs.harvard.edu/abs/2025MNRAS.537.3730H/abstract",
     "plot_url": "assets/staf256_density_profile.png",
+    "eqn_url": "assets/staf256_eqn.png",
     "code_url": "assets/staf256_density_model.py"
   },
   {
@@ -35,6 +36,25 @@
     "luminosity": "2.41e+08 L⊙",
     "paper_url": "https://ui.adsabs.harvard.edu/abs/2022AJ....164..249H/abstract",
     "plot_url": "assets/han2022_density_profile.png",
+    "eqn_url": "assets/han2022_eqn.png",
     "code_url": "assets/han2022_density_model.py"
+  },
+  {
+    "id": "amarante2024",
+    "title": "Amarante et al. (2024)",
+    "subtitle": "Mapping the anisotropic Galactic stellar halo with blue horizontal branch stars",
+    "summary": "This study uses blue horizontal branch (BHB) stars from Legacy Survey photometric data to map the stellar halo density. They find an average radial density profile that follows a double power law with a break at approximately 20 kpc, while also highlighting significant anisotropy across different lines of sight.",
+    "parameters": {
+      "Model": "Broken Power Law",
+      "Break Radius (r_br)": "19.1 ± 1.8 kpc",
+      "Inner Slope (α_in)": "2.9 ± 0.1",
+      "Outer Slope (α_out)": "4.5 ± 0.1",
+      "Flattening (q)": "0.77 (r < 30 kpc), 0.99 (r > 30 kpc)"
+    },
+    "luminosity": "1.09e+09 L⊙",
+    "paper_url": "https://ui.adsabs.harvard.edu/abs/2024A%26A...690A.166A/abstract",
+    "plot_url": "assets/amarante2024_density_profile.png",
+    "eqn_url": "assets/amarante2024_eqn.png",
+    "code_url": "assets/amarante2024_density_model.py"
   }
 ]
