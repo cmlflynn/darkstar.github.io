@@ -56,5 +56,23 @@
     "plot_url": "assets/amarante2024_density_profile.png",
     "eqn_url": "assets/amarante2024_eqn.png",
     "code_url": "assets/amarante2024_density_model.py"
+  },
+  {
+    "id": "chen2023",
+    "title": "Chen et al. (2023)",
+    "subtitle": "Mapping the milky way’s stellar halo with 2D data",
+    "summary": "This paper proposes a new method for measuring the spatial density distribution of the stellar halo using the angular two-point correlation function (ATPCF) of RR Lyrae stars. They find a broken power-law profile with an oblate flattening factor, providing a robust measurement that is independent of individual star distances.",
+    "parameters": {
+      "Model": "Broken Power Law",
+      "Break Radius (r0)": "27.45 ± 9.68 kpc",
+      "Inner Slope (s1)": "2.83 ± 0.25",
+      "Outer Slope (s2)": "4.49 ± 1.43",
+      "Flattening (q)": "0.73 ± 0.24"
+    },
+    "luminosity": "7.10e+08 L⊙",
+    "paper_url": "https://ui.adsabs.harvard.edu/abs/2023MNRAS.525.3075C/abstract",
+    "plot_url": "assets/chen2023_density_profile.png",
+    "eqn_url": "assets/chen2023_eqn.png",
+    "code_url": "assets/chen2023_density_model.py"
   }
 ]
