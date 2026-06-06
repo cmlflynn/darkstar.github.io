@@ -3,78 +3,86 @@ import matplotlib.pyplot as plt
 
 def calculate_amarante2024_halo():
     # Parameters from Amarante et al. (2024) - A&A 690, A166
-    # Broken Power Law Profile
     alpha_in = 2.9
     alpha_out = 4.5
     r_br = 19.1
-    # Flattening: they assume q=0.77 for r < 30 kpc and q=0.99 otherwise.
-    # We'll use an average or the inner value for the luminosity calculation if needed,
-    # but for the profile plot we use the flattened radius rq.
+    r_core = 1.0  # 1 kpc constant density core
+    
     q_inner = 0.77
     q_outer = 0.99
     
-    # Solar position (standard value often used if not specified, 8.122 or 8.275)
-    # Staf256 uses 8.275, Han uses 8.122. Let's use 8.275.
     R_sun = 8.275 
 
     # User local norm
     rho_local_Lsun_pc3 = 1.7e-5
     rho_local_Lsun_kpc3 = rho_local_Lsun_pc3 * (1000**3)
 
-    # Broken Power Law Profile Function (rq = sqrt(x^2 + y^2 + (z/q)^2))
-    def profile(r):
+    # 1. Profile without core
+    def profile_no_core(r):
         if r < r_br:
             return r**-alpha_in
         else:
             return (r_br**(alpha_out - alpha_in)) * (r**-alpha_out)
 
-    # Normalization at the Sun
-    # Note: Amarante uses rq. At the Sun, z=0 so rq = R_sun regardless of q.
-    norm_at_sun = profile(R_sun)
+    # 2. Profile with core
+    def profile_with_core(r):
+        if r < r_core:
+            return r_core**-alpha_in
+        elif r < r_br:
+            return r**-alpha_in
+        else:
+            return (r_br**(alpha_out - alpha_in)) * (r**-alpha_out)
+
+    # Normalization at the Sun (Sun is at 8.275 kpc, which is > r_core)
+    norm_at_sun = profile_no_core(R_sun)
     rho_0 = rho_local_Lsun_kpc3 / norm_at_sun
 
-    # Analytical Integration for Luminosity
-    # L = 4 * pi * q * Integral[ rho(r) * r^2 dr ]
-    # Since q changes, we split the integral at 30 kpc or r_br?
-    # Actually, the profile is defined in terms of rq.
-    # L = 4 * pi * q * Integral[ rho(rq) * rq^2 drq ]
-    
-    # Part 1: 0 to r_br (using q_inner)
-    int1 = (r_br**(3 - alpha_in)) / (3 - alpha_in)
-    L1 = 4 * np.pi * q_inner * rho_0 * int1
-    
-    # Part 2: r_br to 30 kpc (using q_inner)
+    # --- Luminosity WITHOUT core ---
+    # 0 to r_br
+    int1_nc = (r_br**(3 - alpha_in)) / (3 - alpha_in)
+    # r_br to 30 kpc
     C = r_br**(alpha_out - alpha_in)
-    int2 = C * (30**(3 - alpha_out) - r_br**(3 - alpha_out)) / (3 - alpha_out)
-    L2 = 4 * np.pi * q_inner * rho_0 * int2
+    int2_nc = C * (30**(3 - alpha_out) - r_br**(3 - alpha_out)) / (3 - alpha_out)
+    # 30 kpc to infinity
+    int3_nc = C * (0 - 30**(3 - alpha_out)) / (3 - alpha_out)
     
-    # Part 3: 30 kpc to infinity (using q_outer)
-    int3 = C * (0 - 30**(3 - alpha_out)) / (3 - alpha_out)
-    L3 = 4 * np.pi * q_outer * rho_0 * int3
+    L_no_core = 4 * np.pi * rho_0 * (q_inner * (int1_nc + int2_nc) + q_outer * int3_nc)
+
+    # --- Luminosity WITH core ---
+    # 0 to r_core (constant density: rho = rho_0 * r_core^-alpha_in)
+    int_core = (r_core**-alpha_in) * (r_core**3 / 3.0)
+    # r_core to r_br
+    int1_c = (r_br**(3 - alpha_in) - r_core**(3 - alpha_in)) / (3 - alpha_in)
+    # rest are same as int2_nc, int3_nc
     
-    L_total = L1 + L2 + L3
+    L_with_core = 4 * np.pi * rho_0 * (q_inner * (int_core + int1_c + int2_nc) + q_outer * int3_nc)
 
     print(f"--- Amarante et al. (2024) BHB Halo Properties ---")
-    print(f"Central Norm (at 1kpc): {rho_0:.2e} Lsun/kpc^3")
-    print(f"Total Halo Luminosity:  {L_total:.2e} Lsun")
     print(f"Break Radius:           {r_br} kpc")
+    print(f"Core Radius:            {r_core} kpc")
     print(f"Inner Slope (alpha):    {alpha_in}")
     print(f"Outer Slope (alpha):    {alpha_out}")
+    print(f"Luminosity (No Core):   {L_no_core:.2e} Lsun")
+    print(f"Luminosity (With Core): {L_with_core:.2e} Lsun")
+    print(f"Difference:             {((L_no_core - L_with_core)/L_no_core)*100:.2f}%")
     print(f"---------------------------------------------------")
 
     # Plotting
-    r_vals = np.logspace(0.5, 2.2, 500)
-    rho_vals = np.array([rho_0 * profile(r) for r in r_vals])
+    r_vals = np.logspace(-0.5, 2.2, 500)
+    rho_nc = np.array([rho_0 * profile_no_core(r) for r in r_vals])
+    rho_c = np.array([rho_0 * profile_with_core(r) for r in r_vals])
 
     plt.figure(figsize=(10, 7))
-    plt.loglog(r_vals, rho_vals / (1000**3), color='blue', linewidth=2, label='Amarante et al. (2024) BHB Model')
+    plt.loglog(r_vals, rho_nc / (1000**3), color='blue', linestyle='--', alpha=0.5, label='Original (No Core)')
+    plt.loglog(r_vals, rho_c / (1000**3), color='blue', linewidth=2, label='Modified (1 kpc Core)')
     
     # Markers
     plt.axvline(r_br, color='red', linestyle='--', label=f'Break Radius ({r_br} kpc)')
+    plt.axvline(r_core, color='purple', linestyle=':', label=f'Core Radius ({r_core} kpc)')
     plt.axvline(R_sun, color='black', linestyle=':', alpha=0.5, label='Solar Position')
     plt.axhline(rho_local_Lsun_pc3, color='green', linestyle='-', alpha=0.2, label='Local Normalization')
 
-    plt.title('Milky Way Stellar Halo Density Profile (Amarante et al. 2024)', fontsize=14)
+    plt.title('Amarante et al. 2024: Density Profile with 1 kpc Core', fontsize=14)
     plt.xlabel('Flattened Radius $r_q$ [kpc]', fontsize=12)
     plt.ylabel('Luminosity Density [$L_\\odot/pc^3$]', fontsize=12)
     plt.legend(frameon=True)
