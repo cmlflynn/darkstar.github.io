@@ -1,0 +1,38 @@
+[
+  {
+    "id": "staf256",
+    "title": "Horta & Schiavon (2025)",
+    "subtitle": "Modelling the density and mass of the Milky Way’s proto-galaxy",
+    "summary": "This paper models the density and mass of the Milky Way's 'proto-galaxy' (centrally concentrated, metal-poor stars) using APOGEE-Gaia data, finding it follows a triaxial Plummer profile.",
+    "parameters": {
+      "Model": "Triaxial Plummer",
+      "Scale Radius (a)": "3.48 ± 0.10 kpc",
+      "Flattening (p)": "0.80 ± 0.03",
+      "Flattening (q)": "0.66 ± 0.02",
+      "Solar Distance (R₀)": "8.275 kpc"
+    },
+    "luminosity": "1.81e+08 L⊙",
+    "plot_url": "assets/staf256_density_profile.png",
+    "code_url": "assets/staf256_density_model.py"
+  },
+  {
+    "id": "han2022",
+    "title": "Han et al. (2022)",
+    "subtitle": "The Stellar Halo of the Galaxy is Tilted and Doubly Broken",
+    "summary": "This paper uses the H3 Survey to infer the shape and density profile of the Gaia-Sausage-Enceladus (GSE) stellar halo, finding it is best described by a tilted triaxial ellipsoid with a doubly broken power law.",
+    "parameters": {
+      "Model": "Tilted Triaxial Doubly Broken Power Law",
+      "Break Radius 1 (rb1)": "11.85 kpc",
+      "Break Radius 2 (rb2)": "28.33 kpc",
+      "Inner Index (α1)": "1.70",
+      "Middle Index (α2)": "3.09",
+      "Outer Index (α3)": "4.58",
+      "Flattening (p)": "0.81",
+      "Flattening (q)": "0.73",
+      "Tilt (Pitch)": "25°"
+    },
+    "luminosity": "2.41e+08 L⊙",
+    "plot_url": "assets/han2022_density_profile.png",
+    "code_url": "assets/han2022_density_model.py"
+  }
+]

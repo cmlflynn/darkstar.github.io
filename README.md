@@ -1,2 +1,2 @@
-# darkstar.github.io
-Summary of published stellar halo density models, including phyiscal parameters, plots of the density fall-off, and python code. 
+# Milky_Way_Halo_Density_Laws
+# Milky_Way_Halo_Density_Laws
