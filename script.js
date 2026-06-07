@@ -26,6 +26,9 @@ function router() {
     } else if (hash.startsWith('#/model/')) {
         const id = hash.replace('#/model/', '');
         renderDetail(id);
+    } else if (hash.startsWith('#/plot/')) {
+        const id = hash.replace('#/plot/', '');
+        renderFullPlotView(id);
     } else if (hash.startsWith('#/code/')) {
         const id = hash.replace('#/code/', '');
         renderCodeView(id);
@@ -80,6 +83,38 @@ const ModelPhysics = {
         };
         const f = factors[id];
         return (typeof f === 'function') ? f(r) : f;
+    },
+
+    getQ: (id, r) => {
+        const qFactors = {
+            staf256: 0.66,
+            han2022: 0.73,
+            amarante2024: 0.77,
+            chen2023: 0.73,
+            yang2022: (rad) => rad < 5 ? 0.5 : (rad > 30 ? 0.8 : 0.5 + 0.3 * (rad - 5) / 25),
+            hernitschek2018: (rad) => rad < 26 ? 0.65 : 0.85,
+            horta2021: 0.6,
+            kurbatov2024: 0.5,
+            libinney2022: 0.65,
+            lopezcorredoira2024: 1.0,
+            lucey2026: 0.7,
+            mackereth2020: 0.56,
+            medina2024: 0.7,
+            medina2018: 0.7,
+            nibauer2025: 0.7,
+            stringer2021: 0.7,
+            suzuki2026: 0.7,
+            wu2025: (rad) => rad < 8 ? 0.4 : (rad > 25 ? 0.8 : 0.4 + 0.4 * (rad - 8) / 17),
+            wu2022: (rad) => rad < 8 ? 0.4 : (rad > 25 ? 0.8 : 0.4 + 0.4 * (rad - 8) / 17),
+            rix2022: 1.0,
+            cavieres2025: 0.7,
+            feng2024: 1.0,
+            fukushima2025: 1.56,
+            yi2023: 0.73,
+            tao2026: 0.8
+        };
+        const q = qFactors[id];
+        return (typeof q === 'function') ? q(r) : q;
     },
 
     // Normalization at the Sun (R=8.275 typically)
@@ -652,11 +687,11 @@ function renderDetail(id) {
                     </div>
                     
                     <div class="plot-pane">
-                        <h3>Density Profile Plot</h3>
-                        <div class="plot-container">
-                            <a href="${model.plot_url}" target="_blank" title="Click to view full size">
-                                <img src="${model.plot_url}" alt="Density Profile for ${model.title}">
-                            </a>
+                        <h3>Interactive Model Analysis</h3>
+                        <div class="plot-container" id="unifiedPlotContainer" style="height: 600px;"></div>
+                        
+                        <div class="code-footer" style="margin-top: 20px;">
+                            <a href="#/plot/${model.id}" class="btn secondary">View Full Sized Version</a>
                         </div>
                     </div>
                 </div>
@@ -664,6 +699,145 @@ function renderDetail(id) {
         </div>
     `;
     app.innerHTML = html;
+    
+    // Render the interactive unified plot
+    renderUnifiedPlot(model);
+}
+
+function renderUnifiedPlot(model, containerId = 'unifiedPlotContainer') {
+    const qFunc = ModelPhysics.getQ;
+    const rhoFunc = ModelPhysics[model.id];
+    const r_min = 0.01;
+    const r_max = 150;
+    const points = 200;
+    const r_vals = [];
+    const q_vals = [];
+    const rho_vals = [];
+    
+    const logMin = Math.log10(r_min);
+    const logMax = Math.log10(r_max);
+    
+    for (let i = 0; i <= points; i++) {
+        const r = Math.pow(10, logMin + (i / points) * (logMax - logMin));
+        r_vals.push(r);
+        q_vals.push(qFunc(model.id, r));
+        rho_vals.push(rhoFunc(r));
+    }
+
+    const isSpherical = q_vals.every(val => val === 1.0);
+    const traces = [];
+    
+    // Trace 1: Flattening q (Upper Panel)
+    if (!isSpherical) {
+        traces.push({
+            x: r_vals, y: q_vals, mode: 'lines',
+            line: { color: 'var(--accent-color)', width: 3 },
+            name: 'Flattening q', xaxis: 'x', yaxis: 'y2',
+            hoverinfo: 'x+y'
+        });
+    }
+
+    // Trace 2: Density rho (Lower Panel)
+    traces.push({
+        x: r_vals, y: rho_vals, mode: 'lines',
+        line: { color: 'var(--primary-color)', width: 3 },
+        name: 'Luminosity Density', xaxis: 'x', yaxis: 'y',
+        hoverinfo: 'x+y'
+    });
+
+    // Shapes: Valid Range and Markers (spanning all panels)
+    const shapes = [
+        // Valid Range Background
+        {
+            type: 'rect', xref: 'x', yref: 'paper',
+            x0: model.range.min, x1: model.range.max,
+            y0: 0, y1: 1,
+            fillcolor: 'rgba(52, 152, 219, 0.15)',
+            line: { width: 0 },
+            layer: 'below'
+        }
+    ];
+
+    // Markers (Vertical Lines)
+    const R_sun = 8.275;
+    shapes.push({
+        type: 'line', xref: 'x', yref: 'paper',
+        x0: R_sun, x1: R_sun, y0: 0, y1: 1,
+        line: { color: 'green', width: 2, dash: 'dashdot' }
+    });
+
+    // Add Break Radii from parameters
+    Object.entries(model.parameters).forEach(([key, val]) => {
+        if (key.toLowerCase().includes('break') || key.toLowerCase().includes('radius')) {
+            const r_break = parseFloat(val);
+            if (!isNaN(r_break)) {
+                shapes.push({
+                    type: 'line', xref: 'x', yref: 'paper',
+                    x0: r_break, x1: r_break, y0: 0, y1: 1,
+                    line: { color: 'red', width: 1.5, dash: 'dot' }
+                });
+            }
+        }
+    });
+
+    const layout = {
+        grid: { rows: isSpherical ? 1 : 2, columns: 1, pattern: 'independent', roworder: 'top to bottom' },
+        margin: { t: 50, b: 60, l: 80, r: 30 },
+        plot_bgcolor: '#fff',
+        paper_bgcolor: '#fff',
+        showlegend: true,
+        legend: { orientation: 'h', y: -0.2, x: 0.5, xanchor: 'center' },
+        xaxis: {
+            title: 'Galactocentric Radius [kpc]',
+            type: 'log', range: [-2, 2.2], gridcolor: '#eee', anchor: 'y'
+        },
+        yaxis: {
+            title: 'Density [L⊙/pc³]',
+            type: 'log', range: [-10, -1], gridcolor: '#eee', domain: isSpherical ? [0, 1] : [0, 0.6]
+        },
+        yaxis2: isSpherical ? null : {
+            title: 'Flattening q (c/a)',
+            range: [0, 2], gridcolor: '#eee', domain: [0.7, 1.0], anchor: 'x'
+        },
+        shapes: shapes
+    };
+
+    // Add dummy traces for legend entries (shapes don't show in legend)
+    traces.push({
+        x: [null], y: [null], mode: 'lines',
+        line: { color: 'rgba(52, 152, 219, 0.3)', width: 10 },
+        name: 'Valid Data Range'
+    });
+    traces.push({
+        x: [null], y: [null], mode: 'lines',
+        line: { color: 'green', width: 2, dash: 'dashdot' },
+        name: 'Sun (R₀=8.275)'
+    });
+    traces.push({
+        x: [null], y: [null], mode: 'lines',
+        line: { color: 'red', width: 1.5, dash: 'dot' },
+        name: 'Break/Scale Radii'
+    });
+
+    Plotly.newPlot(containerId, traces, layout, {responsive: true, displaylogo: false});
+}
+
+function renderFullPlotView(id) {
+    const model = modelData.find(m => m.id === id);
+    if (!model) {
+        app.innerHTML = `<h2>Model not found</h2><a href="#/">Back to home</a>`;
+        return;
+    }
+
+    app.innerHTML = `
+        <div class="comparison-page">
+            <a href="#/model/${model.id}" class="back-link">&larr; Back to model details</a>
+            <h2>Full Analysis Plot: ${model.title}</h2>
+            <div id="fullPlotContainer" style="width: 100%; height: 80vh; margin-top: 30px;"></div>
+        </div>
+    `;
+    
+    renderUnifiedPlot(model, 'fullPlotContainer');
 }
 
 window.addEventListener('hashchange', router);
