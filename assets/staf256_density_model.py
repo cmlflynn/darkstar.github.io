@@ -40,6 +40,7 @@ def calculate_halo_properties():
     rho_r = rho_0 * (1 + (r / a_kpc)**2)**(-2.5) # Density along X-axis
 
     plt.figure(figsize=(10, 7))
+    plt.axvspan(0.1, 12, color='lightblue', alpha=0.3, label='Valid Data Range (0-12 kpc)')
     plt.loglog(r, rho_r / (1000**3), color='blue', linewidth=2, label='Triaxial Plummer (Major Axis)')
     
     # Markers
@@ -53,7 +54,7 @@ def calculate_halo_properties():
     plt.legend(frameon=True, loc='best')
     plt.grid(True, which="both", ls="-", alpha=0.2)
     
-    output_png = 'staf256_density_profile.png'
+    output_png = 'assets/staf256_density_profile.png'
     plt.savefig(output_png, dpi=300)
     print(f"Plot saved to: {output_png}")
 

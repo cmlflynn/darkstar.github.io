@@ -55,6 +55,7 @@ def calculate_chen2023_halo():
     rho_vals = np.array([rho_0 * profile(r) for r in r_vals])
 
     plt.figure(figsize=(10, 7))
+    plt.axvspan(5, 100, color='lightblue', alpha=0.3, label='Valid Data Range (5-100 kpc)')
     plt.loglog(r_vals, rho_vals / (1000**3), color='purple', linewidth=2, label='Chen et al. (2023) BPL Model')
     
     # Markers

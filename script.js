@@ -31,6 +31,7 @@ function router() {
 }
 
 let currentSort = { col: 'title', asc: true };
+let luminosityChartInstance = null;
 
 // Render Home View
 function renderHome() {
@@ -46,6 +47,7 @@ function renderHome() {
                     <tr>
                         <th class="${getSortClass('title')}" onclick="sortData('title')">Authors</th>
                         <th class="${getSortClass('model_type')}" onclick="sortData('model_type')">Model Type</th>
+                        <th class="${getSortClass('range')}" onclick="sortData('range')">Valid Range</th>
                         <th class="${getSortClass('luminosity')}" onclick="sortData('luminosity')">Luminosity</th>
                         <th>Actions</th>
                     </tr>
@@ -57,6 +59,7 @@ function renderHome() {
                                 <a href="${model.paper_url}" target="_blank">${model.title}</a>
                             </td>
                             <td>${model.parameters.Model}</td>
+                            <td>${model.range ? `${model.range.min} - ${model.range.max} kpc` : 'N/A'}</td>
                             <td>${model.luminosity}</td>
                             <td>
                                 <a href="#/model/${model.id}" class="btn">Explore Model</a>
@@ -66,8 +69,73 @@ function renderHome() {
                 </tbody>
             </table>
         </div>
+
+        <div class="chart-section">
+            <h3>Luminosity Comparison</h3>
+            <div class="chart-container">
+                <canvas id="luminosityChart"></canvas>
+            </div>
+        </div>
     `;
     app.innerHTML = html;
+    renderLuminosityChart();
+}
+
+function renderLuminosityChart() {
+    const ctx = document.getElementById('luminosityChart');
+    if (!ctx) return;
+
+    if (luminosityChartInstance) {
+        luminosityChartInstance.destroy();
+    }
+
+    const labels = modelData.map(m => m.title);
+    const data = modelData.map(m => parseFloat(m.luminosity.split(' ')[0]));
+
+    luminosityChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Total Halo Luminosity (L⊙)',
+                data: data,
+                backgroundColor: 'rgba(44, 62, 80, 0.7)',
+                borderColor: 'rgba(44, 62, 80, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Luminosity (L⊙)'
+                    }
+                },
+                x: {
+                    ticks: {
+                        minRotation: 45,
+                        maxRotation: 45
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `Luminosity: ${context.parsed.y.toExponential(2)} L⊙`;
+                        }
+                    }
+                }
+            }
+        }
+    });
 }
 
 function performSort(col, skipRender = false) {
@@ -89,6 +157,9 @@ function performSort(col, skipRender = false) {
         } else if (col === 'model_type') {
             valA = a.parameters.Model.toLowerCase();
             valB = b.parameters.Model.toLowerCase();
+        } else if (col === 'range') {
+            valA = a.range ? a.range.max : 0;
+            valB = b.range ? b.range.max : 0;
         } else if (col === 'luminosity') {
             // Parse "3.61e+08 L⊙" into a number
             valA = parseFloat(a.luminosity.split(' ')[0]);
@@ -142,6 +213,7 @@ function renderDetail(id) {
                         
                         <h3>Model Parameters</h3>
                         <table class="parameters-table">
+                            <tr><th>Valid Data Range</th><td>${model.range ? `${model.range.min} - ${model.range.max} kpc` : 'N/A'}</td></tr>
                             ${paramRows}
                         </table>
                         

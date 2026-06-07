@@ -52,6 +52,7 @@ def calculate_han2022_halo():
     rho_vals = np.array([rho_0 * profile(r) for r in r_vals])
 
     plt.figure(figsize=(10, 7))
+    plt.axvspan(5, 50, color='lightblue', alpha=0.3, label='Valid Data Range (5-50 kpc)')
     plt.loglog(r_vals, rho_vals / (1000**3), color='darkred', linewidth=2, label='Han et al. (2022) GSE Model')
     
     # Markers
@@ -66,8 +67,8 @@ def calculate_han2022_halo():
     plt.legend(frameon=True)
     plt.grid(True, which="both", ls="-", alpha=0.2)
     
-    plt.savefig('han2022_density_profile.png', dpi=300)
-    print("Plot saved to: han2022_density_profile.png")
+    plt.savefig('assets/han2022_density_profile.png', dpi=300)
+    print("Plot saved to: assets/han2022_density_profile.png")
 
 if __name__ == "__main__":
     calculate_han2022_halo()

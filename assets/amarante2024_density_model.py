@@ -73,6 +73,7 @@ def calculate_amarante2024_halo():
     rho_c = np.array([rho_0 * profile_with_core(r) for r in r_vals])
 
     plt.figure(figsize=(10, 7))
+    plt.axvspan(5, 120, color='lightblue', alpha=0.3, label='Valid Data Range (5-120 kpc)')
     plt.loglog(r_vals, rho_nc / (1000**3), color='blue', linestyle='--', alpha=0.5, label='Original (No Core)')
     plt.loglog(r_vals, rho_c / (1000**3), color='blue', linewidth=2, label='Modified (1 kpc Core)')
     
