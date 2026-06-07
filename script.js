@@ -6,6 +6,8 @@ async function init() {
     try {
         const response = await fetch('data.json');
         modelData = await response.json();
+        // Initial sort by default column without rendering
+        performSort(currentSort.col, true);
         router();
     } catch (err) {
         app.innerHTML = `<div class="error">Error loading model data. Please ensure you are viewing this via a web server.</div>`;
@@ -28,21 +30,81 @@ function router() {
     }
 }
 
+let currentSort = { col: 'title', asc: true };
+
 // Render Home View
 function renderHome() {
+    const getSortClass = (col) => {
+        if (currentSort.col !== col) return '';
+        return currentSort.asc ? 'sort-asc' : 'sort-desc';
+    };
+
     let html = `
-        <div class="model-grid">
-            ${modelData.map(model => `
-                <div class="model-card">
-                    <h2>${model.paper_url ? `<a href="${model.paper_url}" target="_blank">${model.title}</a>` : model.title}</h2>
-                    <p class="subtitle">Paper title: ${model.subtitle}</p>
-                    <p>${model.summary}</p>
-                    <a href="#/model/${model.id}" class="btn">Explore Model</a>
-                </div>
-            `).join('')}
+        <div class="model-table-container">
+            <table class="model-table">
+                <thead>
+                    <tr>
+                        <th class="${getSortClass('title')}" onclick="sortData('title')">Authors</th>
+                        <th class="${getSortClass('model_type')}" onclick="sortData('model_type')">Model Type</th>
+                        <th class="${getSortClass('luminosity')}" onclick="sortData('luminosity')">Luminosity</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${modelData.map(model => `
+                        <tr>
+                            <td>
+                                <a href="${model.paper_url}" target="_blank">${model.title}</a>
+                            </td>
+                            <td>${model.parameters.Model}</td>
+                            <td>${model.luminosity}</td>
+                            <td>
+                                <a href="#/model/${model.id}" class="btn">Explore Model</a>
+                            </td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
         </div>
     `;
     app.innerHTML = html;
+}
+
+function performSort(col, skipRender = false) {
+    if (!skipRender) {
+        if (currentSort.col === col) {
+            currentSort.asc = !currentSort.asc;
+        } else {
+            currentSort.col = col;
+            currentSort.asc = true;
+        }
+    }
+
+    modelData.sort((a, b) => {
+        let valA, valB;
+
+        if (col === 'title') {
+            valA = a.title.toLowerCase();
+            valB = b.title.toLowerCase();
+        } else if (col === 'model_type') {
+            valA = a.parameters.Model.toLowerCase();
+            valB = b.parameters.Model.toLowerCase();
+        } else if (col === 'luminosity') {
+            // Parse "3.61e+08 L⊙" into a number
+            valA = parseFloat(a.luminosity.split(' ')[0]);
+            valB = parseFloat(b.luminosity.split(' ')[0]);
+        }
+
+        if (valA < valB) return currentSort.asc ? -1 : 1;
+        if (valA > valB) return currentSort.asc ? 1 : -1;
+        return 0;
+    });
+
+    if (!skipRender) renderHome();
+}
+
+function sortData(col) {
+    performSort(col);
 }
 
 // Render Detail View
