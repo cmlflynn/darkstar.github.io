@@ -16,6 +16,25 @@ async function init() {
 }
 
 // Router
+function router() {
+    const hash = window.location.hash || '#/';
+    
+    if (hash === '#/') {
+        renderHome();
+    } else if (hash === '#/comparison') {
+        renderComparison();
+    } else if (hash.startsWith('#/model/')) {
+        const id = hash.replace('#/model/', '');
+        renderDetail(id);
+    } else if (hash.startsWith('#/code/')) {
+        const id = hash.replace('#/code/', '');
+        renderCodeView(id);
+    }
+}
+
+let currentSort = { col: 'title', asc: true };
+let luminosityChartInstance = null;
+
 // Density Calculation Functions
 const ModelPhysics = {
     // Normalization at the Sun (R=8.275 typically)
@@ -257,14 +276,10 @@ function renderComparison() {
             <a href="#/" class="back-link">&larr; Back to all models</a>
             <h2>Interactive Model Comparison</h2>
             <div class="comparison-controls">
-                <p><strong>Plotting Instructions:</strong> Each model is plotted only within its <em>Valid Data Range</em>. You can toggle models on and off by clicking their names in the legend or the list below. Use the plot tools to zoom or pan. Units are in Galactocentric radius (kpc) vs Luminosity Density ($L_{\\odot}/pc^3$).</p>
+                <p><strong>Plotting Instructions:</strong> Each model is plotted only within its <em>Valid Data Range</em>. You can toggle models on and off by clicking their names in the legend. Use the plot tools to zoom or pan. Units are in Galactocentric radius (kpc) vs Luminosity Density ($L_{\\odot}/pc^3$).</p>
             </div>
             
             <div id="comparisonPlot"></div>
-            
-            <div class="plot-legend-custom" id="customLegend">
-                <!-- Custom legend items for easier toggling -->
-            </div>
         </div>
     `;
     app.innerHTML = html;
@@ -297,7 +312,7 @@ function renderComparison() {
             mode: 'lines',
             name: model.title,
             line: { width: 3 },
-            visible: index < 5 ? true : 'legendonly' // Only show first 5 by default
+            visible: index < 5 ? true : 'legendonly'
         };
     }).filter(t => t !== null);
 
@@ -328,11 +343,6 @@ function renderComparison() {
     Plotly.newPlot('comparisonPlot', traces, layout, {responsive: true});
 }
 
-// ... existing router logic ...
-
-let currentSort = { col: 'title', asc: true };
-let luminosityChartInstance = null;
-
 // Render Home View
 function renderHome() {
     const getSortClass = (col) => {
@@ -342,7 +352,7 @@ function renderHome() {
 
     let html = `
         <div class="intro-banner">
-            <p>Compare all 20 stellar halo models in our new <a href="#/comparison" class="accent-link">Interactive Comparison Tool</a>.</p>
+            <p>Compare all ${modelData.length} stellar halo models in our new <a href="#/comparison" class="accent-link">Interactive Comparison Tool</a>.</p>
         </div>
 
         <div class="model-table-container">
@@ -391,9 +401,7 @@ function renderLuminosityChart() {
     const canvas = document.getElementById('luminosityChart');
     if (!canvas) return;
 
-    // Ensure Chart.js is loaded
     if (typeof Chart === 'undefined') {
-        console.warn('Chart.js not loaded yet. Retrying in 100ms...');
         setTimeout(renderLuminosityChart, 100);
         return;
     }
@@ -448,9 +456,7 @@ function renderLuminosityChart() {
                         callbacks: {
                             label: function(context) {
                                 let label = context.dataset.label || '';
-                                if (label) {
-                                    label += ': ';
-                                }
+                                if (label) { label += ': '; }
                                 if (context.parsed.y !== null) {
                                     label += context.parsed.y.toExponential(2) + ' L⊙';
                                 }
@@ -492,7 +498,6 @@ function performSort(col, skipRender = false) {
             valA = a.range ? a.range.max : 0;
             valB = b.range ? b.range.max : 0;
         } else if (col === 'luminosity') {
-            // Parse "3.61e+08 L⊙" into a number
             valA = parseFloat(a.luminosity.split(' ')[0]);
             valB = parseFloat(b.luminosity.split(' ')[0]);
         }
