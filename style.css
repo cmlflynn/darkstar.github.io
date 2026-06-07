@@ -491,6 +491,35 @@ footer {
     margin-top: 50px;
 }
 
+.detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    gap: 15px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 15px;
+}
+
+.model-nav {
+    display: flex;
+    gap: 10px;
+}
+
+.btn.small {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+}
+
+.nav-placeholder {
+    display: block;
+}
+
+.model-detail .back-link {
+    margin-bottom: 0;
+}
+
 @media (max-width: 768px) {
     .data-section {
         grid-template-columns: 1fr;

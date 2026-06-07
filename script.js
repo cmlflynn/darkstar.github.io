@@ -5,13 +5,20 @@ let modelData = [];
 async function init() {
     try {
         const response = await fetch('data.json');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
         modelData = await response.json();
         // Initial sort by default column without rendering
         performSort(currentSort.col, true);
         router();
     } catch (err) {
-        app.innerHTML = `<div class="error">Error loading model data. Please ensure you are viewing this via a web server.</div>`;
-        console.error(err);
+        app.innerHTML = `<div class="error">
+            <h3>Error loading model data</h3>
+            <p>${err.message}</p>
+            <p>Please ensure you are viewing this via a web server (e.g., using <code>python3 -m http.server</code>).</p>
+        </div>`;
+        console.error("Initialization error:", err);
     }
 }
 
@@ -45,10 +52,7 @@ const ModelPhysics = {
         const factors = {
             staf256: 4 * Math.PI * 0.80 * 0.66,
             han2022: 4 * Math.PI * 0.81 * 0.73,
-            amarante2024: (rad) => {
-                const q = rad < 30 ? 0.77 : 0.99;
-                return 4 * Math.PI * 1.0 * q;
-            },
+            amarante2024: (rad) => rad < 30 ? 4 * Math.PI * 1.0 * 0.77 : 4 * Math.PI * 1.0 * 0.99,
             chen2023: 4 * Math.PI * 1.0 * 0.73,
             yang2022: (rad) => {
                 const q = rad < 5 ? 0.5 : (rad > 30 ? 0.8 : 0.5 + 0.3 * (rad - 5) / 25);
@@ -92,7 +96,7 @@ const ModelPhysics = {
         const qFactors = {
             staf256: 0.66,
             han2022: 0.73,
-            amarante2024: 0.77,
+            amarante2024: (rad) => rad < 30 ? 0.77 : 0.99,
             chen2023: 0.73,
             yang2022: (rad) => rad < 5 ? 0.5 : (rad > 30 ? 0.8 : 0.5 + 0.3 * (rad - 5) / 25),
             hernitschek2018: (rad) => rad < 26 ? 0.65 : 0.85,
@@ -120,15 +124,12 @@ const ModelPhysics = {
         return (typeof q === 'function') ? q(r) : q;
     },
 
-    // Normalization at the Sun (R=8.275 typically)
-    // All models return L_sun/pc^3
-    
-    // Constant core for all power laws
     applyCore: (r, coreRadius, densityFunc) => {
         if (r < coreRadius) return densityFunc(coreRadius);
         return densityFunc(r);
     },
 
+    // Individual density functions
     staf256: (r) => {
         const a = 3.48;
         const rho_0 = 1.89e+06 / (1000**3);
@@ -352,9 +353,7 @@ function renderComparison() {
             <div class="comparison-controls">
                 <p><strong>Plotting Instructions:</strong> Each model is plotted only within its <em>Valid Data Range</em>. You can toggle models on and off by clicking their names in the legend. Use the plot tools to zoom or pan. Units are in Galactocentric radius (kpc) vs Luminosity Density ($L_{\\odot}/pc^3$).</p>
             </div>
-            
             <div id="comparisonPlot"></div>
-
             <h3 style="margin-top: 50px; color: var(--primary-color);">Cumulative Enclosed Luminosity</h3>
             <div class="comparison-controls">
                 <p>This plot shows the total integrated luminosity ($L_{\\odot}$) enclosed within a 3D volume of radius $r$. The integration accounts for each model's specific triaxial or oblate flattening.</p>
@@ -368,19 +367,16 @@ function renderComparison() {
     const densityTraces = modelData.map((model, index) => {
         const physFunc = ModelPhysics[model.id];
         if (!physFunc) return null;
-
         const r_min = Math.max(0.1, model.range.min);
         const r_max = model.range.max;
         const points = 200;
         const r_vals = [], rho_vals = [];
         const logMin = Math.log10(r_min), logMax = Math.log10(r_max);
-        
         for (let i = 0; i <= points; i++) {
             const r = Math.pow(10, logMin + (i / points) * (logMax - logMin));
             r_vals.push(r);
             rho_vals.push(physFunc(r));
         }
-
         return {
             x: r_vals, y: rho_vals, mode: 'lines', name: model.title,
             line: { width: 3 }, visible: index < 5 ? true : 'legendonly'
@@ -391,32 +387,18 @@ function renderComparison() {
     const cumulativeTraces = modelData.map((model, index) => {
         const physFunc = ModelPhysics[model.id];
         if (!physFunc) return null;
-
         const points = 300;
-        const r_start = 0.001; // Start integration very close to center
         const r_plot_min = 0.01;
         const r_plot_max = 150;
-        
-        const r_vals = [];
-        const l_cum_vals = [];
-        
-        // Log-spaced points for plotting
-        const logMin = Math.log10(r_plot_min);
-        const logMax = Math.log10(r_plot_max);
-        
-        // Cumulative integration using fine linear steps for precision
-        // then sampling at log-spaced points
+        const r_vals = [], l_cum_vals = [];
+        const logMin = Math.log10(r_plot_min), logMax = Math.log10(r_plot_max);
         const integrationSteps = 5000;
         const integrationDr = r_plot_max / integrationSteps;
         let runningL = 0;
-        let currentIntegrationR = 0;
-        
-        // Create an array of target radii for the trace
         const targetRadii = [];
         for (let i = 0; i <= points; i++) {
             targetRadii.push(Math.pow(10, logMin + (i / points) * (logMax - logMin)));
         }
-        
         let targetIdx = 0;
         for (let j = 0; j <= integrationSteps; j++) {
             const r = j * integrationDr;
@@ -426,14 +408,12 @@ function renderComparison() {
                 const dL = rho_kpc3 * volFactor * (r**2) * integrationDr;
                 runningL += dL;
             }
-            
             while (targetIdx < targetRadii.length && r >= targetRadii[targetIdx]) {
                 r_vals.push(targetRadii[targetIdx]);
                 l_cum_vals.push(runningL);
                 targetIdx++;
             }
         }
-
         return {
             x: r_vals, y: l_cum_vals, mode: 'lines', name: model.title,
             line: { width: 3 }, visible: index < 5 ? true : 'legendonly'
@@ -441,23 +421,19 @@ function renderComparison() {
     }).filter(t => t !== null);
 
     const layoutBase = {
-        plot_bgcolor: '#fff',
-        paper_bgcolor: '#fff',
+        plot_bgcolor: '#fff', paper_bgcolor: '#fff',
         margin: { t: 50, b: 80, l: 80, r: 50 },
-        hovermode: 'closest',
-        legend: { orientation: 'h', y: -0.2 }
+        hovermode: 'closest', legend: { orientation: 'h', y: -0.2 }
     };
 
     const densityLayout = {
-        ...layoutBase,
-        title: 'Stellar Halo Density Profiles',
+        ...layoutBase, title: 'Stellar Halo Density Profiles',
         xaxis: { title: 'Galactocentric Radius [kpc]', type: 'log', range: [-1.0, 3.0], gridcolor: '#eee' },
-        yaxis: { title: 'Luminosity Density [L⊙/pc³]', type: 'log', range: [-10, -1], gridcolor: '#eee' }
+        yaxis: { title: 'Luminosity Density [L⊙/pc³]', type: 'log', range: [-10, 1], gridcolor: '#eee' }
     };
 
     const cumulativeLayout = {
-        ...layoutBase,
-        title: 'Cumulative Enclosed Luminosity',
+        ...layoutBase, title: 'Cumulative Enclosed Luminosity',
         xaxis: { title: 'Galactocentric Radius [kpc]', type: 'log', range: [-2, 2.2], gridcolor: '#eee' },
         yaxis: { title: 'Total Enclosed Luminosity [L⊙]', type: 'log', range: [5, 10], gridcolor: '#eee' }
     };
@@ -466,7 +442,6 @@ function renderComparison() {
     Plotly.newPlot('cumulativePlot', cumulativeTraces, cumulativeLayout, {responsive: true});
 }
 
-// Render Home View
 function renderHome() {
     const getSortClass = (col) => {
         if (currentSort.col !== col) return '';
@@ -477,7 +452,6 @@ function renderHome() {
         <div class="intro-banner">
             <p>Compare all ${modelData.length} stellar halo models in our new <a href="#/comparison" class="accent-link">Interactive Comparison Tool</a>.</p>
         </div>
-
         <div class="model-table-container">
             <table class="model-table">
                 <thead>
@@ -493,27 +467,20 @@ function renderHome() {
                 <tbody>
                     ${modelData.map(model => `
                         <tr>
-                            <td>
-                                <a href="${model.paper_url}" target="_blank">${model.title}</a>
-                            </td>
+                            <td><a href="${model.paper_url}" target="_blank">${model.title}</a></td>
                             <td>${model.tracer || 'N/A'}</td>
                             <td>${model.parameters.Model}</td>
                             <td>${model.range ? `${model.range.min} - ${model.range.max} kpc` : 'N/A'}</td>
                             <td>${model.luminosity}</td>
-                            <td>
-                                <a href="#/model/${model.id}" class="btn">Explore Model</a>
-                            </td>
+                            <td><a href="#/model/${model.id}" class="btn">Explore Model</a></td>
                         </tr>
                     `).join('')}
                 </tbody>
             </table>
         </div>
-
         <div class="chart-section">
             <h3>Luminosity Comparison</h3>
-            <div class="chart-container">
-                <canvas id="luminosityChart"></canvas>
-            </div>
+            <div class="chart-container"><canvas id="luminosityChart"></canvas></div>
         </div>
     `;
     app.innerHTML = html;
@@ -523,24 +490,18 @@ function renderHome() {
 function renderLuminosityChart() {
     const canvas = document.getElementById('luminosityChart');
     if (!canvas) return;
-
     if (typeof Chart === 'undefined') {
         setTimeout(renderLuminosityChart, 100);
         return;
     }
-
     try {
         const ctx = canvas.getContext('2d');
-        if (luminosityChartInstance) {
-            luminosityChartInstance.destroy();
-        }
-
+        if (luminosityChartInstance) luminosityChartInstance.destroy();
         const labels = modelData.map(m => m.title);
         const data = modelData.map(m => {
             const val = parseFloat(m.luminosity.split(' ')[0]);
             return isNaN(val) ? 0 : val;
         });
-
         luminosityChartInstance = new Chart(ctx, {
             type: 'bar',
             data: {
@@ -554,35 +515,19 @@ function renderLuminosityChart() {
                 }]
             },
             options: {
-                responsive: true,
-                maintainAspectRatio: false,
+                responsive: true, maintainAspectRatio: false,
                 scales: {
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Luminosity (L⊙)'
-                        }
-                    },
-                    x: {
-                        ticks: {
-                            minRotation: 45,
-                            maxRotation: 45
-                        }
-                    }
+                    y: { beginAtZero: true, title: { display: true, text: 'Luminosity (L⊙)' } },
+                    x: { ticks: { minRotation: 45, maxRotation: 45 } }
                 },
                 plugins: {
-                    legend: {
-                        display: false
-                    },
+                    legend: { display: false },
                     tooltip: {
                         callbacks: {
                             label: function(context) {
                                 let label = context.dataset.label || '';
-                                if (label) { label += ': '; }
-                                if (context.parsed.y !== null) {
-                                    label += context.parsed.y.toExponential(2) + ' L⊙';
-                                }
+                                if (label) label += ': ';
+                                if (context.parsed.y !== null) label += context.parsed.y.toExponential(2) + ' L⊙';
                                 return label;
                             }
                         }
@@ -590,109 +535,79 @@ function renderLuminosityChart() {
                 }
             }
         });
-    } catch (err) {
-        console.error('Error rendering chart:', err);
-    }
+    } catch (err) { console.error('Error rendering chart:', err); }
 }
 
 function performSort(col, skipRender = false) {
     if (!skipRender) {
-        if (currentSort.col === col) {
-            currentSort.asc = !currentSort.asc;
-        } else {
-            currentSort.col = col;
-            currentSort.asc = true;
-        }
+        if (currentSort.col === col) currentSort.asc = !currentSort.asc;
+        else { currentSort.col = col; currentSort.asc = true; }
     }
-
     modelData.sort((a, b) => {
         let valA, valB;
-
-        if (col === 'title') {
-            valA = a.title.toLowerCase();
-            valB = b.title.toLowerCase();
-        } else if (col === 'tracer') {
-            valA = (a.tracer || '').toLowerCase();
-            valB = (b.tracer || '').toLowerCase();
-        } else if (col === 'model_type') {
-            valA = a.parameters.Model.toLowerCase();
-            valB = b.parameters.Model.toLowerCase();
-        } else if (col === 'range') {
-            valA = a.range ? a.range.max : 0;
-            valB = b.range ? b.range.max : 0;
-        } else if (col === 'luminosity') {
+        if (col === 'title') { valA = a.title.toLowerCase(); valB = b.title.toLowerCase(); }
+        else if (col === 'tracer') { valA = (a.tracer || '').toLowerCase(); valB = (b.tracer || '').toLowerCase(); }
+        else if (col === 'model_type') { valA = a.parameters.Model.toLowerCase(); valB = b.parameters.Model.toLowerCase(); }
+        else if (col === 'range') { valA = a.range ? a.range.max : 0; valB = b.range ? b.range.max : 0; }
+        else if (col === 'luminosity') {
             valA = parseFloat(a.luminosity.split(' ')[0]);
             valB = parseFloat(b.luminosity.split(' ')[0]);
         }
-
         if (valA < valB) return currentSort.asc ? -1 : 1;
         if (valA > valB) return currentSort.asc ? 1 : -1;
         return 0;
     });
-
     if (!skipRender) renderHome();
 }
 
-function sortData(col) {
-    performSort(col);
-}
+function sortData(col) { performSort(col); }
 
-// Render Detail View
 function renderDetail(id) {
     const model = modelData.find(m => m.id === id);
-    if (!model) {
-        app.innerHTML = `<h2>Model not found</h2><a href="#/">Back to home</a>`;
-        return;
-    }
-
+    if (!model) { app.innerHTML = `<h2>Model not found</h2><a href="#/">Back to home</a>`; return; }
+    const currentIndex = modelData.findIndex(m => m.id === id);
+    const prevModel = currentIndex > 0 ? modelData[currentIndex - 1] : null;
+    const nextModel = currentIndex < modelData.length - 1 ? modelData[currentIndex + 1] : null;
     const paramRows = Object.entries(model.parameters)
-        .map(([key, val]) => `<tr><th>${key}</th><td>${val}</td></tr>`)
-        .join('');
-
-    let html = `
+        .map(([key, val]) => `<tr><th>${key}</th><td>${val}</td></tr>`).join('');
+    app.innerHTML = `
         <div class="model-detail">
-            <a href="#/" class="back-link">&larr; Back to all models</a>
+            <div class="detail-header">
+                <a href="#/" class="back-link">&larr; Back to all models</a>
+                <div class="model-nav">
+                    ${prevModel ? `<a href="#/model/${prevModel.id}" class="btn secondary small">&larr; Previous: ${prevModel.title}</a>` : '<span class="nav-placeholder"></span>'}
+                    ${nextModel ? `<a href="#/model/${nextModel.id}" class="btn secondary small">Next: ${nextModel.title} &rarr;</a>` : '<span class="nav-placeholder"></span>'}
+                </div>
+            </div>
             <h2>${model.paper_url ? `<a href="${model.paper_url}" target="_blank">${model.title}</a>` : model.title}</h2>
             <p class="subtitle">Paper title: ${model.subtitle}</p>
-            
             <div class="content-wrapper">
                 <div class="description-section">
                     <h3>About this Model</h3>
                     <p>${model.summary}</p>
                 </div>
-
                 <div class="data-section">
                     <div class="info-pane">
-                        ${model.eqn_url ? `
-                        <div class="equation-container">
-                            <h3>Model Equation</h3>
-                            <img src="${model.eqn_url}" alt="Mathematical equation for ${model.title}" class="equation-img">
-                        </div>
-                        ` : ''}
-                        
+                        ${model.eqn_url ? `<div class="equation-container"><h3>Model Equation</h3><img src="${model.eqn_url}" alt="Equation" class="equation-img"></div>` : ''}
                         <h3>Model Parameters</h3>
                         <table class="parameters-table">
                             <tr><th>Tracer Stars</th><td>${model.tracer || 'N/A'}</td></tr>
                             <tr><th>Valid Data Range</th><td>${model.range ? `${model.range.min} - ${model.range.max} kpc` : 'N/A'}</td></tr>
                             ${paramRows}
                         </table>
-                        
                         <div class="luminosity-highlight">
                             <h3>Total Halo Luminosity</h3>
                             <p>Local norm: 1.7E-5 L<sub>&odot;</sub>/pc<sup>3</sup></p>
                             <div class="luminosity-value">${model.luminosity}</div>
                         </div>
-
                         <div class="code-footer">
                             <a href="#/code/${model.id}" class="btn secondary">View Python Source Code</a>
                             <a href="${model.code_url}" class="btn" download>Download Python Source Code</a>
                         </div>
                     </div>
-                    
                     <div class="plot-pane">
                         <h3>Interactive Model Analysis</h3>
                         <div class="plot-container" id="unifiedPlotContainer" style="height: 600px;"></div>
-                        
                         <div class="code-footer" style="margin-top: 20px;">
                             <a href="#/plot/${model.id}" class="btn secondary">View Full Sized Version</a>
                         </div>
@@ -701,145 +616,75 @@ function renderDetail(id) {
             </div>
         </div>
     `;
-    app.innerHTML = html;
-    
-    // Render the interactive unified plot
     renderUnifiedPlot(model);
 }
 
 function renderUnifiedPlot(model, containerId = 'unifiedPlotContainer') {
-    const qFunc = ModelPhysics.getQ;
-    const rhoFunc = ModelPhysics[model.id];
-    const r_min = 0.01;
-    const r_max = 150;
-    const points = 200;
-    const r_vals = [];
-    const q_vals = [];
-    const rho_vals = [];
-    
-    const logMin = Math.log10(r_min);
-    const logMax = Math.log10(r_max);
-    
-    for (let i = 0; i <= points; i++) {
-        const r = Math.pow(10, logMin + (i / points) * (logMax - logMin));
-        r_vals.push(r);
-        q_vals.push(qFunc(model.id, r));
-        rho_vals.push(rhoFunc(r));
-    }
+    try {
+        const qFunc = ModelPhysics.getQ;
+        const rhoFunc = ModelPhysics[model.id];
+        if (!rhoFunc) throw new Error(`Density function not found for model: ${model.id}`);
+        const r_min = 0.01, r_max = 150, points = 200;
+        const r_vals = [], q_vals = [], rho_vals = [];
+        const logMin = Math.log10(r_min), logMax = Math.log10(r_max);
+        for (let i = 0; i <= points; i++) {
+            const r = Math.pow(10, logMin + (i / points) * (logMax - logMin));
+            r_vals.push(r);
+            q_vals.push(qFunc(model.id, r));
+            rho_vals.push(rhoFunc(r));
+        }
 
-    const isSpherical = q_vals.every(val => val === 1.0);
-    const traces = [];
-    
-    // Trace 1: Flattening q (Upper Panel)
-    if (!isSpherical) {
+        const traces = [];
+        
+        // Trace 1: Flattening q (Upper Panel)
         traces.push({
             x: r_vals, y: q_vals, mode: 'lines',
-            line: { color: 'var(--accent-color)', width: 3 },
-            name: 'Flattening q', xaxis: 'x', yaxis: 'y2',
-            hoverinfo: 'x+y'
+            line: { color: 'orange', width: 3 },
+            name: 'Flattening q', xaxis: 'x', yaxis: 'y2', hoverinfo: 'x+y'
         });
-    }
 
-    // Trace 2: Density rho (Lower Panel)
-    traces.push({
-        x: r_vals, y: rho_vals, mode: 'lines',
-        line: { color: 'var(--primary-color)', width: 3 },
-        name: 'Luminosity Density', xaxis: 'x', yaxis: 'y',
-        hoverinfo: 'x+y'
-    });
+        // Trace 2: Density rho (Lower Panel)
+        traces.push({
+            x: r_vals, y: rho_vals, mode: 'lines',
+            line: { color: '#2c3e50', width: 3 },
+            name: 'Luminosity Density', xaxis: 'x', yaxis: 'y', hoverinfo: 'x+y'
+        });
 
-    // Shapes: Valid Range and Markers (spanning all panels)
-    const shapes = [
-        // Valid Range Background
-        {
-            type: 'rect', xref: 'x', yref: 'paper',
-            x0: model.range.min, x1: model.range.max,
-            y0: 0, y1: 1,
-            fillcolor: 'rgba(52, 152, 219, 0.15)',
-            line: { width: 0 },
-            layer: 'below'
-        }
-    ];
+        const shapes = [
+            { type: 'rect', xref: 'x', yref: 'paper', x0: model.range.min, x1: model.range.max, y0: 0, y1: 1, fillcolor: 'rgba(52, 152, 219, 0.15)', line: { width: 0 }, layer: 'below' },
+            { type: 'line', xref: 'x', yref: 'paper', x0: 8.275, x1: 8.275, y0: 0, y1: 1, line: { color: 'green', width: 2, dash: 'dashdot' } }
+        ];
 
-    // Markers (Vertical Lines)
-    const R_sun = 8.275;
-    shapes.push({
-        type: 'line', xref: 'x', yref: 'paper',
-        x0: R_sun, x1: R_sun, y0: 0, y1: 1,
-        line: { color: 'green', width: 2, dash: 'dashdot' }
-    });
-
-    // Add Break Radii from parameters
-    Object.entries(model.parameters).forEach(([key, val]) => {
-        if (key.toLowerCase().includes('break') || key.toLowerCase().includes('radius')) {
-            const r_break = parseFloat(val);
-            if (!isNaN(r_break)) {
-                shapes.push({
-                    type: 'line', xref: 'x', yref: 'paper',
-                    x0: r_break, x1: r_break, y0: 0, y1: 1,
-                    line: { color: 'red', width: 1.5, dash: 'dot' }
-                });
+        Object.entries(model.parameters).forEach(([key, val]) => {
+            if (key.toLowerCase().includes('break') || key.toLowerCase().includes('radius')) {
+                const r_break = parseFloat(val);
+                if (!isNaN(r_break)) {
+                    shapes.push({ type: 'line', xref: 'x', yref: 'paper', x0: r_break, x1: r_break, y0: 0, y1: 1, line: { color: 'red', width: 1.5, dash: 'dot' } });
+                }
             }
-        }
-    });
+        });
 
-    const layout = {
-        grid: { rows: isSpherical ? 1 : 2, columns: 1, pattern: 'independent', roworder: 'top to bottom' },
-        margin: { t: 50, b: 60, l: 80, r: 30 },
-        plot_bgcolor: '#fff',
-        paper_bgcolor: '#fff',
-        showlegend: true,
-        legend: { orientation: 'h', y: -0.2, x: 0.5, xanchor: 'center' },
-        xaxis: {
-            title: 'Galactocentric Radius [kpc]',
-            type: 'log', range: [-2, 2.2], gridcolor: '#eee', anchor: 'y'
-        },
-        yaxis: {
-            title: 'Density [L⊙/pc³]',
-            type: 'log', range: [-10, -1], gridcolor: '#eee', domain: isSpherical ? [0, 1] : [0, 0.6]
-        },
-        yaxis2: isSpherical ? null : {
-            title: 'Flattening q (c/a)',
-            range: [0, 2], gridcolor: '#eee', domain: [0.7, 1.0], anchor: 'x'
-        },
-        shapes: shapes
-    };
+        const layout = {
+            grid: { rows: 2, columns: 1, pattern: 'independent', roworder: 'top to bottom' },
+            margin: { t: 50, b: 60, l: 80, r: 30 }, plot_bgcolor: '#fff', paper_bgcolor: '#fff',
+            xaxis: { title: 'Galactocentric Radius [kpc]', type: 'log', range: [-2, 2.2], gridcolor: '#eee', anchor: 'y' },
+            yaxis: { title: 'Density [L⊙/pc³]', type: 'log', range: [-10, 1], gridcolor: '#eee', domain: [0, 0.6] },
+            yaxis2: { title: 'Flattening q (c/a)', range: [0, 2], gridcolor: '#eee', domain: [0.7, 1.0], anchor: 'x' },
+            shapes: shapes, showlegend: true, legend: { orientation: 'h', y: -0.2, x: 0.5, xanchor: 'center' }
+        };
 
-    // Add dummy traces for legend entries (shapes don't show in legend)
-    traces.push({
-        x: [null], y: [null], mode: 'lines',
-        line: { color: 'rgba(52, 152, 219, 0.3)', width: 10 },
-        name: 'Valid Data Range'
-    });
-    traces.push({
-        x: [null], y: [null], mode: 'lines',
-        line: { color: 'green', width: 2, dash: 'dashdot' },
-        name: 'Sun (R₀=8.275)'
-    });
-    traces.push({
-        x: [null], y: [null], mode: 'lines',
-        line: { color: 'red', width: 1.5, dash: 'dot' },
-        name: 'Break/Scale Radii'
-    });
-
-    Plotly.newPlot(containerId, traces, layout, {responsive: true, displaylogo: false});
+        traces.push({ x: [null], y: [null], mode: 'lines', line: { color: 'rgba(52, 152, 219, 0.3)', width: 10 }, name: 'Valid Data Range' });
+        traces.push({ x: [null], y: [null], mode: 'lines', line: { color: 'green', width: 2, dash: 'dashdot' }, name: 'Sun (R₀=8.275)' });
+        traces.push({ x: [null], y: [null], mode: 'lines', line: { color: 'red', width: 1.5, dash: 'dot' }, name: 'Break/Scale Radii' });
+        
+        Plotly.newPlot(containerId, traces, layout, {responsive: true, displaylogo: false});
+    } catch (err) { console.error("Plot error:", err); }
 }
 
 function renderFullPlotView(id) {
     const model = modelData.find(m => m.id === id);
-    if (!model) {
-        app.innerHTML = `<h2>Model not found</h2><a href="#/">Back to home</a>`;
-        return;
-    }
-
-    app.innerHTML = `
-        <div class="comparison-page">
-            <a href="#/model/${model.id}" class="back-link">&larr; Back to model details</a>
-            <h2>Full Analysis Plot: ${model.title}</h2>
-            <div id="fullPlotContainer" style="width: 100%; height: 80vh; margin-top: 30px;"></div>
-        </div>
-    `;
-    
+    if (!model) { app.innerHTML = `<h2>Model not found</h2><a href="#/">Back to home</a>`; return; }
+    app.innerHTML = `<div class="comparison-page"><a href="#/model/${model.id}" class="back-link">&larr; Back to model details</a><h2>Full Analysis Plot: ${model.title}</h2><div id="fullPlotContainer" style="width: 100%; height: 80vh; margin-top: 30px;"></div></div>`;
     renderUnifiedPlot(model, 'fullPlotContainer');
 }
 
@@ -847,28 +692,13 @@ window.addEventListener('hashchange', router);
 
 async function renderCodeView(id) {
     const model = modelData.find(m => m.id === id);
-    if (!model) {
-        app.innerHTML = `<h2>Model not found</h2><a href="#/">Back to home</a>`;
-        return;
-    }
-
-    app.innerHTML = `
-        <div class="code-page">
-            <a href="#/model/${model.id}" class="back-link">&larr; Back to model details</a>
-            <h2>Python Source Code: ${model.title}</h2>
-            <div class="code-viewer-container">
-                <pre><code id="code-content-loading">Loading source code...</code></pre>
-            </div>
-        </div>
-    `;
-
+    if (!model) { app.innerHTML = `<h2>Model not found</h2><a href="#/">Back to home</a>`; return; }
+    app.innerHTML = `<div class="code-page"><a href="#/model/${model.id}" class="back-link">&larr; Back to model details</a><h2>Python Source Code: ${model.title}</h2><div class="code-viewer-container"><pre><code id="code-content-loading">Loading source code...</code></pre></div></div>`;
     try {
         const response = await fetch(model.code_url);
         const code = await response.text();
         document.getElementById('code-content-loading').textContent = code;
-    } catch (err) {
-        document.getElementById('code-content-loading').textContent = 'Error loading source code.';
-    }
+    } catch (err) { document.getElementById('code-content-loading').textContent = 'Error loading source code.'; }
 }
 
 init();
