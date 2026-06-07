@@ -45,7 +45,10 @@ const ModelPhysics = {
         const factors = {
             staf256: 4 * Math.PI * 0.80 * 0.66,
             han2022: 4 * Math.PI * 0.81 * 0.73,
-            amarante2024: 4 * Math.PI * 1.0 * 0.77, // Simplified to q=0.77
+            amarante2024: (rad) => {
+                const q = rad < 30 ? 0.77 : 0.99;
+                return 4 * Math.PI * 1.0 * q;
+            },
             chen2023: 4 * Math.PI * 1.0 * 0.73,
             yang2022: (rad) => {
                 const q = rad < 5 ? 0.5 : (rad > 30 ? 0.8 : 0.5 + 0.3 * (rad - 5) / 25);
