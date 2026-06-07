@@ -35,8 +35,53 @@ function router() {
 let currentSort = { col: 'title', asc: true };
 let luminosityChartInstance = null;
 
-// Density Calculation Functions
+// Density Calculation and Geometry Data
 const ModelPhysics = {
+    // Volume factor helper: returns 4 * pi * p * q
+    getVolumeFactor: (id, r) => {
+        const factors = {
+            staf256: 4 * Math.PI * 0.80 * 0.66,
+            han2022: 4 * Math.PI * 0.81 * 0.73,
+            amarante2024: 4 * Math.PI * 1.0 * 0.77, // Simplified to q=0.77
+            chen2023: 4 * Math.PI * 1.0 * 0.73,
+            yang2022: (rad) => {
+                const q = rad < 5 ? 0.5 : (rad > 30 ? 0.8 : 0.5 + 0.3 * (rad - 5) / 25);
+                return 4 * Math.PI * 1.0 * q;
+            },
+            hernitschek2018: (rad) => {
+                const q = rad < 26 ? 0.65 : 0.85;
+                return 4 * Math.PI * 1.0 * q;
+            },
+            horta2021: 4 * Math.PI * 0.8 * 0.6,
+            kurbatov2024: 4 * Math.PI * 1.0 * 0.5,
+            libinney2022: 4 * Math.PI * 1.0 * 0.65,
+            lopezcorredoira2024: 4 * Math.PI * 1.0 * 1.0,
+            lucey2026: 4 * Math.PI * 1.0 * 0.7,
+            mackereth2020: 4 * Math.PI * 0.73 * 0.56,
+            medina2024: 4 * Math.PI * 1.0 * 0.7,
+            medina2018: 4 * Math.PI * 1.0 * 0.7,
+            nibauer2025: 4 * Math.PI * 0.75 * 0.70,
+            stringer2021: 4 * Math.PI * 1.0 * 0.7,
+            suzuki2026: 4 * Math.PI * 1.0 * 0.7,
+            wu2025: (rad) => {
+                const q = rad < 8 ? 0.4 : (rad > 25 ? 0.8 : 0.4 + 0.4 * (rad - 8) / 17);
+                return 4 * Math.PI * 1.0 * q;
+            },
+            wu2022: (rad) => {
+                const q = rad < 8 ? 0.4 : (rad > 25 ? 0.8 : 0.4 + 0.4 * (rad - 8) / 17);
+                return 4 * Math.PI * 1.0 * q;
+            },
+            rix2022: 4 * Math.PI * 1.0 * 1.0,
+            cavieres2025: 4 * Math.PI * 0.8 * 0.7,
+            feng2024: 4 * Math.PI * 1.0 * 1.0,
+            fukushima2025: 4 * Math.PI * 1.0 * 1.56,
+            yi2023: 4 * Math.PI * 1.0 * 0.73,
+            tao2026: 4 * Math.PI * 1.0 * 0.8
+        };
+        const f = factors[id];
+        return (typeof f === 'function') ? f(r) : f;
+    },
+
     // Normalization at the Sun (R=8.275 typically)
     // All models return L_sun/pc^3
     
@@ -47,18 +92,13 @@ const ModelPhysics = {
     },
 
     staf256: (r) => {
-        // Horta 2025: Triaxial Plummer
         const a = 3.48;
-        const rho_0 = 1.89e+06 / (1000**3); // pc^3
+        const rho_0 = 1.89e+06 / (1000**3);
         return rho_0 * Math.pow(1 + (r / a)**2, -2.5);
     },
 
     han2022: (r) => {
-        // Han 2022: Doubly Broken Power Law
-        const a1=1.70, a2=3.09, a3=4.58;
-        const rb1=11.85, rb2=28.33;
-        const R_sun=8.122;
-        const core=1.0;
+        const a1=1.70, a2=3.09, a3=4.58, rb1=11.85, rb2=28.33, R_sun=8.122, core=1.0;
         const getRaw = (rad) => {
             if (rad < rb1) return Math.pow(rad, -a1);
             if (rad < rb2) return Math.pow(rb1, a2-a1) * Math.pow(rad, -a2);
@@ -69,8 +109,7 @@ const ModelPhysics = {
     },
 
     amarante2024: (r) => {
-        const alpha_in = 2.9, alpha_out = 4.5, r_br = 19.1, r_core = 1.0;
-        const R_sun = 8.275;
+        const alpha_in = 2.9, alpha_out = 4.5, r_br = 19.1, r_core = 1.0, R_sun = 8.275;
         const getRaw = (rad) => {
             if (rad < r_br) return Math.pow(rad, -alpha_in);
             return Math.pow(r_br, alpha_out - alpha_in) * Math.pow(rad, -alpha_out);
@@ -80,8 +119,7 @@ const ModelPhysics = {
     },
 
     chen2023: (r) => {
-        const s1 = 2.83, s2 = 4.49, r0 = 27.45, r_core = 1.0;
-        const R_sun = 8.275;
+        const s1 = 2.83, s2 = 4.49, r0 = 27.45, r_core = 1.0, R_sun = 8.275;
         const getRaw = (rad) => {
             if (rad < r0) return Math.pow(rad, -s1);
             return Math.pow(r0, s2 - s1) * Math.pow(rad, -s2);
@@ -91,8 +129,7 @@ const ModelPhysics = {
     },
 
     yang2022: (r) => {
-        const a1=1.5, a2=2.8, a3=6.1, rb1=10.0, rb2=25.0, r_core=1.0;
-        const R_sun=8.275;
+        const a1=1.5, a2=2.8, a3=6.1, rb1=10.0, rb2=25.0, r_core=1.0, R_sun=8.275;
         const getRaw = (rad) => {
             if (rad < rb1) return Math.pow(rad, -a1);
             if (rad < rb2) return Math.pow(rb1, a2-a1) * Math.pow(rad, -a2);
@@ -103,8 +140,7 @@ const ModelPhysics = {
     },
 
     hernitschek2018: (r) => {
-        const ai=2.4, ao=4.5, rb=26.0, core=1.0;
-        const R_sun=8.275;
+        const ai=2.4, ao=4.5, rb=26.0, core=1.0, R_sun=8.275;
         const getRaw = (rad) => {
             if (rad < rb) return Math.pow(rad, -ai);
             return Math.pow(rb, ao-ai) * Math.pow(rad, -ao);
@@ -280,25 +316,26 @@ function renderComparison() {
             </div>
             
             <div id="comparisonPlot"></div>
+
+            <h3 style="margin-top: 50px; color: var(--primary-color);">Cumulative Enclosed Luminosity</h3>
+            <div class="comparison-controls">
+                <p>This plot shows the total integrated luminosity ($L_{\\odot}$) enclosed within a 3D volume of radius $r$. The integration accounts for each model's specific triaxial or oblate flattening.</p>
+            </div>
+            <div id="cumulativePlot"></div>
         </div>
     `;
     app.innerHTML = html;
     
-    // Generate data for Plotly
-    const traces = modelData.map((model, index) => {
+    // 1. Generate Density Traces
+    const densityTraces = modelData.map((model, index) => {
         const physFunc = ModelPhysics[model.id];
         if (!physFunc) return null;
 
         const r_min = Math.max(0.1, model.range.min);
         const r_max = model.range.max;
-        
-        // Generate points in log space
         const points = 200;
-        const r_vals = [];
-        const rho_vals = [];
-        
-        const logMin = Math.log10(r_min);
-        const logMax = Math.log10(r_max);
+        const r_vals = [], rho_vals = [];
+        const logMin = Math.log10(r_min), logMax = Math.log10(r_max);
         
         for (let i = 0; i <= points; i++) {
             const r = Math.pow(10, logMin + (i / points) * (logMax - logMin));
@@ -307,40 +344,88 @@ function renderComparison() {
         }
 
         return {
-            x: r_vals,
-            y: rho_vals,
-            mode: 'lines',
-            name: model.title,
-            line: { width: 3 },
-            visible: index < 5 ? true : 'legendonly'
+            x: r_vals, y: rho_vals, mode: 'lines', name: model.title,
+            line: { width: 3 }, visible: index < 5 ? true : 'legendonly'
         };
     }).filter(t => t !== null);
 
-    const layout = {
-        title: 'Stellar Halo Density Profiles Comparison',
-        xaxis: {
-            title: 'Galactocentric Radius [kpc]',
-            type: 'log',
-            range: [-0.5, 3.0],
-            gridcolor: '#eee'
-        },
-        yaxis: {
-            title: 'Luminosity Density [L⊙/pc³]',
-            type: 'log',
-            range: [-10, -1],
-            gridcolor: '#eee'
-        },
-        margin: { t: 50, b: 80, l: 80, r: 50 },
-        hovermode: 'closest',
+    // 2. Generate Cumulative Luminosity Traces
+    const cumulativeTraces = modelData.map((model, index) => {
+        const physFunc = ModelPhysics[model.id];
+        if (!physFunc) return null;
+
+        const points = 300;
+        const r_start = 0.001; // Start integration very close to center
+        const r_plot_min = 0.01;
+        const r_plot_max = 150;
+        
+        const r_vals = [];
+        const l_cum_vals = [];
+        
+        // Log-spaced points for plotting
+        const logMin = Math.log10(r_plot_min);
+        const logMax = Math.log10(r_plot_max);
+        
+        // Cumulative integration using fine linear steps for precision
+        // then sampling at log-spaced points
+        const integrationSteps = 5000;
+        const integrationDr = r_plot_max / integrationSteps;
+        let runningL = 0;
+        let currentIntegrationR = 0;
+        
+        // Create an array of target radii for the trace
+        const targetRadii = [];
+        for (let i = 0; i <= points; i++) {
+            targetRadii.push(Math.pow(10, logMin + (i / points) * (logMax - logMin)));
+        }
+        
+        let targetIdx = 0;
+        for (let j = 0; j <= integrationSteps; j++) {
+            const r = j * integrationDr;
+            if (r > 0) {
+                const rho_kpc3 = physFunc(r) * (1000**3);
+                const volFactor = ModelPhysics.getVolumeFactor(model.id, r);
+                const dL = rho_kpc3 * volFactor * (r**2) * integrationDr;
+                runningL += dL;
+            }
+            
+            while (targetIdx < targetRadii.length && r >= targetRadii[targetIdx]) {
+                r_vals.push(targetRadii[targetIdx]);
+                l_cum_vals.push(runningL);
+                targetIdx++;
+            }
+        }
+
+        return {
+            x: r_vals, y: l_cum_vals, mode: 'lines', name: model.title,
+            line: { width: 3 }, visible: index < 5 ? true : 'legendonly'
+        };
+    }).filter(t => t !== null);
+
+    const layoutBase = {
         plot_bgcolor: '#fff',
         paper_bgcolor: '#fff',
-        legend: {
-            orientation: 'h',
-            y: -0.2
-        }
+        margin: { t: 50, b: 80, l: 80, r: 50 },
+        hovermode: 'closest',
+        legend: { orientation: 'h', y: -0.2 }
     };
 
-    Plotly.newPlot('comparisonPlot', traces, layout, {responsive: true});
+    const densityLayout = {
+        ...layoutBase,
+        title: 'Stellar Halo Density Profiles',
+        xaxis: { title: 'Galactocentric Radius [kpc]', type: 'log', range: [-1.0, 3.0], gridcolor: '#eee' },
+        yaxis: { title: 'Luminosity Density [L⊙/pc³]', type: 'log', range: [-10, -1], gridcolor: '#eee' }
+    };
+
+    const cumulativeLayout = {
+        ...layoutBase,
+        title: 'Cumulative Enclosed Luminosity',
+        xaxis: { title: 'Galactocentric Radius [kpc]', type: 'log', range: [-2, 2.2], gridcolor: '#eee' },
+        yaxis: { title: 'Total Enclosed Luminosity [L⊙]', type: 'log', range: [5, 10], gridcolor: '#eee' }
+    };
+
+    Plotly.newPlot('comparisonPlot', densityTraces, densityLayout, {responsive: true});
+    Plotly.newPlot('cumulativePlot', cumulativeTraces, cumulativeLayout, {responsive: true});
 }
 
 // Render Home View
