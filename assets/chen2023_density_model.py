@@ -9,6 +9,7 @@ def calculate_chen2023_halo():
     s1 = 2.83
     s2 = 4.49
     r0 = 27.45
+    r_core = 1.0  # 1 kpc constant density core
     q = 0.73
     
     # Solar position (standard value)
@@ -18,9 +19,11 @@ def calculate_chen2023_halo():
     rho_local_Lsun_pc3 = 1.7e-5
     rho_local_Lsun_kpc3 = rho_local_Lsun_pc3 * (1000**3)
 
-    # Broken Power Law Profile Function (r_q = sqrt(x^2 + y^2 + (z/q)^2))
+    # Broken Power Law Profile Function with Core
     def profile(r):
-        if r < r0:
+        if r < r_core:
+            return r_core**-s1
+        elif r < r0:
             return r**-s1
         else:
             return (r0**(s2 - s1)) * (r**-s2)
@@ -33,33 +36,37 @@ def calculate_chen2023_halo():
     # Analytical Integration for Luminosity
     # L = 4 * pi * q * Integral[ rho(r_q) * r_q^2 dr_q ]
     
-    # Part 1: 0 to r0
-    int1 = (r0**(3 - s1)) / (3 - s1)
+    # Part 0: 0 to r_core (constant density)
+    int0 = (r_core**-s1) * (r_core**3 / 3.0)
+    # Part 1: r_core to r0
+    int1 = (r0**(3 - s1) - r_core**(3 - s1)) / (3 - s1)
     # Part 2: r0 to infinity
     C = r0**(s2 - s1)
     int2 = C * (0 - r0**(3 - s2)) / (3 - s2)
     
-    L_total = 4 * np.pi * q * rho_0 * (int1 + int2)
+    L_total = 4 * np.pi * q * rho_0 * (int0 + int1 + int2)
 
     print(f"--- Chen et al. (2023) BPL Halo Properties ---")
     print(f"Central Norm (at 1kpc): {rho_0:.2e} Lsun/kpc^3")
     print(f"Total Halo Luminosity:  {L_total:.2e} Lsun")
     print(f"Break Radius (r0):      {r0} kpc")
+    print(f"Core Radius:            {r_core} kpc")
     print(f"Inner Slope (s1):       {s1}")
     print(f"Outer Slope (s2):       {s2}")
     print(f"Flattening (q):         {q}")
     print(f"---------------------------------------------------")
 
     # Plotting
-    r_vals = np.logspace(0.5, 2.2, 500)
+    r_vals = np.logspace(-0.5, 2.2, 500)
     rho_vals = np.array([rho_0 * profile(r) for r in r_vals])
 
     plt.figure(figsize=(10, 7))
     plt.axvspan(5, 100, color='lightblue', alpha=0.3, label='Valid Data Range (5-100 kpc)')
-    plt.loglog(r_vals, rho_vals / (1000**3), color='purple', linewidth=2, label='Chen et al. (2023) BPL Model')
+    plt.loglog(r_vals, rho_vals / (1000**3), color='purple', linewidth=2, label='Chen et al. (2023) BPL Model (1 kpc Core)')
     
     # Markers
     plt.axvline(r0, color='red', linestyle='--', label=f'Break Radius ({r0} kpc)')
+    plt.axvline(r_core, color='purple', linestyle=':', label=f'Core Radius ({r_core} kpc)')
     plt.axvline(R_sun, color='black', linestyle=':', alpha=0.5, label='Solar Position')
     plt.axhline(rho_local_Lsun_pc3, color='green', linestyle='-', alpha=0.2, label='Local Normalization')
 

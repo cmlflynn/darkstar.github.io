@@ -6,6 +6,7 @@ def calculate_yang2022_halo():
     # Double-broken power law
     a1, a2, a3 = 1.5, 2.8, 6.1
     rb1, rb2 = 10.0, 25.0
+    r_core = 1.0  # 1 kpc constant density core
     
     # Flattening q: 0.5 at r < 5, 0.8 at r > 30.
     # We'll use a simple linear interpolation or just the values for the integration.
@@ -21,9 +22,11 @@ def calculate_yang2022_halo():
     rho_local_Lsun_pc3 = 1.7e-5
     rho_local_Lsun_kpc3 = rho_local_Lsun_pc3 * (1000**3)
 
-    # Double-Broken Power Law Profile
+    # Double-Broken Power Law Profile with Core
     def profile(r):
-        if r < rb1:
+        if r < r_core:
+            return r_core**-a1
+        elif r < rb1:
             return r**-a1
         elif r < rb2:
             return (rb1**(a2-a1)) * (r**-a2)
@@ -42,14 +45,15 @@ def calculate_yang2022_halo():
     def integrand(r):
         return q_func(r) * profile(r) * r**2
     
-    # Integrate from 0.1 to 150 kpc
-    result, error = quad(integrand, 0.1, 150.0)
+    # Integrate from 0 to 150 kpc
+    result, error = quad(integrand, 0.0, 150.0)
     L_total = 4 * np.pi * rho_0 * result
 
     print(f"--- Yang et al. (2022) Halo Properties ---")
     print(f"Central Norm (at 1kpc): {rho_0:.2e} Lsun/kpc^3")
     print(f"Total Halo Luminosity:  {L_total:.2e} Lsun")
     print(f"Break Radii:            {rb1} kpc, {rb2} kpc")
+    print(f"Core Radius:            {r_core} kpc")
     print(f"Inner Index (a1):       {a1}")
     print(f"Middle Index (a2):      {a2}")
     print(f"Outer Index (a3):       {a3}")
@@ -57,16 +61,17 @@ def calculate_yang2022_halo():
     print(f"-------------------------------------------")
 
     # Plotting
-    r_vals = np.logspace(0, 2.2, 500)
+    r_vals = np.logspace(-0.5, 2.2, 500)
     rho_vals = np.array([rho_0 * profile(r) for r in r_vals])
 
     plt.figure(figsize=(10, 7))
     plt.axvspan(5, 50, color='lightblue', alpha=0.3, label='Valid Data Range (5-50 kpc)')
-    plt.loglog(r_vals, rho_vals / (1000**3), color='darkgreen', linewidth=2, label='Yang et al. (2022) Model')
+    plt.loglog(r_vals, rho_vals / (1000**3), color='darkgreen', linewidth=2, label='Yang et al. (2022) Model (1 kpc Core)')
     
     # Markers
     plt.axvline(rb1, color='gray', linestyle=':', label=f'Inner Break ({rb1} kpc)')
     plt.axvline(rb2, color='gray', linestyle='--', label=f'Outer Break ({rb2} kpc)')
+    plt.axvline(r_core, color='purple', linestyle=':', label=f'Core Radius ({r_core} kpc)')
     plt.axvline(R_sun, color='blue', linestyle='-.', alpha=0.5, label='Solar Position')
     plt.axhline(rho_local_Lsun_pc3, color='green', linestyle='-', alpha=0.2, label='Local Normalization')
 

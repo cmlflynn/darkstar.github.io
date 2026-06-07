@@ -82,60 +82,82 @@ function renderHome() {
 }
 
 function renderLuminosityChart() {
-    const ctx = document.getElementById('luminosityChart');
-    if (!ctx) return;
+    const canvas = document.getElementById('luminosityChart');
+    if (!canvas) return;
 
-    if (luminosityChartInstance) {
-        luminosityChartInstance.destroy();
+    // Ensure Chart.js is loaded
+    if (typeof Chart === 'undefined') {
+        console.warn('Chart.js not loaded yet. Retrying in 100ms...');
+        setTimeout(renderLuminosityChart, 100);
+        return;
     }
 
-    const labels = modelData.map(m => m.title);
-    const data = modelData.map(m => parseFloat(m.luminosity.split(' ')[0]));
+    try {
+        const ctx = canvas.getContext('2d');
+        if (luminosityChartInstance) {
+            luminosityChartInstance.destroy();
+        }
 
-    luminosityChartInstance = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Total Halo Luminosity (L⊙)',
-                data: data,
-                backgroundColor: 'rgba(44, 62, 80, 0.7)',
-                borderColor: 'rgba(44, 62, 80, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Luminosity (L⊙)'
-                    }
-                },
-                x: {
-                    ticks: {
-                        minRotation: 45,
-                        maxRotation: 45
-                    }
-                }
+        const labels = modelData.map(m => m.title);
+        const data = modelData.map(m => {
+            const val = parseFloat(m.luminosity.split(' ')[0]);
+            return isNaN(val) ? 0 : val;
+        });
+
+        luminosityChartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Total Halo Luminosity (L⊙)',
+                    data: data,
+                    backgroundColor: 'rgba(44, 62, 80, 0.7)',
+                    borderColor: 'rgba(44, 62, 80, 1)',
+                    borderWidth: 1
+                }]
             },
-            plugins: {
-                legend: {
-                    display: false
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Luminosity (L⊙)'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            minRotation: 45,
+                            maxRotation: 45
+                        }
+                    }
                 },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            return `Luminosity: ${context.parsed.y.toExponential(2)} L⊙`;
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    label += context.parsed.y.toExponential(2) + ' L⊙';
+                                }
+                                return label;
+                            }
                         }
                     }
                 }
             }
-        }
-    });
+        });
+    } catch (err) {
+        console.error('Error rendering chart:', err);
+    }
 }
 
 function performSort(col, skipRender = false) {
