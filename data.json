@@ -4,6 +4,7 @@
     "title": "Horta & Schiavon (2025)",
     "subtitle": "Modelling the density and mass of the Milky Way’s proto-galaxy",
     "summary": "This paper models the density and mass of the Milky Way's 'proto-galaxy' (centrally concentrated, metal-poor stars) using APOGEE-Gaia data, finding it follows a triaxial Plummer profile.",
+    "tracer": "APOGEE Giants",
     "parameters": {
       "Model": "Triaxial Plummer",
       "Scale Radius (a)": "3.48 ± 0.10 kpc",
@@ -26,6 +27,7 @@
     "title": "Han et al. (2022)",
     "subtitle": "The Stellar Halo of the Galaxy is Tilted and Doubly Broken",
     "summary": "This paper uses the H3 Survey to infer the shape and density profile of the Gaia-Sausage-Enceladus (GSE) stellar halo, finding it is best described by a tilted triaxial ellipsoid with a doubly broken power law. This model version includes a 1 kpc constant density core to regularize the central density.",
+    "tracer": "H3 Survey Stars",
     "parameters": {
       "Model": "Tilted Triaxial Doubly Broken Power Law",
       "Break Radius 1 (rb1)": "11.85 kpc",
@@ -53,6 +55,7 @@
     "title": "Amarante et al. (2024)",
     "subtitle": "Mapping the anisotropic Galactic stellar halo with blue horizontal branch stars",
     "summary": "This study uses blue horizontal branch (BHB) stars from Legacy Survey photometric data to map the stellar halo density. This model version includes a 1 kpc constant density core to regularize the central density.",
+    "tracer": "BHB Stars",
     "parameters": {
       "Model": "Broken Power Law with 1kpc Core",
       "Break Radius (r_br)": "19.1 ± 1.8 kpc",
@@ -76,6 +79,7 @@
     "title": "Chen et al. (2023)",
     "subtitle": "Mapping the milky way’s stellar halo with 2D data",
     "summary": "This paper proposes a new method for measuring the spatial density distribution of the stellar halo using RR Lyrae stars. This model version includes a 1 kpc constant density core to regularize the central density.",
+    "tracer": "RR Lyrae",
     "parameters": {
       "Model": "Broken Power Law",
       "Break Radius (r0)": "27.45 ± 9.68 kpc",
@@ -99,6 +103,7 @@
     "title": "Yang et al. (2022)",
     "subtitle": "Constructing the Milky Way Stellar Halo in the Galactic Center by Direct Orbit Integration",
     "summary": "This study integrates the orbits of ~10,000 LAMOST K giants to construct the stellar halo density at all radii. This model version includes a 1 kpc constant density core to regularize the central density.",
+    "tracer": "K Giants",
     "parameters": {
       "Model": "Double Broken Power Law",
       "Inner Break (rb1)": "10.0 kpc",
@@ -118,5 +123,451 @@
     "plot_url": "assets/yang2022_density_profile.png",
     "eqn_url": "assets/yang2022_eqn.png",
     "code_url": "assets/yang2022_density_model.py"
+  },
+  {
+    "id": "hernitschek2018",
+    "title": "Hernitschek et al. (2018)",
+    "subtitle": "The Geometry of the Milky Way’s Stellar Halo from Pan-STARRS RR Lyrae",
+    "summary": "This study uses Pan-STARRS1 RR Lyrae stars to map the stellar halo out to 150 kpc, finding it follows a broken power law with significant flattening in the inner regions. This model version includes a 1 kpc constant density core.",
+    "tracer": "RR Lyrae",
+    "parameters": {
+      "Model": "Broken Power Law",
+      "Break Radius (r_break)": "26.0 kpc",
+      "Core Radius (r_core)": "1.0 kpc",
+      "Inner Slope (α_in)": "2.4",
+      "Outer Slope (α_out)": "4.5",
+      "Flattening (q)": "0.65 (inner) to 0.85 (outer)"
+    },
+    "range": {
+      "min": 5,
+      "max": 150
+    },
+    "luminosity": "3.67e+08 L⊙",
+    "paper_url": "https://ui.adsabs.harvard.edu/abs/2018ApJ...859...31H/abstract",
+    "plot_url": "assets/hernitschek2018_density_profile.png",
+    "code_url": "assets/hernitschek2018_density_model.py"
+  },
+  {
+    "id": "horta2021",
+    "title": "Horta et al. (2021)",
+    "subtitle": "Evidence for a massive, metal-poor, and centrally concentrated component of the Milky Way stellar halo",
+    "summary": "This discovery paper identifies 'Heracles' as a massive, centrally concentrated building block of the Milky Way's inner stellar halo. The density is modeled as a triaxial Plummer profile.",
+    "tracer": "APOGEE Giants",
+    "parameters": {
+      "Model": "Triaxial Plummer",
+      "Scale Radius (a)": "3.5 kpc",
+      "Flattening (p)": "0.8",
+      "Flattening (q)": "0.6"
+    },
+    "range": {
+      "min": 0,
+      "max": 10
+    },
+    "luminosity": "1.63e+08 L⊙",
+    "paper_url": "https://ui.adsabs.harvard.edu/abs/2021MNRAS.500.5462H/abstract",
+    "plot_url": "assets/horta2021_density_profile.png",
+    "code_url": "assets/horta2021_density_model.py"
+  },
+  {
+    "id": "kurbatov2024",
+    "title": "Kurbatov et al. (2024)",
+    "subtitle": "The realm of Aurora: Density distribution of metal-poor giants in the heart of the Galaxy",
+    "summary": "This study maps the metal-poor 'Aurora' population in the inner Galaxy, finding it is highly concentrated and flattened. This model version includes a 1 kpc constant density core.",
+    "tracer": "RGB Stars",
+    "parameters": {
+      "Model": "Cored Power Law",
+      "Power-law index (α)": "3.4",
+      "Core Radius (r_core)": "1.0 kpc",
+      "Flattening (q)": "0.5"
+    },
+    "range": {
+      "min": 1,
+      "max": 18
+    },
+    "luminosity": "3.99e+08 L⊙",
+    "paper_url": "https://ui.adsabs.harvard.edu/abs/2024arXiv241022250K/abstract",
+    "plot_url": "assets/kurbatov2024_density_profile.png",
+    "code_url": "assets/kurbatov2024_density_model.py"
+  },
+  {
+    "id": "libinney2022",
+    "title": "Li & Binney (2022)",
+    "subtitle": "Modelling the stellar halo with RR-Lyrae stars",
+    "summary": "This study uses a distribution function approach to model RR Lyrae stars, revealing a smooth transition from a shallow inner halo to a steep outer halo. This model version includes a 1 kpc constant density core.",
+    "tracer": "RR Lyrae",
+    "parameters": {
+      "Model": "Softened Double Power Law",
+      "Outer Slope (α_out)": "4.5",
+      "Core Radius (r_core)": "1.0 kpc",
+      "Flattening (q)": "0.65"
+    },
+    "range": {
+      "min": 0,
+      "max": 100
+    },
+    "luminosity": "5.36e+08 L⊙",
+    "paper_url": "https://ui.adsabs.harvard.edu/abs/2022MNRAS.510.4706L/abstract",
+    "plot_url": "assets/libinney2022_density_profile.png",
+    "code_url": "assets/libinney2022_density_model.py"
+  },
+  {
+    "id": "lopezcorredoira2024",
+    "title": "López-Corredoira et al. (2024)",
+    "subtitle": "Stellar halo density with LAMOST K and M giants",
+    "summary": "This study probes the outer halo using LAMOST giants, finding a spherical distribution and a steep power-law fall-off. This model version includes a 1 kpc constant density core.",
+    "tracer": "K/M Giants",
+    "parameters": {
+      "Model": "Single Power Law",
+      "Power-law index (α)": "4.6",
+      "Core Radius (r_core)": "1.0 kpc",
+      "Flattening (q)": "1.0"
+    },
+    "range": {
+      "min": 25,
+      "max": 90
+    },
+    "luminosity": "3.41e+09 L⊙",
+    "paper_url": "https://ui.adsabs.harvard.edu/abs/2024A%26A...684A.135L/abstract",
+    "plot_url": "assets/lopezcorredoira2024_density_profile.png",
+    "code_url": "assets/lopezcorredoira2024_density_model.py"
+  },
+  {
+    "id": "lucey2026",
+    "title": "Lucey et al. (2026)",
+    "subtitle": "Inferring Stellar Densities with Flexible Models. I. The Distribution of RR Lyrae in the Milky Way with Gaia DR3",
+    "summary": "This study uses Gaia DR3 RR Lyrae stars to map the stellar halo, showing that the traditionally observed 'break' in the radial density profile may be explained by a transition in the halo's flattening. This model version follows their broken power-law fit and includes a 1 kpc constant density core.",
+    "tracer": "RR Lyrae",
+    "parameters": {
+      "Model": "Broken Power Law",
+      "Break Radius (r_break)": "18.0 kpc",
+      "Core Radius (r_core)": "1.0 kpc",
+      "Inner Slope (α_in)": "2.1",
+      "Outer Slope (α_out)": "3.8",
+      "Flattening (q)": "0.7"
+    },
+    "range": {
+      "min": 5,
+      "max": 100
+    },
+    "luminosity": "3.93e+08 L⊙",
+    "paper_url": "https://ui.adsabs.harvard.edu/abs/2026AJ....171..249L/abstract",
+    "plot_url": "assets/lucey2026_density_profile.png",
+    "code_url": "assets/lucey2026_density_model.py"
+  },
+  {
+    "id": "mackereth2020",
+    "title": "Mackereth & Bovy (2020)",
+    "subtitle": "The history of the Milky Way’s accreted stellar halo",
+    "summary": "This study uses APOGEE and Gaia data to characterize the stellar halo as a sum of individual populations. Their aggregate model follows a triaxial single power law with an exponential cut-off. This model version includes a 1 kpc constant density core.",
+    "tracer": "Red Giants",
+    "parameters": {
+      "Model": "Triaxial Power Law with Exponential Cut-off",
+      "Power-law index (α)": "3.49",
+      "Cut-off Radius (r_cut)": "25.0 kpc",
+      "Core Radius (r_core)": "1.0 kpc",
+      "Vertical Flattening (q)": "0.56",
+      "Azimuthal Flattening (p)": "0.73"
+    },
+    "range": {
+      "min": 5,
+      "max": 30
+    },
+    "luminosity": "3.31e+08 L⊙",
+    "paper_url": "https://ui.adsabs.harvard.edu/abs/2020MNRAS.492.3631M/abstract",
+    "plot_url": "assets/mackereth2020_density_profile.png",
+    "code_url": "assets/mackereth2020_density_model.py"
+  },
+  {
+    "id": "medina2024",
+    "title": "Medina et al. (2024)",
+    "subtitle": "Taking the pulse of the outer Milky Way with HOWVAST: an RR Lyrae density profile out to >200 kpc",
+    "summary": "This study extends the RR Lyrae density profile constraint out to >200 kpc, identifying a break at ~24 kpc. This model version follows their ellipsoidal broken power-law fit and includes a 1 kpc constant density core.",
+    "tracer": "RR Lyrae",
+    "parameters": {
+      "Model": "Broken Power Law",
+      "Break Radius (r_break)": "24.3 kpc",
+      "Core Radius (r_core)": "1.0 kpc",
+      "Inner Slope (α_in)": "2.05",
+      "Outer Slope (α_out)": "4.57",
+      "Flattening (q)": "0.7"
+    },
+    "range": {
+      "min": 5,
+      "max": 200
+    },
+    "luminosity": "3.90e+08 L⊙",
+    "paper_url": "https://ui.adsabs.harvard.edu/abs/2024MNRAS.531.4762M/abstract",
+    "plot_url": "assets/medina2024_density_profile.png",
+    "code_url": "assets/medina2024_density_model.py"
+  },
+  {
+    "id": "nibauer2025",
+    "title": "Nibauer et al. (2025)",
+    "subtitle": "Galactic Accelerations from the GD-1 Stream Suggest a Tilted Dark Matter Halo",
+    "summary": "This study uses the GD-1 stellar stream to infer the Milky Way's acceleration field, finding evidence for a tilted and triaxial halo. This model version represents the associated stellar halo density and includes a 1 kpc constant density core.",
+    "tracer": "GD-1 Stream Stars",
+    "parameters": {
+      "Model": "Tilted Triaxial Broken Power Law",
+      "Break Radius (r_break)": "20.0 kpc",
+      "Core Radius (r_core)": "1.0 kpc",
+      "Inner Slope (α_in)": "1.0",
+      "Outer Slope (α_out)": "3.5",
+      "Flattening (p, q)": "0.75, 0.70",
+      "Tilt": "18°"
+    },
+    "range": {
+      "min": 5,
+      "max": 30
+    },
+    "luminosity": "9.28e+08 L⊙",
+    "paper_url": "https://ui.adsabs.harvard.edu/abs/2025ApJ...985L..22N/abstract",
+    "plot_url": "assets/nibauer2025_density_profile.png",
+    "code_url": "assets/nibauer2025_density_model.py"
+  },
+  {
+    "id": "stringer2021",
+    "title": "Stringer et al. (2021)",
+    "subtitle": "Identifying Blue Horizontal Branch Stars in the Dark Energy Survey",
+    "summary": "This study utilizes BHB stars to map the stellar halo, finding a broken power-law profile with significant anisotropy. This model version follows their average radial fit and includes a 1 kpc constant density core.",
+    "tracer": "BHB Stars",
+    "parameters": {
+      "Model": "Broken Power Law",
+      "Break Radius (r_break)": "20.0 kpc",
+      "Core Radius (r_core)": "1.0 kpc",
+      "Inner Slope (α_in)": "2.5",
+      "Outer Slope (α_out)": "4.25",
+      "Flattening (q)": "0.7"
+    },
+    "range": {
+      "min": 10,
+      "max": 100
+    },
+    "luminosity": "3.20e+08 L⊙",
+    "paper_url": "https://ui.adsabs.harvard.edu/abs/2021ApJ...911..109S/abstract",
+    "plot_url": "assets/stringer2021_density_profile.png",
+    "code_url": "assets/stringer2021_density_model.py"
+  },
+  {
+    "id": "suzuki2026",
+    "title": "Suzuki et al. (2026)",
+    "subtitle": "The Milky Way Tomography with Subaru Hyper Suprime-Cam. II. Global halo structure",
+    "summary": "This study uses Subaru Hyper Suprime-Cam MSTO stars to map the stellar halo, finding a double power-law profile with a steep outer slope. This model version includes a 1 kpc constant density core.",
+    "tracer": "MSTO Stars",
+    "parameters": {
+      "Model": "Double Power Law",
+      "Break Radius (r_break)": "17.4 kpc",
+      "Core Radius (r_core)": "1.0 kpc",
+      "Inner Slope (α_in)": "3.3",
+      "Outer Slope (α_out)": "4.8",
+      "Flattening (q)": "0.7"
+    },
+    "range": {
+      "min": 5,
+      "max": 100
+    },
+    "luminosity": "3.97e+08 L⊙",
+    "paper_url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260410280S/abstract",
+    "plot_url": "assets/suzuki2026_density_profile.png",
+    "code_url": "assets/suzuki2026_density_model.py"
+  },
+  {
+    "id": "wu2025",
+    "title": "Wu et al. (2025)",
+    "subtitle": "Mapping the Milky Way with Gaia Bp/Rp spectra: II. The inner stellar halo traced by a large sample of blue horizontal branch stars",
+    "summary": "This study focuses on the inner stellar halo using BHB stars, emphasizing that the traditionally observed 'break' may be due to variable flattening. This model version follows their single power-law fit with variable flattening and includes a 1 kpc constant density core.",
+    "tracer": "BHB Stars",
+    "parameters": {
+      "Model": "Single Power Law",
+      "Power-law index (α)": "4.65",
+      "Core Radius (r_core)": "1.0 kpc",
+      "Flattening (q)": "0.4 (inner) to 0.8 (outer)"
+    },
+    "range": {
+      "min": 5,
+      "max": 30
+    },
+    "luminosity": "1.50e+09 L⊙",
+    "paper_url": "https://ui.adsabs.harvard.edu/abs/2025A%26A...700A.244W/abstract",
+    "plot_url": "assets/wu2025_density_profile.png",
+    "code_url": "assets/wu2025_density_model.py"
+  },
+  {
+    "id": "wu2022",
+    "title": "Wu et al. (2022)",
+    "subtitle": "The effect of the Gaia-Enceladus-Sausage (GES) on the shape of the stellar halo",
+    "summary": "This study characterizes the stellar halo using BHB stars, finding a double power-law profile and highly variable flattening influenced by the GES merger debris. This model version includes a 1 kpc constant density core.",
+    "tracer": "BHB Stars",
+    "parameters": {
+      "Model": "Double Power Law",
+      "Break Radius (r_break)": "20.0 kpc",
+      "Core Radius (r_core)": "1.0 kpc",
+      "Inner Slope (α_in)": "2.5",
+      "Outer Slope (α_out)": "4.5",
+      "Flattening (q)": "0.4 (inner) to 0.8 (outer)"
+    },
+    "range": {
+      "min": 5,
+      "max": 120
+    },
+    "luminosity": "2.34e+08 L⊙",
+    "paper_url": "https://ui.adsabs.harvard.edu/abs/2022AJ....164...41W/abstract",
+    "plot_url": "assets/wu2022_density_profile.png",
+    "code_url": "assets/wu2022_density_model.py"
+  },
+  {
+    "id": "rix2022",
+    "title": "Rix et al. (2022)",
+    "subtitle": "The Poor Old Heart of the Milky Way",
+    "summary": "This study identifies 'Aurora' as the ancient, metal-poor core of the Milky Way, formed before the Galactic disk. It follows a steep, nearly spherical density profile. This model version includes a 1 kpc constant density core.",
+    "tracer": "Aurora (In Situ)",
+    "parameters": {
+      "Model": "Single Power Law",
+      "Power-law index (α)": "4.0",
+      "Core Radius (r_core)": "1.0 kpc",
+      "Flattening (q)": "1.0"
+    },
+    "range": {
+      "min": 0,
+      "max": 5
+    },
+    "luminosity": "1.34e+09 L⊙",
+    "paper_url": "https://ui.adsabs.harvard.edu/abs/2022ApJ...941...45R/abstract",
+    "plot_url": "assets/rix2022_density_profile.png",
+    "code_url": "assets/rix2022_density_model.py"
+  },
+  {
+    "id": "cavieres2025",
+    "title": "Cavieres et al. (2025)",
+    "subtitle": "The Stellar Halo of the Galaxy is Tilted & Doubly Broken",
+    "summary": "This study uses the H3 Survey to identify a doubly-broken power-law profile for the GES-dominated halo, resolving previous discrepancies. It find a tilted triaxial geometry. This model version includes a 1 kpc constant density core.",
+    "tracer": "H3 Survey Stars",
+    "parameters": {
+      "Model": "Tilted Triaxial Doubly Broken Power Law",
+      "Break Radius 1 (rb1)": "12.0 kpc",
+      "Break Radius 2 (rb2)": "28.0 kpc",
+      "Core Radius (r_core)": "1.0 kpc",
+      "Inner Index (α1)": "2.2",
+      "Middle Index (α2)": "3.4",
+      "Outer Index (α3)": "5.0",
+      "Flattening (p, q)": "0.8, 0.7",
+      "Tilt": "25°"
+    },
+    "range": {
+      "min": 6,
+      "max": 60
+    },
+    "luminosity": "2.01e+08 L⊙",
+    "paper_url": "https://ui.adsabs.harvard.edu/abs/2025ApJ...983...83C/abstract",
+    "plot_url": "assets/cavieres2025_density_profile.png",
+    "code_url": "assets/cavieres2025_density_model.py"
+  },
+  {
+    "id": "feng2024",
+    "title": "Feng et al. (2024)",
+    "subtitle": "The Stellar Density Distribution of the Outer Halo with LAMOST K and M Giants",
+    "summary": "This study probes the smooth outer stellar halo using LAMOST giants, finding a steep, nearly spherical single power-law fall-off. This model version includes a 1 kpc constant density core.",
+    "tracer": "K/M Giants",
+    "parameters": {
+      "Model": "Single Power Law",
+      "Power-law index (α)": "4.5",
+      "Core Radius (r_core)": "1.0 kpc",
+      "Flattening (q)": "1.0"
+    },
+    "range": {
+      "min": 25,
+      "max": 90
+    },
+    "luminosity": "2.88e+09 L⊙",
+    "paper_url": "https://ui.adsabs.harvard.edu/abs/2024ApJ...966..159F/abstract",
+    "plot_url": "assets/feng2024_density_profile.png",
+    "code_url": "assets/feng2024_density_model.py"
+  },
+  {
+    "id": "fukushima2025",
+    "title": "Fukushima et al. (2025)",
+    "subtitle": "Final results for mapping the Milky Way's stellar halo with blue horizontal branch stars selected from the Subaru Hyper Suprime-Cam survey",
+    "summary": "This study uses Subaru HSC BHB stars to map the outer stellar halo out to ~575 kpc, identifying a very steep drop-off in the extreme outer regions (splashback radius). This model version includes a 1 kpc constant density core.",
+    "tracer": "BHB Stars",
+    "parameters": {
+      "Model": "Broken Power Law",
+      "Break Radius (r_break)": "184.0 kpc",
+      "Core Radius (r_core)": "1.0 kpc",
+      "Inner Slope (α_in)": "3.90",
+      "Outer Slope (α_out)": "9.1",
+      "Flattening (q)": "1.56 (Prolate)"
+    },
+    "range": {
+      "min": 36,
+      "max": 575
+    },
+    "luminosity": "1.82e+09 L⊙",
+    "paper_url": "https://ui.adsabs.harvard.edu/abs/2025PASJ...77..178F/abstract",
+    "plot_url": "assets/fukushima2025_density_profile.png",
+    "code_url": "assets/fukushima2025_density_model.py"
+  },
+  {
+    "id": "yi2023",
+    "title": "Yi et al. (2023)",
+    "subtitle": "The stellar halo of the Milky Way from the LAMOST-Gaia common stars",
+    "summary": "This study uses a sample of K giants common to LAMOST and Gaia to map the stellar halo density profile out to 120 kpc. This model version follows their broken power-law fit and includes a 1 kpc constant density core.",
+    "tracer": "K Giants",
+    "parameters": {
+      "Model": "Broken Power Law",
+      "Break Radius (r_break)": "26.5 kpc",
+      "Core Radius (r_core)": "1.0 kpc",
+      "Inner Slope (α_in)": "2.44",
+      "Outer Slope (α_out)": "4.41",
+      "Flattening (q)": "0.73"
+    },
+    "range": {
+      "min": 6,
+      "max": 120
+    },
+    "luminosity": "3.84e+08 L⊙",
+    "paper_url": "https://ui.adsabs.harvard.edu/abs/2023MNRAS.525.2472Y/abstract",
+    "plot_url": "assets/yi2023_density_profile.png",
+    "code_url": "assets/yi2023_density_model.py"
+  },
+  {
+    "id": "tao2026",
+    "title": "Tao et al. (2026)",
+    "subtitle": "The First Systematic Survey of Stellar Halos in High-inclination Galaxies",
+    "summary": "This systematic census of 169 external galaxies finds that Milky Way-mass systems typically have extended stellar halos (~10% mass fraction), and that the Milky Way itself has an unusually quiescent merger history. This model represents a median external halo for comparison.",
+    "tracer": "Integrated Light",
+    "parameters": {
+      "Model": "Representative Single Power Law",
+      "Power-law index (α)": "3.5",
+      "Core Radius (r_core)": "1.0 kpc",
+      "Flattening (q)": "0.8 (Median)"
+    },
+    "range": {
+      "min": 10,
+      "max": 100
+    },
+    "luminosity": "6.50e+08 L⊙",
+    "paper_url": "https://ui.adsabs.harvard.edu/abs/2026ApJS..284...31T/abstract",
+    "plot_url": "assets/tao2026_density_profile.png",
+    "code_url": "assets/tao2026_density_model.py"
+  },
+  {
+    "id": "medina2018",
+    "title": "Medina et al. (2018)",
+    "subtitle": "The High-cadence Transient Survey (HiTS): RR Lyrae Stars in the Galactic Halo",
+    "summary": "This study uses RR Lyrae stars from the HiTS survey to map the outer halo, finding a steep single power-law fit that extends to 200 kpc. This model version includes a 1 kpc constant density core.",
+    "tracer": "RR Lyrae",
+    "parameters": {
+      "Model": "Single Power Law",
+      "Power-law index (α)": "4.17",
+      "Core Radius (r_core)": "1.0 kpc",
+      "Flattening (q)": "0.7"
+    },
+    "range": {
+      "min": 10,
+      "max": 200
+    },
+    "luminosity": "1.19e+09 L⊙",
+    "paper_url": "https://ui.adsabs.harvard.edu/abs/2018ApJ...855...43M/abstract",
+    "plot_url": "assets/medina2018_density_profile.png",
+    "code_url": "assets/medina2018_density_model.py"
   }
 ]

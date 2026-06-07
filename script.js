@@ -16,19 +16,319 @@ async function init() {
 }
 
 // Router
-function router() {
-    const hash = window.location.hash || '#/';
+// Density Calculation Functions
+const ModelPhysics = {
+    // Normalization at the Sun (R=8.275 typically)
+    // All models return L_sun/pc^3
     
-    if (hash === '#/') {
-        renderHome();
-    } else if (hash.startsWith('#/model/')) {
-        const id = hash.replace('#/model/', '');
-        renderDetail(id);
-    } else if (hash.startsWith('#/code/')) {
-        const id = hash.replace('#/code/', '');
-        renderCodeView(id);
+    // Constant core for all power laws
+    applyCore: (r, coreRadius, densityFunc) => {
+        if (r < coreRadius) return densityFunc(coreRadius);
+        return densityFunc(r);
+    },
+
+    staf256: (r) => {
+        // Horta 2025: Triaxial Plummer
+        const a = 3.48;
+        const rho_0 = 1.89e+06 / (1000**3); // pc^3
+        return rho_0 * Math.pow(1 + (r / a)**2, -2.5);
+    },
+
+    han2022: (r) => {
+        // Han 2022: Doubly Broken Power Law
+        const a1=1.70, a2=3.09, a3=4.58;
+        const rb1=11.85, rb2=28.33;
+        const R_sun=8.122;
+        const core=1.0;
+        const getRaw = (rad) => {
+            if (rad < rb1) return Math.pow(rad, -a1);
+            if (rad < rb2) return Math.pow(rb1, a2-a1) * Math.pow(rad, -a2);
+            return Math.pow(rb1, a2-a1) * Math.pow(rb2, a3-a2) * Math.pow(rad, -a3);
+        };
+        const rho_norm = (1.7e-5) / getRaw(R_sun);
+        return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
+    },
+
+    amarante2024: (r) => {
+        const alpha_in = 2.9, alpha_out = 4.5, r_br = 19.1, r_core = 1.0;
+        const R_sun = 8.275;
+        const getRaw = (rad) => {
+            if (rad < r_br) return Math.pow(rad, -alpha_in);
+            return Math.pow(r_br, alpha_out - alpha_in) * Math.pow(rad, -alpha_out);
+        };
+        const rho_norm = (1.7e-5) / getRaw(R_sun);
+        return ModelPhysics.applyCore(r, r_core, (rad) => rho_norm * getRaw(rad));
+    },
+
+    chen2023: (r) => {
+        const s1 = 2.83, s2 = 4.49, r0 = 27.45, r_core = 1.0;
+        const R_sun = 8.275;
+        const getRaw = (rad) => {
+            if (rad < r0) return Math.pow(rad, -s1);
+            return Math.pow(r0, s2 - s1) * Math.pow(rad, -s2);
+        };
+        const rho_norm = (1.7e-5) / getRaw(R_sun);
+        return ModelPhysics.applyCore(r, r_core, (rad) => rho_norm * getRaw(rad));
+    },
+
+    yang2022: (r) => {
+        const a1=1.5, a2=2.8, a3=6.1, rb1=10.0, rb2=25.0, r_core=1.0;
+        const R_sun=8.275;
+        const getRaw = (rad) => {
+            if (rad < rb1) return Math.pow(rad, -a1);
+            if (rad < rb2) return Math.pow(rb1, a2-a1) * Math.pow(rad, -a2);
+            return Math.pow(rb1, a2-a1) * Math.pow(rb2, a3-a2) * Math.pow(rad, -a3);
+        };
+        const rho_norm = (1.7e-5) / getRaw(R_sun);
+        return ModelPhysics.applyCore(r, r_core, (rad) => rho_norm * getRaw(rad));
+    },
+
+    hernitschek2018: (r) => {
+        const ai=2.4, ao=4.5, rb=26.0, core=1.0;
+        const R_sun=8.275;
+        const getRaw = (rad) => {
+            if (rad < rb) return Math.pow(rad, -ai);
+            return Math.pow(rb, ao-ai) * Math.pow(rad, -ao);
+        };
+        const rho_norm = (1.7e-5) / getRaw(R_sun);
+        return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
+    },
+
+    horta2021: (r) => {
+        const a=3.5, R_sun=8.275;
+        const rho_0 = 1.90e+06 / (1000**3);
+        return rho_0 * Math.pow(1 + (r / a)**2, -2.5);
+    },
+
+    kurbatov2024: (r) => {
+        const a=3.4, core=1.0, R_sun=8.275;
+        const rho_norm = (1.7e-5) / Math.pow(R_sun, -a);
+        return ModelPhysics.applyCore(r, core, (rad) => rho_norm * Math.pow(rad, -a));
+    },
+
+    libinney2022: (r) => {
+        const ai=1.0, ao=4.5, rb=20.0, core=1.0, R_sun=8.275;
+        const getRaw = (rad) => {
+            if (rad < rb) return Math.pow(rad, -ai);
+            return Math.pow(rb, ao-ai) * Math.pow(rad, -ao);
+        };
+        const rho_norm = (1.7e-5) / getRaw(R_sun);
+        return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
+    },
+
+    lopezcorredoira2024: (r) => {
+        const a=4.6, core=1.0, R_sun=8.275;
+        const rho_norm = (1.7e-5) / Math.pow(R_sun, -a);
+        return ModelPhysics.applyCore(r, core, (rad) => rho_norm * Math.pow(rad, -a));
+    },
+
+    lucey2026: (r) => {
+        const ai=2.1, ao=3.8, rb=18.0, core=1.0, R_sun=8.275;
+        const getRaw = (rad) => {
+            if (rad < rb) return Math.pow(rad, -ai);
+            return Math.pow(rb, ao-ai) * Math.pow(rad, -ao);
+        };
+        const rho_norm = (1.7e-5) / getRaw(R_sun);
+        return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
+    },
+
+    mackereth2020: (r) => {
+        const a=3.49, r_cut=25.0, core=1.0, R_sun=8.275;
+        const getRaw = (rad) => Math.pow(rad, -a) * Math.exp(-rad / r_cut);
+        const rho_norm = (1.7e-5) / getRaw(R_sun);
+        return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
+    },
+
+    medina2024: (r) => {
+        const ai=2.05, ao=4.57, rb=24.3, core=1.0, R_sun=8.275;
+        const getRaw = (rad) => {
+            if (rad < rb) return Math.pow(rad, -ai);
+            return Math.pow(rb, ao-ai) * Math.pow(rad, -ao);
+        };
+        const rho_norm = (1.7e-5) / getRaw(R_sun);
+        return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
+    },
+
+    medina2018: (r) => {
+        const a=4.17, core=1.0, R_sun=8.275;
+        const rho_norm = (1.7e-5) / Math.pow(R_sun, -a);
+        return ModelPhysics.applyCore(r, core, (rad) => rho_norm * Math.pow(rad, -a));
+    },
+
+    nibauer2025: (r) => {
+        const ai=1.0, ao=3.5, rb=20.0, core=1.0, R_sun=8.275;
+        const getRaw = (rad) => {
+            if (rad < rb) return Math.pow(rad, -ai);
+            return Math.pow(rb, ao-ai) * Math.pow(rad, -ao);
+        };
+        const rho_norm = (1.7e-5) / getRaw(R_sun);
+        return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
+    },
+
+    stringer2021: (r) => {
+        const ai=2.5, ao=4.25, rb=20.0, core=1.0, R_sun=8.275;
+        const getRaw = (rad) => {
+            if (rad < rb) return Math.pow(rad, -ai);
+            return Math.pow(rb, ao-ai) * Math.pow(rad, -ao);
+        };
+        const rho_norm = (1.7e-5) / getRaw(R_sun);
+        return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
+    },
+
+    suzuki2026: (r) => {
+        const ai=3.3, ao=4.8, rb=17.4, core=1.0, R_sun=8.275;
+        const getRaw = (rad) => {
+            if (rad < rb) return Math.pow(rad, -ai);
+            return Math.pow(rb, ao-ai) * Math.pow(rad, -ao);
+        };
+        const rho_norm = (1.7e-5) / getRaw(R_sun);
+        return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
+    },
+
+    wu2025: (r) => {
+        const a=4.65, core=1.0, R_sun=8.275;
+        const rho_norm = (1.7e-5) / Math.pow(R_sun, -a);
+        return ModelPhysics.applyCore(r, core, (rad) => rho_norm * Math.pow(rad, -a));
+    },
+
+    wu2022: (r) => {
+        const ai=2.5, ao=4.5, rb=20.0, core=1.0, R_sun=8.275;
+        const getRaw = (rad) => {
+            if (rad < rb) return Math.pow(rad, -ai);
+            return Math.pow(rb, ao-ai) * Math.pow(rad, -ao);
+        };
+        const rho_norm = (1.7e-5) / getRaw(R_sun);
+        return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
+    },
+
+    rix2022: (r) => {
+        const a=4.0, core=1.0, R_sun=8.275;
+        const rho_norm = (1.7e-5) / Math.pow(R_sun, -a);
+        return ModelPhysics.applyCore(r, core, (rad) => rho_norm * Math.pow(rad, -a));
+    },
+
+    cavieres2025: (r) => {
+        const a1=2.2, a2=3.4, a3=5.0, rb1=12.0, rb2=28.0, core=1.0, R_sun=8.275;
+        const getRaw = (rad) => {
+            if (rad < rb1) return Math.pow(rad, -a1);
+            if (rad < rb2) return Math.pow(rb1, a2-a1) * Math.pow(rad, -a2);
+            return Math.pow(rb1, a2-a1) * Math.pow(rb2, a3-a2) * Math.pow(rad, -a3);
+        };
+        const rho_norm = (1.7e-5) / getRaw(R_sun);
+        return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
+    },
+
+    feng2024: (r) => {
+        const a=4.5, core=1.0, R_sun=8.275;
+        const rho_norm = (1.7e-5) / Math.pow(R_sun, -a);
+        return ModelPhysics.applyCore(r, core, (rad) => rho_norm * Math.pow(rad, -a));
+    },
+
+    fukushima2025: (r) => {
+        const ai=3.90, ao=9.1, rb=184.0, core=1.0, R_sun=8.275;
+        const getRaw = (rad) => {
+            if (rad < rb) return Math.pow(rad, -ai);
+            return Math.pow(rb, ao-ai) * Math.pow(rad, -ao);
+        };
+        const rho_norm = (1.7e-5) / getRaw(R_sun);
+        return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
+    },
+
+    yi2023: (r) => {
+        const ai=2.44, ao=4.41, rb=26.5, core=1.0, R_sun=8.275;
+        const getRaw = (rad) => {
+            if (rad < rb) return Math.pow(rad, -ai);
+            return Math.pow(rb, ao-ai) * Math.pow(rad, -ao);
+        };
+        const rho_norm = (1.7e-5) / getRaw(R_sun);
+        return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
+    },
+
+    tao2026: (r) => {
+        const a=3.5, core=1.0, R_sun=8.275;
+        const rho_norm = (1.7e-5) / Math.pow(R_sun, -a);
+        return ModelPhysics.applyCore(r, core, (rad) => rho_norm * Math.pow(rad, -a));
     }
+};
+
+function renderComparison() {
+    let html = `
+        <div class="comparison-page">
+            <a href="#/" class="back-link">&larr; Back to all models</a>
+            <h2>Interactive Model Comparison</h2>
+            <div class="comparison-controls">
+                <p><strong>Plotting Instructions:</strong> Each model is plotted only within its <em>Valid Data Range</em>. You can toggle models on and off by clicking their names in the legend or the list below. Use the plot tools to zoom or pan. Units are in Galactocentric radius (kpc) vs Luminosity Density ($L_{\\odot}/pc^3$).</p>
+            </div>
+            
+            <div id="comparisonPlot"></div>
+            
+            <div class="plot-legend-custom" id="customLegend">
+                <!-- Custom legend items for easier toggling -->
+            </div>
+        </div>
+    `;
+    app.innerHTML = html;
+    
+    // Generate data for Plotly
+    const traces = modelData.map((model, index) => {
+        const physFunc = ModelPhysics[model.id];
+        if (!physFunc) return null;
+
+        const r_min = Math.max(0.1, model.range.min);
+        const r_max = model.range.max;
+        
+        // Generate points in log space
+        const points = 200;
+        const r_vals = [];
+        const rho_vals = [];
+        
+        const logMin = Math.log10(r_min);
+        const logMax = Math.log10(r_max);
+        
+        for (let i = 0; i <= points; i++) {
+            const r = Math.pow(10, logMin + (i / points) * (logMax - logMin));
+            r_vals.push(r);
+            rho_vals.push(physFunc(r));
+        }
+
+        return {
+            x: r_vals,
+            y: rho_vals,
+            mode: 'lines',
+            name: model.title,
+            line: { width: 3 },
+            visible: index < 5 ? true : 'legendonly' // Only show first 5 by default
+        };
+    }).filter(t => t !== null);
+
+    const layout = {
+        title: 'Stellar Halo Density Profiles Comparison',
+        xaxis: {
+            title: 'Galactocentric Radius [kpc]',
+            type: 'log',
+            range: [-0.5, 3.0],
+            gridcolor: '#eee'
+        },
+        yaxis: {
+            title: 'Luminosity Density [L⊙/pc³]',
+            type: 'log',
+            range: [-10, -1],
+            gridcolor: '#eee'
+        },
+        margin: { t: 50, b: 80, l: 80, r: 50 },
+        hovermode: 'closest',
+        plot_bgcolor: '#fff',
+        paper_bgcolor: '#fff',
+        legend: {
+            orientation: 'h',
+            y: -0.2
+        }
+    };
+
+    Plotly.newPlot('comparisonPlot', traces, layout, {responsive: true});
 }
+
+// ... existing router logic ...
 
 let currentSort = { col: 'title', asc: true };
 let luminosityChartInstance = null;
@@ -41,11 +341,16 @@ function renderHome() {
     };
 
     let html = `
+        <div class="intro-banner">
+            <p>Compare all 20 stellar halo models in our new <a href="#/comparison" class="accent-link">Interactive Comparison Tool</a>.</p>
+        </div>
+
         <div class="model-table-container">
             <table class="model-table">
                 <thead>
                     <tr>
                         <th class="${getSortClass('title')}" onclick="sortData('title')">Authors</th>
+                        <th class="${getSortClass('tracer')}" onclick="sortData('tracer')">Tracer Stars</th>
                         <th class="${getSortClass('model_type')}" onclick="sortData('model_type')">Model Type</th>
                         <th class="${getSortClass('range')}" onclick="sortData('range')">Valid Range</th>
                         <th class="${getSortClass('luminosity')}" onclick="sortData('luminosity')">Luminosity</th>
@@ -58,6 +363,7 @@ function renderHome() {
                             <td>
                                 <a href="${model.paper_url}" target="_blank">${model.title}</a>
                             </td>
+                            <td>${model.tracer || 'N/A'}</td>
                             <td>${model.parameters.Model}</td>
                             <td>${model.range ? `${model.range.min} - ${model.range.max} kpc` : 'N/A'}</td>
                             <td>${model.luminosity}</td>
@@ -176,6 +482,9 @@ function performSort(col, skipRender = false) {
         if (col === 'title') {
             valA = a.title.toLowerCase();
             valB = b.title.toLowerCase();
+        } else if (col === 'tracer') {
+            valA = (a.tracer || '').toLowerCase();
+            valB = (b.tracer || '').toLowerCase();
         } else if (col === 'model_type') {
             valA = a.parameters.Model.toLowerCase();
             valB = b.parameters.Model.toLowerCase();
@@ -235,6 +544,7 @@ function renderDetail(id) {
                         
                         <h3>Model Parameters</h3>
                         <table class="parameters-table">
+                            <tr><th>Tracer Stars</th><td>${model.tracer || 'N/A'}</td></tr>
                             <tr><th>Valid Data Range</th><td>${model.range ? `${model.range.min} - ${model.range.max} kpc` : 'N/A'}</td></tr>
                             ${paramRows}
                         </table>
