@@ -86,7 +86,8 @@ const ModelPhysics = {
             feng2024: 4 * Math.PI * 1.0 * 1.0,
             fukushima2025: 4 * Math.PI * 1.0 * 1.56,
             yi2023: 4 * Math.PI * 1.0 * 0.73,
-            tao2026: 4 * Math.PI * 1.0 * 0.8
+            tao2026: 4 * Math.PI * 1.0 * 0.8,
+            lane2023: 4 * Math.PI * 1.0 * 1.25
         };
         const f = factors[id];
         return (typeof f === 'function') ? f(r) : f;
@@ -118,7 +119,8 @@ const ModelPhysics = {
             feng2024: 1.0,
             fukushima2025: 1.56,
             yi2023: 0.73,
-            tao2026: 0.8
+            tao2026: 0.8,
+            lane2023: 1.25
         };
         const q = qFactors[id];
         return (typeof q === 'function') ? q(r) : q;
@@ -342,6 +344,17 @@ const ModelPhysics = {
         const a=3.5, core=1.0, R_sun=8.275;
         const rho_norm = (1.7e-5) / Math.pow(R_sun, -a);
         return ModelPhysics.applyCore(r, core, (rad) => rho_norm * Math.pow(rad, -a));
+    },
+
+    lane2023: (r) => {
+        const a1=1.5, a2=3.5, a3=5.0, rb1=12.0, rb2=28.0, core=1.0, R_sun=8.275;
+        const getRaw = (rad) => {
+            if (rad < rb1) return Math.pow(rad, -a1);
+            if (rad < rb2) return Math.pow(rb1, a2-a1) * Math.pow(rad, -a2);
+            return Math.pow(rb1, a2-a1) * Math.pow(rb2, a3-a2) * Math.pow(rad, -a3);
+        };
+        const rho_norm = (1.7e-5) / getRaw(R_sun);
+        return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
     }
 };
 
@@ -391,7 +404,7 @@ function renderComparison() {
         const r_plot_min = 0.01;
         const r_plot_max = 150;
         const r_vals = [], l_cum_vals = [];
-        const logMin = Math.log10(r_plot_min), logMax = Math.log10(r_plot_max);
+        const logMin = Math.log10(r_plot_min), logMax = Math.log10(r_max);
         const integrationSteps = 5000;
         const integrationDr = r_plot_max / integrationSteps;
         let runningL = 0;
@@ -714,7 +727,11 @@ function renderFullPlotView(id) {
     const model = modelData.find(m => m.id === id);
     if (!model) { app.innerHTML = `<h2>Model not found</h2><a href="#/">Back to home</a>`; return; }
     app.innerHTML = `<div class="comparison-page"><a href="#/model/${model.id}" class="back-link">&larr; Back to model details</a><h2>Full Analysis Plot: ${model.title}</h2><div id="fullPlotContainer" style="width: 100%; height: 80vh; margin-top: 30px;"></div></div>`;
-    renderUnifiedPlot(model, 'fullPlotContainer');
+    renderFullPlotViewWithRender(model, 'fullPlotContainer');
+}
+
+function renderFullPlotViewWithRender(model, containerId) {
+    renderUnifiedPlot(model, containerId);
 }
 
 window.addEventListener('hashchange', router);
