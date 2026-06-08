@@ -286,10 +286,10 @@ const ModelPhysics = {
     },
 
     wu2022: (r) => {
-        const ai=2.5, ao=4.5, rb=20.0, core=1.0, R_sun=8.275;
+        const a1=4.92, a2=4.25, core=1.0, R_sun=8.275;
+        const r_match = Math.exp(3.0);
         const getRaw = (rad) => {
-            if (rad < rb) return Math.pow(rad, -ai);
-            return Math.pow(rb, ao-ai) * Math.pow(rad, -ao);
+            return Math.pow(r_match, a1 - a2) * Math.pow(rad, -a1) + Math.pow(rad, -a2);
         };
         const rho_norm = (1.7e-5) / getRaw(R_sun);
         return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
@@ -643,11 +643,40 @@ function renderUnifiedPlot(model, containerId = 'unifiedPlotContainer') {
             name: 'Flattening q', xaxis: 'x', yaxis: 'y2', hoverinfo: 'x+y'
         });
 
+        // Specific handling for Wu 2022 components
+        if (model.id === 'wu2022') {
+            const a1 = 4.92, a2 = 4.25, core = 1.0, R_sun = 8.275;
+            const r_match = Math.exp(3.0);
+            const getRawShape = (rad) => Math.pow(r_match, a1 - a2) * Math.pow(rad, -a1) + Math.pow(rad, -a2);
+            const rho_norm = (1.7e-5) / getRawShape(R_sun);
+
+            const comp1_vals = r_vals.map(r => {
+                const val = rho_norm * Math.pow(r_match, a1 - a2) * Math.pow(Math.max(r, core), -a1);
+                return val;
+            });
+            const comp2_vals = r_vals.map(r => {
+                const val = rho_norm * Math.pow(Math.max(r, core), -a2);
+                return val;
+            });
+
+            traces.push({
+                x: r_vals, y: comp1_vals, mode: 'lines',
+                line: { color: 'gray', width: 2, dash: 'dash' },
+                name: 'Component 1 (α=4.92)', xaxis: 'x', yaxis: 'y', hoverinfo: 'x+y'
+            });
+            traces.push({
+                x: r_vals, y: comp2_vals, mode: 'lines',
+                line: { color: 'gray', width: 2, dash: 'dot' },
+                name: 'Component 2 (α=4.25)', xaxis: 'x', yaxis: 'y', hoverinfo: 'x+y'
+            });
+        }
+
         // Trace 2: Density rho (Lower Panel)
         traces.push({
             x: r_vals, y: rho_vals, mode: 'lines',
-            line: { color: '#2c3e50', width: 3 },
-            name: 'Luminosity Density', xaxis: 'x', yaxis: 'y', hoverinfo: 'x+y'
+            line: { color: model.id === 'wu2022' ? 'black' : '#2c3e50', width: 3.5 },
+            name: model.id === 'wu2022' ? 'Total Density (Sum)' : 'Luminosity Density', 
+            xaxis: 'x', yaxis: 'y', hoverinfo: 'x+y'
         });
 
         const shapes = [

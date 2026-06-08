@@ -395,21 +395,21 @@
     "id": "wu2022",
     "title": "Wu et al. (2022)",
     "subtitle": "The effect of the Gaia-Enceladus-Sausage (GES) on the shape of the stellar halo",
-    "summary": "This study characterizes the stellar halo using BHB stars, finding a double power-law profile and highly variable flattening influenced by the GES merger debris. This model version includes a 1 kpc constant density core.",
-    "tracer": "BHB Stars",
+    "summary": "This study characterizes the stellar halo using K giant stars, finding a double power-law profile and highly variable flattening influenced by the GES merger debris. This model version includes a 1 kpc constant density core.",
+    "tracer": "K Giants",
     "parameters": {
-      "Model": "Double Power Law",
-      "Break Radius (r_break)": "20.0 kpc",
+      "Model": "Sum of two Power Laws",
+      "Equidensity Radius": "20.1 kpc",
       "Core Radius (r_core)": "1.0 kpc",
-      "Inner Slope (α_in)": "2.5",
-      "Outer Slope (α_out)": "4.5",
+      "Power-law index (α1)": "4.92",
+      "Power-law index (α2)": "4.25",
       "Flattening (q)": "0.4 (inner) to 0.8 (outer)"
     },
     "range": {
       "min": 5,
       "max": 120
     },
-    "luminosity": "2.34e+08 L⊙",
+    "luminosity": "1.83e+09 L⊙",
     "paper_url": "https://ui.adsabs.harvard.edu/abs/2022AJ....164...41W/abstract",
     "plot_url": "assets/wu2022_density_profile.png",
     "code_url": "assets/wu2022_density_model.py"
