@@ -29,7 +29,7 @@ def calculate_halo_properties():
     # Analytical solution for Plummer: (4/3) * pi * a^3 * rho_0
     L_total = p * q * rho_0 * (4/3) * np.pi * (a_kpc**3)
 
-    print(f"--- Halo Properties (Horta & Schiavon 2025 Model) ---")
+    print(f"--- Halo Properties (Horta & Schiavon 2025 Model: Modelling the density and mass of the Milky Way's proto-galaxy components with APOGEE-Gaia) ---")
     print(f"Central Density (rho_0): {rho_0:.2e} Lsun/kpc^3")
     print(f"Local Density (fixed):   {rho_local_Lsun_pc3:.2e} Lsun/pc^3")
     print(f"Total Halo Luminosity:   {L_total:.2e} Lsun")
@@ -48,7 +48,7 @@ def calculate_halo_properties():
     plt.axhline(rho_local_Lsun_pc3, color='green', linestyle=':', alpha=0.7, label=f'Local Norm ({rho_local_Lsun_pc3:.1e} $L_\\odot/pc^3$)')
 
     # Formatting
-    plt.title('Milky Way Stellar Halo Density Profile\n(Model: Horta & Schiavon 2025)', fontsize=14)
+    plt.title("Stellar Halo Density Profile\n(Horta & Schiavon 2025: Modelling the density and mass of the Milky Way's proto-galaxy components with APOGEE-Gaia)", fontsize=10)
     plt.xlabel('Galactocentric Radius [kpc]', fontsize=12)
     plt.ylabel('Luminosity Density [$L_\\odot/pc^3$]', fontsize=12)
     plt.legend(frameon=True, loc='best')

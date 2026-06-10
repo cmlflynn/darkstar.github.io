@@ -36,14 +36,14 @@ def calculate_mackereth2020_halo():
     result, error = quad(integrand, 0.0, 150.0)
     L_total = 4 * np.pi * p * q * rho_0 * result
 
-    print(f"--- Mackereth & Bovy (2020) APOGEE/Gaia Halo Properties ---")
+    print(f"--- Mackereth & Bovy (2020) - Weighing the stellar constituents of the galactic halo with APOGEE red giant stars ---")
     print(f"Central Norm (rho_0 at 1kpc): {rho_0:.2e} Lsun/kpc^3")
     print(f"Total Halo Luminosity:        {L_total:.2e} Lsun")
     print(f"Power-law index (alpha):      {alpha}")
     print(f"Cut-off Radius (r_cut):       {r_cut} kpc")
     print(f"Core Radius (r_core):         {r_core} kpc")
     print(f"Flattening (p, q):            {p}, {q}")
-    print(f"----------------------------------------------------------")
+    print(f"-------------------------------------------------------------------------------------------------------------")
 
     # Plotting
     r_vals = np.logspace(-0.5, 2.2, 500)
@@ -59,7 +59,7 @@ def calculate_mackereth2020_halo():
     plt.axvline(R_sun, color='black', linestyle=':', alpha=0.5, label='Solar Position')
     plt.axhline(rho_local_Lsun_pc3, color='green', linestyle='-', alpha=0.2, label='Local Normalization')
 
-    plt.title('Milky Way Stellar Halo Density Profile (Mackereth & Bovy 2020)', fontsize=14)
+    plt.title('Stellar Halo Density Profile (Mackereth & Bovy 2020)', fontsize=14)
     plt.xlabel('Radius $r$ [kpc]', fontsize=12)
     plt.ylabel('Luminosity Density [$L_\\odot/pc^3$]', fontsize=12)
     plt.legend(frameon=True)

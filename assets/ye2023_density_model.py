@@ -1,14 +1,14 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-def calculate_stringer2021_halo():
-    # Parameters from Stringer et al. (2021) - ApJ 911, 109
-    # Model: Broken Power Law (RR Lyrae stars)
-    alpha_in = 2.5
-    alpha_out = 4.25 # Typical outer slope found
-    r_break = 20.0
-    r_core = 1.0     # 1 kpc constant density core (project requirement)
-    q = 0.7          # Standard oblate flattening used
+def calculate_ye2023_halo():
+    # Parameters from Ye et al. (2023) - MNRAS 525, 2472
+    # Model: Broken Power Law (LAMOST-Gaia common K giants)
+    alpha_in = 2.44
+    alpha_out = 4.41
+    r_break = 26.5
+    r_core = 1.0   # 1 kpc constant density core (project requirement)
+    q = 0.73       # Constant flattening
     R_sun = 8.275 
 
     # User local norm
@@ -41,22 +41,23 @@ def calculate_stringer2021_halo():
     
     L_total = 4 * np.pi * q * rho_0 * (int0 + int1 + int2)
 
-    print(f"--- Stringer et al. (2021) - Identifying RR Lyrae Variable Stars in Six Years of the Dark Energy Survey ---")
+    print(f"--- Ye et al. (2023) - Discovery of the shell structure via break radii in the outer halo of the Milky Way ---")
     print(f"Central Norm (rho_0 at 1kpc): {rho_0:.2e} Lsun/kpc^3")
     print(f"Total Halo Luminosity:        {L_total:.2e} Lsun")
+    print(f"Break Radius (r_break):       {r_break} kpc")
+    print(f"Core Radius (r_core):         {r_core} kpc")
     print(f"Inner Slope (alpha_in):       {alpha_in}")
     print(f"Outer Slope (alpha_out):      {alpha_out}")
-    print(f"Break Radius (r_break):       {r_break} kpc")
     print(f"Flattening (q):               {q}")
-    print(f"---------------------------------------------------")
+    print(f"---------------------------------------------------------------------------------------------------------")
 
     # Plotting
     r_vals = np.logspace(-0.5, 2.2, 500)
     rho_vals = np.array([rho_0 * profile(r) for r in r_vals])
 
     plt.figure(figsize=(10, 7))
-    plt.axvspan(10, 100, color='lightblue', alpha=0.3, label='Valid Data Range (10-100 kpc)')
-    plt.loglog(r_vals, rho_vals / (1000**3), color='darkgoldenrod', linewidth=2, label='Stringer et al. (2021) BPL Model (1 kpc Core)')
+    plt.axvspan(6, 120, color='lightblue', alpha=0.3, label='Valid Data Range (6-120 kpc)')
+    plt.loglog(r_vals, rho_vals / (1000**3), color='forestgreen', linewidth=2, label='Ye et al. (2023) Model (1 kpc Core)')
     
     # Markers
     plt.axvline(r_break, color='red', linestyle='--', label=f'Break Radius ({r_break} kpc)')
@@ -64,14 +65,14 @@ def calculate_stringer2021_halo():
     plt.axvline(R_sun, color='black', linestyle=':', alpha=0.5, label='Solar Position')
     plt.axhline(rho_local_Lsun_pc3, color='green', linestyle='-', alpha=0.2, label='Local Normalization')
 
-    plt.title('RR Lyrae Stellar Halo Density Profile (Stringer et al. 2021)', fontsize=14)
+    plt.title('Stellar Halo Density Profile (Ye et al. 2023)', fontsize=14)
     plt.xlabel('Radius $r$ [kpc]', fontsize=12)
     plt.ylabel('Luminosity Density [$L_\\odot/pc^3$]', fontsize=12)
     plt.legend(frameon=True)
     plt.grid(True, which="both", ls="-", alpha=0.2)
     
-    plt.savefig('assets/stringer2021_density_profile.png', dpi=300)
-    print("Plot saved to: assets/stringer2021_density_profile.png")
+    plt.savefig('assets/ye2023_density_profile.png', dpi=300)
+    print("Plot saved to: assets/ye2023_density_profile.png")
 
 if __name__ == "__main__":
-    calculate_stringer2021_halo()
+    calculate_ye2023_halo()

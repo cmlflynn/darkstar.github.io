@@ -49,7 +49,7 @@ def calculate_lane2023_halo():
 
     L_total = 4 * np.pi * p * q * rho_0 * (int0 + int1 + int2 + int3)
 
-    print(f"--- Lane et al. (2023) APOGEE GSE Halo Properties ---")
+    print(f"--- Lane et al. (2023) - The stellar mass of the Gaia-Sausage/Enceladus accretion remnant ---")
     print(f"Central Norm (rho_0 at 1kpc): {rho_0:.2e} Lsun/kpc^3")
     print(f"Total Halo Luminosity:        {L_total:.2e} Lsun")
     print(f"Break Radii:                  {rb1} kpc, {rb2} kpc")
@@ -74,7 +74,7 @@ def calculate_lane2023_halo():
     plt.axvline(R_sun, color='black', linestyle=':', alpha=0.5, label='Solar Position')
     plt.axhline(rho_local_Lsun_pc3, color='green', linestyle='-', alpha=0.2, label='Local Normalization')
 
-    plt.title('GSE Stellar Halo Density Profile (Lane et al. 2023)', fontsize=14)
+    plt.title('Stellar Halo Density Profile (Lane et al. 2023)', fontsize=14)
     plt.xlabel('Radius $r$ [kpc]', fontsize=12)
     plt.ylabel('Luminosity Density [$L_\\odot/pc^3$]', fontsize=12)
     plt.legend(frameon=True)

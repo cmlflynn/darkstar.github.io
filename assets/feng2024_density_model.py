@@ -2,11 +2,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def calculate_feng2024_halo():
-    # Parameters from Feng et al. (2024) - ApJ 966, 159
-    # Model: Single Power Law for the Outer Halo (25-90 kpc)
-    alpha = 4.5    # Fit for M-giants (cleaner sample)
+    # Parameters from Feng et al. (2024) - ApJ 966, 159 (NGVS Study)
+    # Model: Single Power Law for the Outer Halo (20-300 kpc)
+    alpha = 4.09   # Fit for RR Lyrae from NGVS
     r_core = 1.0   # 1 kpc constant density core (project requirement)
-    q = 1.0        # Spherical outer halo
+    q = 1.0        # Spherical fit
     R_sun = 8.275 
 
     # User local norm
@@ -32,7 +32,7 @@ def calculate_feng2024_halo():
     
     L_total = 4 * np.pi * q * rho_0 * (int0 + int1)
 
-    print(f"--- Feng et al. (2024) LAMOST Giant Halo Properties ---")
+    print(f"--- Feng et al. (2024) NGVS RR Lyrae Halo Properties ---")
     print(f"Central Norm (rho_0 at 1kpc): {rho_0:.2e} Lsun/kpc^3")
     print(f"Total Halo Luminosity:        {L_total:.2e} Lsun")
     print(f"Power-law index (alpha):      {alpha}")
@@ -41,19 +41,19 @@ def calculate_feng2024_halo():
     print(f"-------------------------------------------------------")
 
     # Plotting
-    r_vals = np.logspace(-0.5, 2.2, 500)
+    r_vals = np.logspace(-0.5, 2.5, 500)
     rho_vals = np.array([rho_0 * profile(r) for r in r_vals])
 
     plt.figure(figsize=(10, 7))
-    plt.axvspan(25, 90, color='lightblue', alpha=0.3, label='Valid Data Range (25-90 kpc)')
-    plt.loglog(r_vals, rho_vals / (1000**3), color='darkgreen', linewidth=2, label='Feng et al. (2024) Model (1 kpc Core)')
+    plt.axvspan(20, 300, color='lightblue', alpha=0.3, label='Valid Data Range (20-300 kpc)')
+    plt.loglog(r_vals, rho_vals / (1000**3), color='forestgreen', linewidth=2, label='Feng et al. (2024) NGVS Model (1 kpc Core)')
     
     # Markers
     plt.axvline(r_core, color='purple', linestyle=':', label=f'Core Radius ({r_core} kpc)')
     plt.axvline(R_sun, color='black', linestyle=':', alpha=0.5, label='Solar Position')
     plt.axhline(rho_local_Lsun_pc3, color='green', linestyle='-', alpha=0.2, label='Local Normalization')
 
-    plt.title('Milky Way Stellar Halo Density Profile (Feng et al. 2024)', fontsize=14)
+    plt.title('NGVS RR Lyrae Stellar Halo Density Profile (Feng et al. 2024)', fontsize=14)
     plt.xlabel('Radius $r$ [kpc]', fontsize=12)
     plt.ylabel('Luminosity Density [$L_\\odot/pc^3$]', fontsize=12)
     plt.legend(frameon=True)

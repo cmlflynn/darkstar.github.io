@@ -34,13 +34,13 @@ def calculate_medina2018_halo():
     
     L_total = 4 * np.pi * q * rho_0 * (int0 + int1)
 
-    print(f"--- Medina et al. (2018) HiTS RRL Halo Properties ---")
+    print(f"--- Medina et al. (2018) - Discovery of Distant RR Lyrae Stars in the Milky Way Using DECam ---")
     print(f"Central Norm (rho_0 at 1kpc): {rho_0:.2e} Lsun/kpc^3")
     print(f"Total Halo Luminosity:        {L_total:.2e} Lsun")
     print(f"Power-law index (alpha):      {alpha}")
     print(f"Core Radius (r_core):         {r_core} kpc")
     print(f"Flattening (q):               {q}")
-    print(f"-------------------------------------------------------")
+    print(f"---------------------------------------------------------------------------------------------")
 
     # Plotting
     r_vals = np.logspace(-0.5, 2.3, 500)
@@ -55,7 +55,7 @@ def calculate_medina2018_halo():
     plt.axvline(R_sun, color='black', linestyle=':', alpha=0.5, label='Solar Position')
     plt.axhline(rho_local_Lsun_pc3, color='green', linestyle='-', alpha=0.2, label='Local Normalization')
 
-    plt.title('Milky Way Stellar Halo Density Profile (Medina et al. 2018)', fontsize=14)
+    plt.title('Stellar Halo Density Profile (Medina et al. 2018)', fontsize=14)
     plt.xlabel('Radius $r$ [kpc]', fontsize=12)
     plt.ylabel('Luminosity Density [$L_\\odot/pc^3$]', fontsize=12)
     plt.legend(frameon=True)

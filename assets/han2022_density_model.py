@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 def calculate_han2022_halo():
     # Parameters from Han et al. (2022) - AJ 164:249
     # Fiducial GSE model
-    a1, a2, a3 = 1.70, 3.09, 4.58
-    rb1, rb2 = 11.85, 28.33
+    a1, a2, a3 = 1.7, 3.1, 4.6
+    rb1, rb2 = 12.0, 28.0
     r_core = 1.0  # 1 kpc constant density core
     p, q = 0.81, 0.73
     R_sun = 8.122  # Solar position used in the paper
@@ -58,7 +58,7 @@ def calculate_han2022_halo():
     rho_vals = np.array([rho_0 * profile(r) for r in r_vals])
 
     plt.figure(figsize=(10, 7))
-    plt.axvspan(5, 50, color='lightblue', alpha=0.3, label='Valid Data Range (5-50 kpc)')
+    plt.axvspan(6, 60, color='lightblue', alpha=0.3, label='Valid Data Range (6-60 kpc)')
     plt.loglog(r_vals, rho_vals / (1000**3), color='darkred', linewidth=2, label='Han et al. (2022) GSE Model (1 kpc Core)')
     
     # Markers

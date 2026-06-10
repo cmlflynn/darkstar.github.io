@@ -56,7 +56,7 @@ def calculate_wu2022_halo():
     result, error = quad(integrand, 0.0, 150.0)
     L_total = 4 * np.pi * result
 
-    print(f"--- Wu et al. (2022) K Giant Halo Properties ---")
+    print(f"--- Wu et al. (2022) - Influence of the Gaia-Sausage-Enceladus on the Density Shape of the Galactic Stellar Halo ---")
     print(f"Model:                Sum of two Power Laws")
     print(f"Total Halo Luminosity: {L_total:.2e} Lsun")
     print(f"Alpha 1 (Inner-ish):   {a1}")
@@ -64,33 +64,33 @@ def calculate_wu2022_halo():
     print(f"Match Radius:          {r_match:.2f} kpc")
     print(f"Core Radius:           {r_core} kpc")
     print(f"Flattening (q):        0.4 (inner) to 0.8 (outer)")
-    print(f"--------------------------------------------")
+    print(f"-------------------------------------------------------------------------------------------------------------------")
 
     # Plotting
     r_vals = np.logspace(-0.5, 2.2, 500)
     rho_vals = np.array([density_kpc3(r) for r in r_vals])
-    
+
     # Components for plotting
     term1_vals = np.array([rho_0_unit * (r_match**(a1 - a2)) * (max(r, r_core)**-a1) for r in r_vals])
     term2_vals = np.array([rho_0_unit * (max(r, r_core)**-a2) for r in r_vals])
 
     plt.figure(figsize=(10, 7))
     plt.axvspan(5, 120, color='lightblue', alpha=0.3, label='Valid Data Range (5-120 kpc)')
-    
+
     # Plot components
     plt.loglog(r_vals, term1_vals / (1000**3), color='gray', linestyle='--', alpha=0.6, label=f'Component 1 (alpha={a1})')
     plt.loglog(r_vals, term2_vals / (1000**3), color='gray', linestyle=':', alpha=0.6, label=f'Component 2 (alpha={a2})')
-    
+
     # Plot sum
     plt.loglog(r_vals, rho_vals / (1000**3), color='black', linewidth=2.5, label='Wu et al. (2022) Total (Sum-of-PL)')
-    
+
     # Markers
     plt.axvline(r_match, color='red', linestyle='--', label=f'Equidensity Radius ({r_match:.1f} kpc)')
     plt.axvline(r_core, color='purple', linestyle=':', label=f'Core Radius ({r_core} kpc)')
-    plt.axvline(R_sun, color='blue', linestyle='-.', alpha=0.4, label='Solar Position')
+    plt.axvline(R_sun, color='black', linestyle=':', alpha=0.5, label='Solar Position')
     plt.axhline(rho_local_Lsun_pc3, color='green', linestyle='-', alpha=0.2, label='Local Normalization')
 
-    plt.title('K-Giant Stellar Halo Density Profile (Wu et al. 2022)', fontsize=14)
+    plt.title('Stellar Halo Density Profile (Wu et al. 2022)', fontsize=14)
     plt.xlabel('Radius $r$ [kpc]', fontsize=12)
     plt.ylabel('Luminosity Density [$L_\\odot/pc^3$]', fontsize=12)
     plt.legend(frameon=True)

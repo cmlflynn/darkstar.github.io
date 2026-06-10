@@ -62,7 +62,7 @@ def calculate_chen2023_halo():
 
     plt.figure(figsize=(10, 7))
     plt.axvspan(5, 100, color='lightblue', alpha=0.3, label='Valid Data Range (5-100 kpc)')
-    plt.loglog(r_vals, rho_vals / (1000**3), color='purple', linewidth=2, label='Chen et al. (2023) BPL Model (1 kpc Core)')
+    plt.loglog(r_vals, rho_vals / (1000**3), color='purple', linewidth=2, label='4-parameter BPL model (1 kpc Core)')
     
     # Markers
     plt.axvline(r0, color='red', linestyle='--', label=f'Break Radius ({r0} kpc)')

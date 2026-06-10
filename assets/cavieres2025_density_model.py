@@ -34,6 +34,8 @@ def calculate_cavieres2025_halo():
     rho_0 = rho_local_Lsun_kpc3 / norm_at_sun
 
     # Analytical Integration for Luminosity
+    # L = 4 * pi * p * q * Integral[ rho(r) * r^2 dr ]
+    
     # Part 0: 0 to r_core
     int0 = (r_core**-a1) * (r_core**3 / 3.0)
     # Part 1: r_core to rb1
@@ -47,7 +49,7 @@ def calculate_cavieres2025_halo():
 
     L_total = 4 * np.pi * p * q * rho_0 * (int0 + int1 + int2 + int3)
 
-    print(f"--- Cavieres et al. (2025) GSE Halo Properties ---")
+    print(f"--- Cavieres et al. (2025) - The Distant Milky Way Halo from the Southern Hemisphere ---")
     print(f"Central Norm (rho_0 at 1kpc): {rho_0:.2e} Lsun/kpc^3")
     print(f"Total Halo Luminosity:        {L_total:.2e} Lsun")
     print(f"Break Radii:                  {rb1} kpc, {rb2} kpc")
@@ -62,7 +64,7 @@ def calculate_cavieres2025_halo():
     rho_vals = np.array([rho_0 * profile(r) for r in r_vals])
 
     plt.figure(figsize=(10, 7))
-    plt.axvspan(6, 60, color='lightblue', alpha=0.3, label='Valid Data Range (6-60 kpc)')
+    plt.axvspan(60, 100, color='lightblue', alpha=0.3, label='Valid Data Range (60-100 kpc)')
     plt.loglog(r_vals, rho_vals / (1000**3), color='darkslateblue', linewidth=2, label='Cavieres et al. (2025) Model (1 kpc Core)')
     
     # Markers
@@ -72,7 +74,7 @@ def calculate_cavieres2025_halo():
     plt.axvline(R_sun, color='black', linestyle=':', alpha=0.5, label='Solar Position')
     plt.axhline(rho_local_Lsun_pc3, color='green', linestyle='-', alpha=0.2, label='Local Normalization')
 
-    plt.title('GSE Stellar Halo Density Profile (Cavieres et al. 2025)', fontsize=14)
+    plt.title('Stellar Halo Density Profile (Cavieres et al. 2025)', fontsize=14)
     plt.xlabel('Flattened Radius [kpc]', fontsize=12)
     plt.ylabel('Luminosity Density [$L_\\odot/pc^3$]', fontsize=12)
     plt.legend(frameon=True)
