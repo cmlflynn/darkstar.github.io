@@ -57,7 +57,7 @@ def calculate_wu2022_halo():
     L_total = 4 * np.pi * result
 
     print(f"--- Wu et al. (2022) - Influence of the Gaia-Sausage-Enceladus on the Density Shape of the Galactic Stellar Halo ---")
-    print(f"Model:                Sum of two Power Laws")
+    print(f"Model:                Sum of two simple power-laws")
     print(f"Total Halo Luminosity: {L_total:.2e} Lsun")
     print(f"Alpha 1 (Inner-ish):   {a1}")
     print(f"Alpha 2 (Outer-ish):   {a2}")

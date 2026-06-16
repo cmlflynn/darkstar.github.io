@@ -434,7 +434,7 @@
     "summary": "This study characterizes the stellar halo using K giant stars, finding a double power-law profile and highly variable flattening influenced by the GES merger debris. This model version includes a 1 kpc constant density core.",
     "tracer": "K Giants",
     "parameters": {
-      "Model": "Sum of two Power Laws",
+      "Model": "Sum of two simple power-laws",
       "Equidensity Radius": "20.1 kpc",
       "Core Radius (r_core)": "1.0 kpc",
       "Power-law index (α1)": "4.92",
@@ -545,11 +545,11 @@
     "code_url": "assets/fukushima2025_density_model.py"
   },
   {
-    "id": "ye2023",
-    "title": "Ye et al. (2023)",
+    "id": "yi2023",
+    "title": "Yi et al. (2023)",
     "subtitle": "Discovery of the shell structure via break radii in the outer halo of the Milky Way",
-    "summary": "This study uses a sample of K giants common to LAMOST and Gaia to map the stellar halo density profile out to 120 kpc. This model version follows their broken power-law fit and includes a 1 kpc constant density core.",
-    "tracer": "K Giants",
+    "summary": "This study uses Gaia DR3 RR Lyrae stars to map the stellar halo density profile out to 120 kpc, identifying shell structures via density break radii. This model version follows their broken power-law fit and includes a 1 kpc constant density core.",
+    "tracer": "RR Lyrae",
     "parameters": {
       "Model": "Broken Power Law",
       "Break Radius (r_break)": "26.5 kpc",
@@ -564,9 +564,9 @@
     },
     "luminosity": "3.84e+08 L⊙",
     "paper_url": "https://ui.adsabs.harvard.edu/abs/2023MNRAS.525.2472Y/abstract",
-    "plot_url": "assets/ye2023_density_profile.png",
-    "eqn_url": "assets/ye2023_eqn.png",
-    "code_url": "assets/ye2023_density_model.py"
+    "plot_url": "assets/yi2023_density_profile.png",
+    "eqn_url": "assets/yi2023_eqn.png",
+    "code_url": "assets/yi2023_density_model.py"
   },
   {
     "id": "tao2026",

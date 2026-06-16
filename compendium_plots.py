@@ -1,0 +1,278 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.ticker import LogFormatterExponent
+import json
+
+# =============================================================================
+# MILKY WAY STELLAR HALO COMPENDIUM - STANDALONE VISUALIZATION SUITE
+# This script replicates the interactive visualizations from the HALOLF project.
+# =============================================================================
+
+# Embedded Data (Latest parameters as of June 2026)
+MODELS_JSON = """
+[
+  {"id": "staf256", "title": "Horta & Schiavon (2025)", "luminosity": "1.81e+08 L⊙", "range": {"min": 0, "max": 12}},
+  {"id": "han2022", "title": "Han et al. (2022)", "luminosity": "2.40e+08 L⊙", "range": {"min": 6, "max": 60}},
+  {"id": "amarante2024", "title": "Amarante et al. (2024)", "luminosity": "3.61e+08 L⊙", "range": {"min": 5, "max": 120}},
+  {"id": "chen2023", "title": "Chen et al. (2023)", "luminosity": "3.68e+08 L⊙", "range": {"min": 5, "max": 100}},
+  {"id": "yang2022", "title": "Yang et al. (2022)", "luminosity": "2.07e+08 L⊙", "range": {"min": 5, "max": 50}},
+  {"id": "hernitschek2018", "title": "Hernitschek et al. (2018)", "luminosity": "2.24e+09 L⊙", "range": {"min": 20, "max": 131}},
+  {"id": "horta2021", "title": "Horta et al. (2021)", "luminosity": "3.32e+08 L⊙", "range": {"min": 0, "max": 10}},
+  {"id": "kurbatov2024", "title": "Kurbatov et al. (2024)", "luminosity": "3.99e+08 L⊙", "range": {"min": 1, "max": 18}},
+  {"id": "libinney2022", "title": "Li & Binney (2022)", "luminosity": "5.36e+08 L⊙", "range": {"min": 0, "max": 100}},
+  {"id": "lopezcorredoira2024", "title": "López-Corredoira et al. (2024)", "luminosity": "3.41e+09 L⊙", "range": {"min": 25, "max": 90}},
+  {"id": "lane2023", "title": "Lane et al. (2023)", "luminosity": "4.43e+08 L⊙", "range": {"min": 5, "max": 50}},
+  {"id": "lucey2026", "title": "Lucey et al. (2026)", "luminosity": "1.68e+09 L⊙", "range": {"min": 0.2, "max": 120}},
+  {"id": "mackereth2020", "title": "Mackereth & Bovy (2020)", "luminosity": "3.31e+08 L⊙", "range": {"min": 5, "max": 30}},
+  {"id": "medina2024", "title": "Medina et al. (2024)", "luminosity": "3.90e+08 L⊙", "range": {"min": 5, "max": 200}},
+  {"id": "nibauer2025", "title": "Nibauer et al. (2025)", "luminosity": "9.28e+08 L⊙", "range": {"min": 5, "max": 30}},
+  {"id": "stringer2021", "title": "Stringer et al. (2021)", "luminosity": "3.20e+08 L⊙", "range": {"min": 10, "max": 100}},
+  {"id": "suzuki2026", "title": "Suzuki et al. (2026)", "luminosity": "3.97e+08 L⊙", "range": {"min": 5, "max": 100}},
+  {"id": "wu2025", "title": "Wu et al. (2025)", "luminosity": "1.34e+09 L⊙", "range": {"min": 5, "max": 5}},
+  {"id": "wu2022", "title": "Wu et al. (2022)", "luminosity": "1.83e+09 L⊙", "range": {"min": 5, "max": 120}},
+  {"id": "rix2022", "title": "Rix et al. (2022)", "luminosity": "1.34e+09 L⊙", "range": {"min": 0, "max": 5}},
+  {"id": "cavieres2025", "title": "Cavieres et al. (2025)", "luminosity": "5.79e+08 L⊙", "range": {"min": 20, "max": 100}},
+  {"id": "feng2024", "title": "Feng et al. (2024)", "luminosity": "1.52e+09 L⊙", "range": {"min": 20, "max": 300}},
+  {"id": "fukushima2025", "title": "Fukushima et al. (2025)", "luminosity": "1.82e+09 L⊙", "range": {"min": 36, "max": 575}},
+  {"id": "yi2023", "title": "Yi et al. (2023)", "luminosity": "3.84e+08 L⊙", "range": {"min": 6, "max": 120}},
+  {"id": "tao2026", "title": "Tao et al. (2026)", "luminosity": "6.50e+08 L⊙", "range": {"min": 10, "max": 100}},
+  {"id": "medina2018", "title": "Medina et al. (2018)", "luminosity": "1.19e+09 L⊙", "range": {"min": 10, "max": 200}}
+]
+"""
+
+class ModelPhysics:
+    R_SUN = 8.275
+    RHO_LOCAL_PC3 = 1.7e-5
+    
+    @staticmethod
+    def get_volume_factor(id, r):
+        # 4 * pi * p * q
+        factors = {
+            'staf256': 4 * np.pi * 0.80 * 0.66,
+            'han2022': 4 * np.pi * 0.81 * 0.73,
+            'amarante2024': 4 * np.pi * 1.0 * (0.77 if r < 30 else 0.99),
+            'chen2023': 4 * np.pi * 1.0 * 0.73,
+            'yang2022': 4 * np.pi * 1.0 * (0.5 if r < 5 else (0.8 if r > 30 else 0.5 + 0.3 * (r - 5) / 25)),
+            'hernitschek2018': 4 * np.pi * 1.0 * 0.918,
+            'horta2021': 4 * np.pi * 0.73 * 0.56,
+            'kurbatov2024': 4 * np.pi * 1.0 * 0.5,
+            'libinney2022': 4 * np.pi * 1.0 * 0.65,
+            'lopezcorredoira2024': 4 * np.pi * 1.0 * 1.0,
+            'lucey2026': 4 * np.pi * 1.0 * (1.31 if r < 10 else 0.70),
+            'mackereth2020': 4 * np.pi * 0.73 * 0.56,
+            'medina2024': 4 * np.pi * 1.0 * 0.7,
+            'medina2018': 4 * np.pi * 1.0 * 0.7,
+            'nibauer2025': 4 * np.pi * 0.75 * 0.70,
+            'stringer2021': 4 * np.pi * 1.0 * 0.7,
+            'suzuki2026': 4 * np.pi * 1.0 * 0.7,
+            'wu2025': 4 * np.pi * 1.0 * (0.4 if r < 8 else (0.8 if r > 25 else 0.4 + 0.4 * (r - 8) / 17)),
+            'wu2022': 4 * np.pi * 1.0 * (0.4 if r < 8 else (0.8 if r > 25 else 0.4 + 0.4 * (r - 8) / 17)),
+            'rix2022': 4 * np.pi * 1.0 * 1.0,
+            'cavieres2025': 4 * np.pi * 1.0 * 0.98,
+            'feng2024': 4 * np.pi * 1.0 * 1.0,
+            'fukushima2025': 4 * np.pi * 1.0 * 1.56,
+            'yi2023': 4 * np.pi * 1.0 * 0.73,
+            'tao2026': 4 * np.pi * 1.0 * 0.8,
+            'lane2023': 4 * np.pi * 1.0 * 1.25
+        }
+        return factors.get(id, 4 * np.pi)
+
+    @staticmethod
+    def apply_core(r, core, val):
+        return val if r >= core else ModelPhysics.get_val_at(core, val, r) # simplified
+
+    @staticmethod
+    def get_density(id, r):
+        # Implementation of each model function from script.js
+        def spl(rad, a, core=1.0):
+            r_eff = max(rad, core)
+            return ModelPhysics.RHO_LOCAL_PC3 / (ModelPhysics.R_SUN**-a) * (r_eff**-a)
+
+        def bpl(rad, ai, ao, rb, core=1.0):
+            def raw(r_val):
+                if r_val < rb: return r_val**-ai
+                return (rb**(ao-ai)) * (r_val**-ao)
+            r_eff = max(rad, core)
+            norm = ModelPhysics.RHO_LOCAL_PC3 / raw(ModelPhysics.R_SUN)
+            return norm * raw(r_eff)
+
+        def dbpl(rad, a1, a2, a3, rb1, rb2, core=1.0):
+            def raw(r_val):
+                if r_val < rb1: return r_val**-a1
+                if r_val < rb2: return (rb1**(a2-a1)) * (r_val**-a2)
+                return (rb1**(a2-a1)) * (rb2**(a3-a2)) * (r_val**-a3)
+            r_eff = max(rad, core)
+            norm = ModelPhysics.RHO_LOCAL_PC3 / raw(ModelPhysics.R_SUN)
+            return norm * raw(r_eff)
+
+        if id == 'staf256':
+            a = 3.48; rho_0 = 1.89e+06 / (1000**3)
+            return rho_0 * (1 + (r / a)**2)**-2.5
+        if id == 'han2022': return dbpl(r, 1.7, 3.1, 4.6, 12.0, 28.0)
+        if id == 'amarante2024': return bpl(r, 2.9, 4.5, 19.1)
+        if id == 'chen2023': return bpl(r, 2.83, 4.49, 27.45)
+        if id == 'yang2022': return dbpl(r, 1.5, 2.8, 6.1, 10.0, 25.0)
+        if id == 'hernitschek2018': return spl(r, 4.40)
+        if id == 'horta2021': return spl(r, 3.5)
+        if id == 'kurbatov2024': return spl(r, 3.4)
+        if id == 'libinney2022': return bpl(r, 1.0, 4.5, 20.0)
+        if id == 'lopezcorredoira2024': return spl(r, 4.6)
+        if id == 'lane2023': return dbpl(r, 1.5, 3.5, 5.0, 12.0, 28.0)
+        if id == 'lucey2026': return spl(r, 4.0)
+        if id == 'mackereth2020':
+            a, r_cut = 3.49, 25.0
+            def raw(rd): return (rd**-a) * np.exp(-rd/r_cut)
+            r_eff = max(r, 1.0)
+            return (ModelPhysics.RHO_LOCAL_PC3 / raw(ModelPhysics.R_SUN)) * raw(r_eff)
+        if id == 'medina2024': return bpl(r, 2.05, 4.57, 24.3)
+        if id == 'medina2018': return spl(r, 4.17)
+        if id == 'nibauer2025': return bpl(r, 1.0, 3.5, 20.0)
+        if id == 'stringer2021': return bpl(r, 2.5, 4.25, 20.0)
+        if id == 'suzuki2026': return bpl(r, 3.3, 4.8, 17.4)
+        if id == 'wu2025': return spl(r, 4.65)
+        if id == 'wu2022':
+            a1, a2, rm = 4.92, 4.25, np.exp(3.0)
+            def raw(rd): r_e = max(rd, 1.0); return (rm**(a1-a2)) * (r_e**-a1) + (r_e**-a2)
+            return (ModelPhysics.RHO_LOCAL_PC3 / raw(ModelPhysics.R_SUN)) * raw(r)
+        if id == 'rix2022': return spl(r, 4.0)
+        if id == 'cavieres2025': return bpl(r, 3.13, 7.46, 67.5)
+        if id == 'feng2024': return spl(r, 4.09)
+        if id == 'fukushima2025': return bpl(r, 3.90, 9.1, 184.0)
+        if id == 'yi2023': return bpl(r, 2.44, 4.41, 26.5)
+        if id == 'tao2026': return spl(r, 3.5)
+        return 0
+
+def plot_luminosity_summary(model_data):
+    """Replicates the home page bar chart."""
+    titles = [m['title'] for m in model_data]
+    lums = [float(m['luminosity'].split(' ')[0]) for m in model_data]
+    
+    # Sort by luminosity descending
+    sorted_indices = np.argsort(lums)[::-1]
+    titles = [titles[i] for i in sorted_indices]
+    lums = [lums[i] for i in sorted_indices]
+
+    plt.figure(figsize=(12, 6))
+    bars = plt.bar(titles, lums, color='#2c3e50', alpha=0.8, edgecolor='black', linewidth=0.5)
+    
+    plt.yscale('log')
+    plt.ylabel('Total Stellar Halo Luminosity [$L_\\odot$]', fontsize=12)
+    plt.xticks(rotation=45, ha='right', fontsize=9)
+    plt.title('Compendium of Milky Way Stellar Halo Luminosities', fontsize=14, fontweight='bold', pad=20)
+    plt.grid(axis='y', linestyle='--', alpha=0.3)
+    
+    # Add values on top
+    for bar in bars:
+        height = bar.get_height()
+        plt.text(bar.get_x() + bar.get_width()/2., height * 1.1, f'{height:.1e}', 
+                 ha='center', va='bottom', rotation=90, fontsize=8, color='#555')
+
+    plt.tight_layout()
+    plt.savefig('luminosity_summary.pdf')
+    plt.savefig('luminosity_summary.png', dpi=300)
+    print("Saved: luminosity_summary.pdf/png")
+
+def plot_unified_comparison(model_data):
+    """Replicates the interactive two-panel comparison plot."""
+    r_plot = np.logspace(-1, 2.7, 400) # 0.1 to 500 kpc
+    
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 10), sharex=True, 
+                                   gridspec_kw={'height_ratios': [1, 1], 'hspace': 0.05})
+    
+    # Custom color palette (26 colors)
+    colors = plt.cm.tab20(np.linspace(0, 1, 20)).tolist() + plt.cm.Set3(np.linspace(0, 1, 10)).tolist()
+
+    for idx, model in enumerate(model_data):
+        mid = model['id']
+        m_range = model['range']
+        color = colors[idx % len(colors)]
+        
+        # 1. Calculate Density Curves
+        rho_vals = np.array([ModelPhysics.get_density(mid, r) for r in r_plot])
+        
+        # Split into Valid and Extrapolated
+        mask_valid = (r_plot >= m_range['min']) & (r_plot <= m_range['max'])
+        
+        # Plot Extrapolation (Dashed)
+        ax1.loglog(r_plot, rho_vals, color=color, linestyle='--', linewidth=1, alpha=0.6)
+        
+        # Plot Valid Range (Solid Bold)
+        if np.any(mask_valid):
+            # We plot segments to avoid connecting jumps across gap if range is complex
+            ax1.loglog(r_plot[mask_valid], rho_vals[mask_valid], color=color, 
+                       linestyle='-', linewidth=3.5, label=model['title'])
+
+        # 2. Calculate Cumulative Luminosity (Log-spaced integration)
+        # Integration steps from 10^-4 to 500 kpc
+        log_steps = np.linspace(-4, np.log10(500), 5000)
+        dv = log_steps[1] - log_steps[0]
+        ln10 = np.log(10)
+        
+        running_L = 0
+        l_cum_at_r = []
+        
+        # Precompute densities for integration steps
+        integration_r = 10**log_steps
+        integration_rho = np.array([ModelPhysics.get_density(mid, r) for r in integration_r])
+        
+        # Cumulative integration
+        # dL = rho_kpc3 * 4*pi*p*q * r^2 * dr
+        # dr = r * ln(10) * dv
+        for j in range(len(log_steps)):
+            r = integration_r[j]
+            rho_kpc3 = integration_rho[j] * (1000**3)
+            vol_factor = ModelPhysics.get_volume_factor(mid, r)
+            dL = rho_kpc3 * vol_factor * (r**2) * (r * ln10 * dv)
+            running_L += dL
+            l_cum_at_r.append(running_L)
+            
+        l_cum_interp = np.interp(r_plot, integration_r, l_cum_at_r)
+        ax2.loglog(r_plot, l_cum_interp, color=color, linestyle='-', linewidth=2.5, alpha=0.9)
+
+    # Styling Panel 1 (Density)
+    ax1.set_ylabel('Luminosity Density [$L_\\odot/pc^3$]', fontsize=12)
+    ax1.set_ylim(1e-14, 10)
+    ax1.grid(True, which="both", ls="-", alpha=0.1)
+    ax1.set_title('Interactive Comparison Suite: Density & Enclosed Luminosity', fontsize=14, fontweight='bold')
+    
+    # Legend handling
+    ax1.legend(loc='upper left', bbox_to_anchor=(1.02, 1), fontsize=8, frameon=False, ncol=1)
+    
+    # Styling Panel 2 (Cumulative)
+    ax2.set_xlabel('Galactocentric Radius $R$ [kpc]', fontsize=12)
+    ax2.set_ylabel('Total Enclosed Luminosity [$L_\\odot$]', fontsize=12)
+    ax2.set_ylim(1e3, 1e11)
+    ax2.set_xlim(0.1, 500)
+    ax2.grid(True, which="both", ls="-", alpha=0.1)
+
+    # Formatting axes with E notation (1E-6 format)
+    class EFormatter(LogFormatterExponent):
+        def __call__(self, x, pos=None):
+            if x == 0: return '0'
+            exp = int(np.floor(np.log10(x)))
+            return f"1E{exp:+d}" if exp != 0 else "1E+0"
+
+    ax1.yaxis.set_major_formatter(EFormatter())
+    ax2.yaxis.set_major_formatter(EFormatter())
+
+    # Add physical markers
+    for ax in [ax1, ax2]:
+        ax.axvline(8.275, color='green', linestyle='-.', alpha=0.5, label='Sun ($R_\\odot$)' if ax == ax1 else "")
+        # Box borders
+        for spine in ax.spines.values():
+            spine.set_edgecolor('black')
+            spine.set_linewidth(1.2)
+
+    plt.tight_layout()
+    fig.subplots_adjust(right=0.75) # Make room for legend
+    plt.savefig('unified_comparison.pdf')
+    plt.savefig('unified_comparison.png', dpi=300)
+    print("Saved: unified_comparison.pdf/png")
+
+if __name__ == "__main__":
+    data = json.loads(MODELS_JSON)
+    
+    print("Generating compendium figures...")
+    plot_luminosity_summary(data)
+    plot_unified_comparison(data)
+    print("Done. Check the current directory for PDF and PNG outputs.")

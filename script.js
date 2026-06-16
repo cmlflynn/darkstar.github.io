@@ -76,7 +76,7 @@ const ModelPhysics = {
             cavieres2025: 4 * Math.PI * 0.8 * 0.7,
             feng2024: 4 * Math.PI * 1.0 * 1.0,
             fukushima2025: 4 * Math.PI * 1.0 * 1.56,
-            ye2023: 4 * Math.PI * 1.0 * 0.73,
+            yi2023: 4 * Math.PI * 1.0 * 0.73,
             tao2026: 4 * Math.PI * 1.0 * 0.8,
             lane2023: 4 * Math.PI * 1.0 * 1.25
         };
@@ -109,7 +109,7 @@ const ModelPhysics = {
             cavieres2025: 0.98,
             feng2024: 1.0,
             fukushima2025: 1.56,
-            ye2023: 0.73,
+            yi2023: 0.73,
             tao2026: 0.8,
             lane2023: 1.25
         };
@@ -292,7 +292,7 @@ const ModelPhysics = {
         return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
     },
 
-    ye2023: (r) => {
+    yi2023: (r) => {
         const ai=2.44, ao=4.41, rb=26.5, core=1.0, R_sun=8.275;
         const getRaw = (rad) => rad < rb ? Math.pow(rad, -ai) : Math.pow(rb, ao-ai) * Math.pow(rad, -ao);
         const rho_norm = (1.7e-5) / getRaw(R_sun);
