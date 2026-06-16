@@ -106,7 +106,7 @@ const ModelPhysics = {
             wu2025: (rad) => rad < 8 ? 0.4 : (rad > 25 ? 0.8 : 0.4 + 0.4 * (rad - 8) / 17),
             wu2022: (rad) => rad < 8 ? 0.4 : (rad > 25 ? 0.8 : 0.4 + 0.4 * (rad - 8) / 17),
             rix2022: 1.0,
-            cavieres2025: 0.7,
+            cavieres2025: 0.98,
             feng2024: 1.0,
             fukushima2025: 1.56,
             ye2023: 0.73,
