@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 def calculate_suzuki2026_halo():
     # Parameters from Suzuki et al. (2026) - arXiv:2604.10280
-    # Model: Double Power Law (MSTO stars)
+    # Model: Double broken Power Law (MSTO stars)
     alpha_in = 3.3
     alpha_out = 4.8
     r_break = 17.4
@@ -15,7 +15,7 @@ def calculate_suzuki2026_halo():
     rho_local_Lsun_pc3 = 1.7e-5
     rho_local_Lsun_kpc3 = rho_local_Lsun_pc3 * (1000**3)
 
-    # Double Power Law Profile with Core
+    # Double broken Power Law Profile with Core
     def profile(r):
         if r < r_core:
             return r_core**-alpha_in

@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 def calculate_kurbatov2024_halo():
     # Parameters from Kurbatov et al. (2024) - arXiv:2410.22250
-    # Model: Cored Power Law (Single-component model for the "heart" of the Galaxy)
+    # Model: Single Power Law (Single-component model for the "heart" of the Galaxy)
     alpha = 3.4
     r_core = 1.0   # 1 kpc constant density core (project requirement)
     q = 0.5        # Highly flattened vertical axis ratio

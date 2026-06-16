@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 def calculate_ye2023_halo():
     # Parameters from Ye et al. (2023) - MNRAS 525, 2472
-    # Model: Broken Power Law (LAMOST-Gaia common K giants)
+    # Model: Broken Power Law (Gaia DR3 RR Lyrae)
     alpha_in = 2.44
     alpha_out = 4.41
     r_break = 26.5
@@ -18,11 +18,14 @@ def calculate_ye2023_halo():
     # Broken Power Law Profile with Core
     def profile(r):
         if r < r_core:
-            return r_core**-alpha_in
-        elif r < r_break:
-            return r**-alpha_in
+            r_eff = r_core
         else:
-            return (r_break**(alpha_out - alpha_in)) * (r**-alpha_out)
+            r_eff = r
+            
+        if r_eff < r_break:
+            return r_eff**-alpha_in
+        else:
+            return (r_break**(alpha_out - alpha_in)) * (r_eff**-alpha_out)
 
     # Normalization at the Sun
     norm_at_sun = profile(R_sun)
@@ -31,17 +34,14 @@ def calculate_ye2023_halo():
     # Analytical Integration for Luminosity
     # L = 4 * pi * q * Integral[ rho(r) * r^2 dr ]
     
-    # Part 0: 0 to r_core
-    int0 = (r_core**-alpha_in) * (r_core**3 / 3.0)
-    # Part 1: r_core to r_break
-    int1 = (r_break**(3 - alpha_in) - r_core**(3 - alpha_in)) / (3 - alpha_in)
-    # Part 2: r_break to infinity
-    C = r_break**(alpha_out - alpha_in)
-    int2 = C * (0 - r_break**(3 - alpha_out)) / (3 - alpha_out)
+    def integrand(r):
+        return profile(r) * r**2
     
-    L_total = 4 * np.pi * q * rho_0 * (int0 + int1 + int2)
+    from scipy.integrate import quad
+    res, err = quad(integrand, 0, 500)
+    L_total = 4 * np.pi * q * (rho_0) * res
 
-    print(f"--- Ye et al. (2023) - Discovery of the shell structure via break radii in the outer halo of the Milky Way ---")
+    print(f"--- Ye et al. (2023) Gaia DR3 RR Lyrae Halo Properties ---")
     print(f"Central Norm (rho_0 at 1kpc): {rho_0:.2e} Lsun/kpc^3")
     print(f"Total Halo Luminosity:        {L_total:.2e} Lsun")
     print(f"Break Radius (r_break):       {r_break} kpc")
@@ -49,7 +49,7 @@ def calculate_ye2023_halo():
     print(f"Inner Slope (alpha_in):       {alpha_in}")
     print(f"Outer Slope (alpha_out):      {alpha_out}")
     print(f"Flattening (q):               {q}")
-    print(f"---------------------------------------------------------------------------------------------------------")
+    print(f"----------------------------------------------------------")
 
     # Plotting
     r_vals = np.logspace(-0.5, 2.2, 500)
@@ -57,7 +57,7 @@ def calculate_ye2023_halo():
 
     plt.figure(figsize=(10, 7))
     plt.axvspan(6, 120, color='lightblue', alpha=0.3, label='Valid Data Range (6-120 kpc)')
-    plt.loglog(r_vals, rho_vals / (1000**3), color='forestgreen', linewidth=2, label='Ye et al. (2023) Model (1 kpc Core)')
+    plt.loglog(r_vals, rho_vals / (1000**3), color='forestgreen', linewidth=2, label='Ye et al. (2023) RR Lyrae Model (1 kpc Core)')
     
     # Markers
     plt.axvline(r_break, color='red', linestyle='--', label=f'Break Radius ({r_break} kpc)')

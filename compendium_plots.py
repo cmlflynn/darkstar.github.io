@@ -34,7 +34,7 @@ MODELS_JSON = """
   {"id": "cavieres2025", "title": "Cavieres et al. (2025)", "luminosity": "5.79e+08 L⊙", "range": {"min": 20, "max": 100}},
   {"id": "feng2024", "title": "Feng et al. (2024)", "luminosity": "1.52e+09 L⊙", "range": {"min": 20, "max": 300}},
   {"id": "fukushima2025", "title": "Fukushima et al. (2025)", "luminosity": "1.82e+09 L⊙", "range": {"min": 36, "max": 575}},
-  {"id": "yi2023", "title": "Yi et al. (2023)", "luminosity": "3.84e+08 L⊙", "range": {"min": 6, "max": 120}},
+  {"id": "ye2023", "title": "Ye et al. (2023)", "luminosity": "3.84e+08 L⊙", "range": {"min": 6, "max": 120}},
   {"id": "tao2026", "title": "Tao et al. (2026)", "luminosity": "6.50e+08 L⊙", "range": {"min": 10, "max": 100}},
   {"id": "medina2018", "title": "Medina et al. (2018)", "luminosity": "1.19e+09 L⊙", "range": {"min": 10, "max": 200}}
 ]
@@ -71,7 +71,7 @@ class ModelPhysics:
             'cavieres2025': 4 * np.pi * 1.0 * 0.98,
             'feng2024': 4 * np.pi * 1.0 * 1.0,
             'fukushima2025': 4 * np.pi * 1.0 * 1.56,
-            'yi2023': 4 * np.pi * 1.0 * 0.73,
+            'ye2023': 4 * np.pi * 1.0 * 0.73,
             'tao2026': 4 * np.pi * 1.0 * 0.8,
             'lane2023': 4 * np.pi * 1.0 * 1.25
         }
@@ -138,7 +138,7 @@ class ModelPhysics:
         if id == 'cavieres2025': return bpl(r, 3.13, 7.46, 67.5)
         if id == 'feng2024': return spl(r, 4.09)
         if id == 'fukushima2025': return bpl(r, 3.90, 9.1, 184.0)
-        if id == 'yi2023': return bpl(r, 2.44, 4.41, 26.5)
+        if id == 'ye2023': return bpl(r, 2.44, 4.41, 26.5)
         if id == 'tao2026': return spl(r, 3.5)
         return 0
 
