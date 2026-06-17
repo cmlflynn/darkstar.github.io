@@ -81,7 +81,7 @@
     "summary": "This paper proposes a new method for measuring the spatial density distribution of the stellar halo using RR Lyrae stars. This model version includes a 1 kpc constant density core to regularize the central density.",
     "tracer": "RR Lyrae",
     "parameters": {
-      "Model": "broken power law",
+      "Model": "Broken Power Law",
       "Break Radius (r0)": "27.45 ± 9.68 kpc",
       "Core Radius (r_core)": "1.0 kpc",
       "Inner Slope (s1)": "2.83 ± 0.25",
@@ -269,7 +269,7 @@
     "summary": "This study uses Gaia DR3 RR Lyrae stars to map the stellar halo, showing that the traditionally observed 'break' in the radial density profile may be explained by a transition in the halo's flattening. This model version follows their broken power-law fit and includes a 1 kpc constant density core.",
     "tracer": "RR Lyrae",
     "parameters": {
-      "Model": "Single Power Law with Variable q",
+      "Model": "Single Power Law With Variable q",
       "Power-law index (α)": "4.0",
       "Core Radius (r_core)": "1.0 kpc",
       "Flattening (q)": "1.31 (R < 10 kpc) to 0.70 (R > 10 kpc)"
@@ -291,7 +291,7 @@
     "summary": "This study uses APOGEE and Gaia data to characterize the stellar halo as a sum of individual populations. Their aggregate model follows a triaxial single power law with an exponential cut-off. This model version includes a 1 kpc constant density core.",
     "tracer": "Red Giants",
     "parameters": {
-      "Model": "Triaxial Power Law with Exponential Cut-off",
+      "Model": "Triaxial Power Law With Exponential Cut-Off",
       "Power-law index (α)": "3.49",
       "Cut-off Radius (r_cut)": "25.0 kpc",
       "Core Radius (r_core)": "1.0 kpc",
@@ -434,7 +434,7 @@
     "summary": "This study characterizes the stellar halo using K giant stars, finding a double power-law profile and highly variable flattening influenced by the GES merger debris. This model version includes a 1 kpc constant density core.",
     "tracer": "K Giants",
     "parameters": {
-      "Model": "Sum of two simple power-laws",
+      "Model": "Sum Of Two Simple Power-Laws",
       "Equidensity Radius": "20.1 kpc",
       "Core Radius (r_core)": "1.0 kpc",
       "Power-law index (α1)": "4.92",
@@ -575,7 +575,7 @@
     "summary": "This systematic census of 169 external galaxies finds that Milky Way-mass systems typically have extended stellar halos (~10% mass fraction), and that the Milky Way itself has an unusually quiescent merger history. This model represents a median external halo for comparison.",
     "tracer": "Integrated Light",
     "parameters": {
-      "Model": "Single power law",
+      "Model": "Single Power Law",
       "Power-law index (α)": "3.5",
       "Core Radius (r_core)": "1.0 kpc",
       "Flattening (q)": "0.8 (Median)"
