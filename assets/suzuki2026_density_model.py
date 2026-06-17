@@ -3,19 +3,19 @@ import matplotlib.pyplot as plt
 
 def calculate_suzuki2026_halo():
     # Parameters from Suzuki et al. (2026) - arXiv:2604.10280
-    # Model: Double broken Power Law (MSTO stars)
+    # Model: Broken Power Law (MSTO stars)
     alpha_in = 3.3
     alpha_out = 4.8
     r_break = 17.4
     r_core = 1.0   # 1 kpc constant density core (project requirement)
-    q = 0.7        # Typical flattening for DPL comparison
+    q = 1.0        # Spherically symmetric model
     R_sun = 8.275 
 
     # User local norm
     rho_local_Lsun_pc3 = 1.7e-5
     rho_local_Lsun_kpc3 = rho_local_Lsun_pc3 * (1000**3)
 
-    # Double broken Power Law Profile with Core
+    # Broken Power Law Profile with Core
     def profile(r):
         if r < r_core:
             return r_core**-alpha_in

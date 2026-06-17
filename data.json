@@ -385,21 +385,21 @@
     "id": "suzuki2026",
     "title": "Suzuki et al. (2026)",
     "subtitle": "The Milky Way Tomography with Subaru Hyper Suprime-Cam. II. Global halo structure",
-    "summary": "This study uses Subaru Hyper Suprime-Cam MSTO stars to map the stellar halo, finding a double power-law profile with a steep outer slope. This model version includes a 1 kpc constant density core.",
+    "summary": "This study uses Subaru Hyper Suprime-Cam MSTO stars to map the stellar halo, finding a broken power-law profile with a steep outer slope. This model version includes a 1 kpc constant density core.",
     "tracer": "MSTO Stars",
     "parameters": {
-      "Model": "Double broken Power Law",
+      "Model": "Broken Power Law",
       "Break Radius (r_break)": "17.4 kpc",
       "Core Radius (r_core)": "1.0 kpc",
       "Inner Slope (α_in)": "3.3",
       "Outer Slope (α_out)": "4.8",
-      "Flattening (q)": "0.7"
+      "Flattening (q)": "1.0"
     },
     "range": {
       "min": 5,
       "max": 100
     },
-    "luminosity": "3.97e+08 L⊙",
+    "luminosity": "5.68e+08 L⊙",
     "paper_url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260410280S/abstract",
     "plot_url": "assets/suzuki2026_density_profile.png",
     "eqn_url": "assets/suzuki2026_eqn.png",
@@ -478,7 +478,7 @@
     "title": "Cavieres et al. (2025)",
     "subtitle": "The Distant Milky Way Halo from the Southern Hemisphere: Characterization of the LMC-induced Dynamical Friction Wake",
     "summary": "This study uses photometric data from the Southern Hemisphere to map the distant stellar halo, identifying a triaxial broken power-law profile and the dynamical wake of the LMC. This model version follows their fit from section 5.2 and includes a 1 kpc constant density core.",
-    "tracer": "BHB stars",
+    "tracer": "nMSTO and RGB stars",
     "parameters": {
       "Model": "Triaxial Broken Power Law",
       "Break Radius (r_break)": "67.5 kpc",
@@ -611,5 +611,122 @@
     "plot_url": "assets/medina2018_density_profile.png",
     "eqn_url": "assets/medina2018_eqn.png",
     "code_url": "assets/medina2018_density_model.py"
+  },
+  {
+    "id": "deason2011",
+    "title": "Deason et al. (2011)",
+    "subtitle": "The Milky Way stellar halo out to 40 kpc: squashed, broken but smooth",
+    "summary": "This study uses SDSS DR8 BHB and BS stars to map the stellar halo out to 40 kpc, identifying a squashed, oblate halo best described by a broken power law or Einasto profile. This model version follows their broken power-law fit and includes a 1 kpc constant density core.",
+    "tracer": "BHB Stars",
+    "parameters": {
+      "Model": "Broken Power Law",
+      "Break Radius (r_break)": "27.0 kpc",
+      "Core Radius (r_core)": "1.0 kpc",
+      "Inner Slope (α_in)": "2.3",
+      "Outer Slope (α_out)": "4.6",
+      "Flattening (q)": "0.59"
+    },
+    "range": {
+      "min": 1,
+      "max": 40
+    },
+    "luminosity": "3.17e+08 L⊙",
+    "paper_url": "https://ui.adsabs.harvard.edu/abs/2011MNRAS.416.2903D/abstract",
+    "plot_url": "assets/deason2011_density_profile.png",
+    "eqn_url": "assets/deason2011_eqn.png",
+    "code_url": "assets/deason2011_density_model.py"
+  },
+  {
+    "id": "thomas2018",
+    "title": "Thomas et al. (2018)",
+    "subtitle": "A-type stars in the Canada–France Imaging Survey I. The stellar halo of the Milky Way traced to large radius by blue horizontal branch stars",
+    "summary": "This study uses deep u-band imaging from CFIS to trace BHB stars out to 220 kpc. It finds a broken power-law profile where the inner profile is steeper than the outer profile. This model version includes a 1 kpc constant density core.",
+    "tracer": "BHB Stars",
+    "parameters": {
+      "Model": "Broken Power Law",
+      "Break Radius (r_break)": "41.4 kpc",
+      "Core Radius (r_core)": "1.0 kpc",
+      "Inner Slope (α_in)": "4.24",
+      "Outer Slope (α_out)": "3.21",
+      "Flattening (q)": "0.86"
+    },
+    "range": {
+      "min": 15,
+      "max": 220
+    },
+    "luminosity": "1.65e+09 L⊙",
+    "paper_url": "https://ui.adsabs.harvard.edu/abs/2018MNRAS.481.5223T/abstract",
+    "plot_url": "assets/thomas2018_density_profile.png",
+    "eqn_url": "assets/thomas2018_eqn.png",
+    "code_url": "assets/thomas2018_density_model.py"
+  },
+  {
+    "id": "li2026",
+    "title": "Li et al. (2026)",
+    "subtitle": "The Milky Way Stellar Halo Is Twisted and Doubly Broken: Insights from DESI DR2 Milky Way Survey Observation",
+    "summary": "This study uses DESI MWS DR2 K giant stars to map the stellar halo out to 100 kpc. It finds a triple power-law profile and a triaxial shape, discovering a second break radius at ~76 kpc. This model version includes a 1 kpc constant density core.",
+    "tracer": "K Giant Stars",
+    "parameters": {
+      "Model": "Triple Power Law",
+      "Break Radii (rb1, rb2)": "16.0, 76.3 kpc",
+      "Core Radius (r_core)": "1.0 kpc",
+      "Slopes (α1, α2, α3)": "1.50, 3.45, 5.20",
+      "Flattening (p, q)": "0.85, 0.74"
+    },
+    "range": {
+      "min": 10,
+      "max": 100
+    },
+    "luminosity": "4.10e+08 L⊙",
+    "paper_url": "https://ui.adsabs.harvard.edu/abs/2026ApJ...999..108L/abstract",
+    "plot_url": "assets/li2026_density_profile.png",
+    "eqn_url": "assets/li2026_eqn.png",
+    "code_url": "assets/li2026_density_model.py"
+  },
+  {
+    "id": "yu2024",
+    "title": "Yu et al. (2024)",
+    "subtitle": "The Power of High-precision Broadband Photometry: Tracing the Milky Way Density Profile with Blue Horizontal Branch Stars in the Dark Energy Survey",
+    "summary": "This study uses high-precision griz photometry from DES DR2 to identify BHB stars and map the stellar halo density profile with a single power law out to 70 kpc. This model version includes a 1 kpc constant density core.",
+    "tracer": "BHB Stars",
+    "parameters": {
+      "Model": "Single Power Law",
+      "Core Radius (r_core)": "1.0 kpc",
+      "Slope (α)": "4.34",
+      "Flattening (q)": "1.0"
+    },
+    "range": {
+      "min": 20,
+      "max": 70
+    },
+    "luminosity": "2.22e+09 L⊙",
+    "paper_url": "https://ui.adsabs.harvard.edu/abs/2024ApJ...975...81Y/abstract",
+    "plot_url": "assets/yu2024_density_profile.png",
+    "eqn_url": "assets/yu2024_eqn.png",
+    "code_url": "assets/yu2024_density_model.py"
+  },
+  {
+    "id": "ablimit2018",
+    "title": "Ablimit et al. (2018)",
+    "subtitle": "The Density Profile and Kinematics of the Milky Way with RR Lyrae Stars",
+    "summary": "This study uses RR Lyrae stars (Type ab) from Catalina, SDSS, and LAMOST to map the stellar halo density and kinematics. It confirms a broken power-law profile with a break at 21 kpc. This model version includes a 1 kpc constant density core.",
+    "tracer": "RR Lyrae",
+    "parameters": {
+      "Model": "Broken Power Law",
+      "Break Radius (r_break)": "21.0 kpc",
+      "Core Radius (r_core)": "1.0 kpc",
+      "Inner Slope (α_in)": "2.8",
+      "Outer Slope (α_out)": "4.8",
+      "Flattening (q)": "1.0"
+    },
+    "range": {
+      "min": 9,
+      "max": 50
+    },
+    "luminosity": "4.40e+08 L⊙",
+    "paper_url": "https://ui.adsabs.harvard.edu/abs/2018ApJ...855..126A/abstract",
+    "plot_url": "assets/ablimit2018_density_profile.png",
+    "eqn_url": "assets/ablimit2018_eqn.png",
+    "code_url": "assets/ablimit2018_density_model.py"
   }
 ]

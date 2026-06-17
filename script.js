@@ -53,7 +53,9 @@ const ModelPhysics = {
             staf256: 4 * Math.PI * 0.80 * 0.66,
             han2022: 4 * Math.PI * 0.81 * 0.73,
             amarante2024: (rad) => rad < 30 ? 4 * Math.PI * 1.0 * 0.77 : 4 * Math.PI * 1.0 * 0.99,
+            ablimit2018: 4 * Math.PI * 1.0 * 1.0,
             chen2023: 4 * Math.PI * 1.0 * 0.73,
+            deason2011: 4 * Math.PI * 1.0 * 0.59,
             yang2022: (rad) => {
                 const q = rad < 5 ? 0.5 : (rad > 30 ? 0.8 : 0.5 + 0.3 * (rad - 5) / 25);
                 return 4 * Math.PI * 1.0 * q;
@@ -69,11 +71,14 @@ const ModelPhysics = {
             medina2018: 4 * Math.PI * 1.0 * 0.7,
             nibauer2025: 4 * Math.PI * 0.75 * 0.70,
             stringer2021: 4 * Math.PI * 1.0 * 0.7,
-            suzuki2026: 4 * Math.PI * 1.0 * 0.7,
+            suzuki2026: 4 * Math.PI * 1.0 * 1.0,
+            thomas2018: 4 * Math.PI * 1.0 * 0.86,
+            li2026: 4 * Math.PI * 0.85 * 0.74,
+            yu2024: 4 * Math.PI * 1.0 * 1.0,
             wu2025: (rad) => rad < 8 ? 4 * Math.PI * 1.0 * 0.4 : (rad > 25 ? 4 * Math.PI * 1.0 * 0.8 : 4 * Math.PI * 1.0 * (0.4 + 0.4 * (rad - 8) / 17)),
             wu2022: (rad) => rad < 8 ? 4 * Math.PI * 1.0 * 0.4 : (rad > 25 ? 4 * Math.PI * 1.0 * 0.8 : 4 * Math.PI * 1.0 * (0.4 + 0.4 * (rad - 8) / 17)),
             rix2022: 4 * Math.PI * 1.0 * 1.0,
-            cavieres2025: 4 * Math.PI * 0.8 * 0.7,
+            cavieres2025: 4 * Math.PI * 1.0 * 0.98,
             feng2024: 4 * Math.PI * 1.0 * 1.0,
             fukushima2025: 4 * Math.PI * 1.0 * 1.56,
             ye2023: 4 * Math.PI * 1.0 * 0.73,
@@ -90,6 +95,7 @@ const ModelPhysics = {
             han2022: 0.73,
             amarante2024: (rad) => rad < 30 ? 0.77 : 0.99,
             chen2023: 0.73,
+            deason2011: 0.59,
             yang2022: (rad) => rad < 5 ? 0.5 : (rad > 30 ? 0.8 : 0.5 + 0.3 * (rad - 5) / 25),
             hernitschek2018: 0.918,
             horta2021: 0.56,
@@ -102,7 +108,11 @@ const ModelPhysics = {
             medina2018: 0.7,
             nibauer2025: 0.7,
             stringer2021: 0.7,
-            suzuki2026: 0.7,
+            suzuki2026: 1.0,
+            thomas2018: 0.86,
+            li2026: 0.74,
+            ablimit2018: 1.0,
+            yu2024: 1.0,
             wu2025: (rad) => rad < 8 ? 0.4 : (rad > 25 ? 0.8 : 0.4 + 0.4 * (rad - 8) / 17),
             wu2022: (rad) => rad < 8 ? 0.4 : (rad > 25 ? 0.8 : 0.4 + 0.4 * (rad - 8) / 17),
             rix2022: 1.0,
@@ -110,6 +120,7 @@ const ModelPhysics = {
             feng2024: 1.0,
             fukushima2025: 1.56,
             ye2023: 0.73,
+            yu2024: 1.0,
             tao2026: 0.8,
             lane2023: 1.25
         };
@@ -126,6 +137,24 @@ const ModelPhysics = {
     staf256: (r) => {
         const a = 3.48, rho_0 = 1.89e+06 / (1000**3);
         return rho_0 * Math.pow(1 + (r / a)**2, -2.5);
+    },
+
+    deason2011: (r) => {
+        const ai=2.3, ao=4.6, rb=27.0, core=1.0, R_sun=8.275;
+        const getRaw = (rad) => rad < rb ? Math.pow(rad, -ai) : Math.pow(rb, ao-ai) * Math.pow(rad, -ao);
+        const rho_norm = (1.7e-5) / getRaw(R_sun);
+        return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
+    },
+
+    li2026: (r) => {
+        const a1=1.50, a2=3.45, a3=5.20, rb1=16.0, rb2=76.3, core=1.0, R_sun=8.275;
+        const getRaw = (rad) => {
+            if (rad < rb1) return Math.pow(rad, -a1);
+            if (rad < rb2) return Math.pow(rb1, a2-a1) * Math.pow(rad, -a2);
+            return Math.pow(rb1, a2-a1) * Math.pow(rb2, a3-a2) * Math.pow(rad, -a3);
+        };
+        const rho_norm = (1.7e-5) / getRaw(R_sun);
+        return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
     },
 
     han2022: (r) => {
@@ -145,6 +174,13 @@ const ModelPhysics = {
             if (rad < rb) return Math.pow(rad, -ai);
             return Math.pow(rb, ao-ai) * Math.pow(rad, -ao);
         };
+        const rho_norm = (1.7e-5) / getRaw(R_sun);
+        return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
+    },
+
+    ablimit2018: (r) => {
+        const ai=2.8, ao=4.8, rb=21.0, core=1.0, R_sun=8.275;
+        const getRaw = (rad) => rad < rb ? Math.pow(rad, -ai) : Math.pow(rb, ao-ai) * Math.pow(rad, -ao);
         const rho_norm = (1.7e-5) / getRaw(R_sun);
         return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
     },
@@ -269,12 +305,8 @@ const ModelPhysics = {
     },
 
     cavieres2025: (r) => {
-        const a1=2.2, a2=3.4, a3=5.0, rb1=12.0, rb2=28.0, core=1.0, R_sun=8.275;
-        const getRaw = (rad) => {
-            if (rad < rb1) return Math.pow(rad, -a1);
-            if (rad < rb2) return Math.pow(rb1, a2-a1) * Math.pow(rad, -a2);
-            return Math.pow(rb1, a2-a1) * Math.pow(rb2, a3-a2) * Math.pow(rad, -a3);
-        };
+        const ai=3.13, ao=7.46, rb=67.5, core=1.0, R_sun=8.275;
+        const getRaw = (rad) => rad < rb ? Math.pow(rad, -ai) : Math.pow(rb, ao-ai) * Math.pow(rad, -ao);
         const rho_norm = (1.7e-5) / getRaw(R_sun);
         return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
     },
@@ -299,10 +331,23 @@ const ModelPhysics = {
         return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
     },
 
+    yu2024: (r) => {
+        const a=4.34, core=1.0, R_sun=8.275;
+        const rho_norm = (1.7e-5) / Math.pow(R_sun, -a);
+        return ModelPhysics.applyCore(r, core, (rad) => rho_norm * Math.pow(rad, -a));
+    },
+
     tao2026: (r) => {
         const a=3.5, core=1.0, R_sun=8.275;
         const rho_norm = (1.7e-5) / Math.pow(R_sun, -a);
         return ModelPhysics.applyCore(r, core, (rad) => rho_norm * Math.pow(rad, -a));
+    },
+
+    thomas2018: (r) => {
+        const ai=4.24, ao=3.21, rb=41.4, core=1.0, R_sun=8.275;
+        const getRaw = (rad) => rad < rb ? Math.pow(rad, -ai) : Math.pow(rb, ao-ai) * Math.pow(rad, -ao);
+        const rho_norm = (1.7e-5) / getRaw(R_sun);
+        return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
     },
 
     lane2023: (r) => {
