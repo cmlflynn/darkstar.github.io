@@ -586,6 +586,11 @@ footer {
     box-shadow: 0 2px 8px rgba(230, 126, 34, 0.4);
 }
 
+.comparison-selector-wrapper .core-selector-container,
+.detail-selector-wrapper .core-selector-container {
+    margin: 0;
+}
+
 /* Sensitivity Table in Detail View */
 .sensitivity-table tr:hover {
     background: rgba(255, 255, 255, 0.05);

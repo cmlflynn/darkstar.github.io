@@ -431,15 +431,30 @@ const ModelPhysics = {
 };
 
 function renderComparison() {
+    const existingPlot = document.getElementById('unifiedComparisonPlot');
+    const visibilityState = {};
+    if (existingPlot && existingPlot.data) {
+        existingPlot.data.forEach(trace => {
+            if (trace.legendgroup) {
+                visibilityState[trace.legendgroup] = trace.visible !== undefined ? trace.visible : true;
+            }
+        });
+    }
+
     let html = `
         <div class="comparison-page">
             <a href="#/" class="back-link">&larr; Back to all models</a>
             <h2>Interactive Model Comparison</h2>
             <div class="comparison-controls">
                 <p><strong>Plotting Instructions:</strong> Upper panel: Bold solid lines indicate the <em>Valid Data Range</em>. Dashed lines represent the model's extrapolation. You can toggle models on and off by clicking their names in the legend. Top panel: Luminosity Density ($L_{\\odot}/pc^3$); Bottom panel: Cumulative Enclosed Luminosity ($L_{\\odot}$).</p>
-                <div class="toggle-controls" style="margin-top: 15px;">
-                    <button class="btn small" onclick="toggleAllModels(true)">Show All Models</button>
-                    <button class="btn secondary small" onclick="toggleAllModels(false)" style="margin-left: 10px;">Hide All Models</button>
+                <div class="toggle-controls" style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+                    <div>
+                        <button class="btn small" onclick="toggleAllModels(true)">Show All Models</button>
+                        <button class="btn secondary small" onclick="toggleAllModels(false)" style="margin-left: 10px;">Hide All Models</button>
+                    </div>
+                    <div class="comparison-selector-wrapper">
+                        ${renderCoreSelectorHTML()}
+                    </div>
                 </div>
             </div>
             <div id="unifiedComparisonPlot" style="height: 850px; margin-top: 20px;"></div>
@@ -467,7 +482,7 @@ function renderComparison() {
             if (!physFunc) return;
 
             const color = colors[index % colors.length];
-            const visible = index < 5 ? true : 'legendonly';
+            const visible = (model.id in visibilityState) ? visibilityState[model.id] : (index < 5 ? true : 'legendonly');
 
             // 1. Full Range Density (Dashed)
             const fr_min = 0.01, fr_max = 500, points = 300;
