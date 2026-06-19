@@ -539,3 +539,54 @@ footer {
         grid-template-columns: 1fr;
     }
 }
+
+/* Core Selector Styles */
+.core-selector-container {
+    margin: 20px auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 15px;
+    background: #f8f9fa;
+    padding: 10px 20px;
+    border-radius: 30px;
+    border: 1px solid var(--border-color);
+}
+
+.core-selector-label {
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.core-selector-options {
+    display: flex;
+    gap: 8px;
+}
+
+.core-btn {
+    background: #e9ecef;
+    color: var(--primary-color);
+    border: 1px solid #ced4da;
+    padding: 6px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+.core-btn:hover {
+    background: #dee2e6;
+}
+
+.core-btn.active {
+    background: var(--accent-color);
+    color: white;
+    border-color: var(--accent-color);
+    box-shadow: 0 2px 8px rgba(230, 126, 34, 0.4);
+}
+
+/* Sensitivity Table in Detail View */
+.sensitivity-table tr:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
