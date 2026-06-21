@@ -672,8 +672,11 @@ function renderHome() {
             <h3>Luminosity Comparison</h3>
             <div class="chart-container"><canvas id="luminosityChart"></canvas></div>
         </div>
-        <div class="home-selector-wrapper" style="text-align: center; margin-top: 30px;">
+        <div class="home-selector-wrapper" style="text-align: center; margin-top: 30px; display: flex; flex-direction: column; align-items: center; gap: 15px;">
             ${renderCoreSelectorHTML()}
+            <div>
+                <a href="compendium_data.csv" download class="btn" id="downloadCsvBtn">Download Results (CSV)</a>
+            </div>
         </div>
     `;
     app.innerHTML = html;

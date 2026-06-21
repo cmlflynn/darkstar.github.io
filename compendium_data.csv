@@ -1,0 +1,32 @@
+Paper,Model Type,Tracer Type,Valid Radii Range [kpc],Luminosity (R_core = 1 kpc) [Lsun],Luminosity (R_core = 3 kpc) [Lsun],Luminosity (R_core = 5 kpc) [Lsun]
+Horta & Schiavon (2025),Triaxial Plummer,APOGEE Giants,0 - 12,1.76e+08,1.76e+08,1.76e+08
+Han et al. (2022),Tilted Triaxial Doubly Broken Power Law,H3 Survey Stars,6 - 60,2.48e+08,2.41e+08,2.33e+08
+Amarante et al. (2024),Broken Power Law,BHB Stars,5 - 120,3.61e+08,2.76e+08,2.33e+08
+Chen et al. (2023),Broken Power Law,RR Lyrae,5 - 100,3.67e+08,2.96e+08,2.59e+08
+Yang et al. (2022),Double Broken Power Law,K Giants,5 - 50,2.07e+08,2.04e+08,1.99e+08
+Hernitschek et al. (2018),Single Power Law,RR Lyrae,20 - 131,2.24e+09,4.82e+08,2.35e+08
+Horta et al. (2021),Triaxial Disc Cut-off (TRI-CUT-DISC),APOGEE Giants,0 - 10,3.19e+08,1.79e+08,1.36e+08
+Kurbatov et al. (2024),Single Power Law,RGB Stars,1 - 18,3.70e+08,2.28e+08,1.80e+08
+Li & Binney (2022),Softened Double Power Law,RR Lyrae,0 - 100,5.34e+08,5.32e+08,5.29e+08
+López-Corredoira et al. (2024),Single Power Law,K/M Giants,25 - 90,3.41e+09,5.88e+08,2.60e+08
+Lane et al. (2023),Prolate Tilted Doubly Broken Power Law,APOGEE Giants,5 - 50,4.43e+08,4.34e+08,4.21e+08
+Lucey et al. (2026),Single Power Law With Variable q,RR Lyrae,0.2 - 120,1.69e+09,5.21e+08,2.87e+08
+Mackereth & Bovy (2020),Triaxial Power Law With Exponential Cut-Off,Red Giants,5 - 30,3.31e+08,1.49e+08,9.53e+07
+Medina et al. (2024),Broken Power Law,RR Lyrae,5 - 200,3.89e+08,3.74e+08,3.59e+08
+Nibauer et al. (2025),Tilted Triaxial Broken Power Law,GD-1 Stream Stars,5 - 30,7.80e+08,7.78e+08,7.76e+08
+Stringer et al. (2021),Broken Power Law,RR Lyrae,10 - 100,3.18e+08,2.82e+08,2.57e+08
+Suzuki et al. (2026),Broken Power Law,MSTO Stars,5 - 100,5.68e+08,3.33e+08,2.47e+08
+Wu et al. (2025),Single Power Law,BHB Stars,5 - 30,1.50e+09,2.54e+08,1.16e+08
+Wu et al. (2022),Sum Of Two Simple Power-Laws,K Giants,5 - 120,1.83e+09,2.69e+08,1.19e+08
+Rix et al. (2022),Single Power Law,Aurora (In Situ),0 - 5,1.33e+09,4.43e+08,2.65e+08
+Cavieres et al. (2025),Triaxial Broken Power Law,nMSTO and RGB stars,20 - 100,5.79e+08,4.12e+08,3.42e+08
+Feng et al. (2024),Single Power Law,RR Lyrae,20 - 300,1.51e+09,4.56e+08,2.61e+08
+Fukushima et al. (2025),Broken Power Law,BHB Stars,36 - 575,1.82e+09,6.69e+08,4.18e+08
+Ye et al. (2023),Broken Power Law,RR Lyrae,6 - 120,3.82e+08,3.48e+08,3.24e+08
+Tao et al. (2026),Single Power Law,Integrated Light,10 - 100,6.25e+08,3.50e+08,2.66e+08
+Medina et al. (2018),Single Power Law,RR Lyrae,10 - 200,1.19e+09,3.29e+08,1.81e+08
+Deason et al. (2011),Broken Power Law,BHB Stars,1 - 40,3.17e+08,2.96e+08,2.80e+08
+Thomas et al. (2018),Broken Power Law,BHB Stars,15 - 220,9.57e+08,2.52e+08,1.38e+08
+Li et al. (2026),Triple Power Law,K Giant Stars,10 - 100,3.92e+08,3.87e+08,3.81e+08
+Yu et al. (2024),Single Power Law,BHB Stars,20 - 70,1.55e+09,3.56e+08,1.79e+08
+Ablimit et al. (2018),Broken Power Law,RR Lyrae,9 - 50,2.86e+08,2.27e+08,1.94e+08
