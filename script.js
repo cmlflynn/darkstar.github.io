@@ -115,6 +115,7 @@ const ModelPhysics = {
             wu2025: (rad) => rad < 8 ? 4 * Math.PI * 1.0 * 0.4 : (rad > 25 ? 4 * Math.PI * 1.0 * 0.8 : 4 * Math.PI * 1.0 * (0.4 + 0.4 * (rad - 8) / 17)),
             wu2022: (rad) => rad < 8 ? 4 * Math.PI * 1.0 * 0.4 : (rad > 25 ? 4 * Math.PI * 1.0 * 0.8 : 4 * Math.PI * 1.0 * (0.4 + 0.4 * (rad - 8) / 17)),
             rix2022: 4 * Math.PI * 1.0 * 1.0,
+            rix2022gau: 4 * Math.PI * 1.0 * 1.0,
             cavieres2025: 4 * Math.PI * 1.0 * 0.98,
             feng2024: 4 * Math.PI * 1.0 * 1.0,
             fukushima2025: 4 * Math.PI * 1.0 * 1.56,
@@ -153,6 +154,7 @@ const ModelPhysics = {
             wu2025: (rad) => rad < 8 ? 0.4 : (rad > 25 ? 0.8 : 0.4 + 0.4 * (rad - 8) / 17),
             wu2022: (rad) => rad < 8 ? 0.4 : (rad > 25 ? 0.8 : 0.4 + 0.4 * (rad - 8) / 17),
             rix2022: 1.0,
+            rix2022gau: 1.0,
             cavieres2025: 0.98,
             feng2024: 1.0,
             fukushima2025: 1.56,
@@ -338,6 +340,12 @@ const ModelPhysics = {
         const a=4.0, core=ModelPhysics.currentCoreRadius, R_sun=8.275;
         const rho_norm = (1.7e-5) / Math.pow(R_sun, -a);
         return ModelPhysics.applyCore(r, core, (rad) => rho_norm * Math.pow(rad, -a));
+    },
+
+    rix2022gau: (r) => {
+        const sigma=2.7, R_sun=8.275;
+        const rho_norm = 1.7e-5;
+        return rho_norm * Math.exp(-(r*r - R_sun*R_sun) / (2 * sigma*sigma));
     },
 
     cavieres2025: (r) => {
@@ -795,6 +803,7 @@ function renderDetail(id) {
                             <h3>Total Halo Luminosity</h3>
                             <p>Local norm: 1.7E-5 L<sub>&odot;</sub>/pc<sup>3</sup> at R=8.275 kpc</p>
                             <div class="luminosity-value">${formatLuminosity(getLuminosityValue(model))}</div>
+                            ${model.id !== 'rix2022gau' ? `
                             <div class="core-sensitivity-container" style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 15px;">
                                 <h4 style="font-size: 0.95rem; margin-bottom: 10px; color: var(--accent-color);">Sensitivity to Core Radius (R<sub>core</sub>)</h4>
                                 <table class="sensitivity-table" style="width:100%; font-size:0.9rem; text-align:left; border-collapse:collapse; color:white;">
@@ -822,6 +831,7 @@ function renderDetail(id) {
                                     </tbody>
                                 </table>
                             </div>
+                            ` : ''}
                         </div>
                         <div class="code-footer">
                             <a href="#/code/${model.id}" class="btn secondary">View Python Source Code</a>
@@ -831,10 +841,12 @@ function renderDetail(id) {
                     <div class="plot-pane">
                         <h3>Interactive Model Analysis</h3>
                         <div class="plot-container" id="unifiedPlotContainer" style="height: 600px;"></div>
-                        <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+                        <div style="margin-top: 20px; display: flex; justify-content: ${model.id !== 'rix2022gau' ? 'space-between' : 'flex-end'}; align-items: center; flex-wrap: wrap; gap: 15px;">
+                            ${model.id !== 'rix2022gau' ? `
                             <div class="detail-selector-wrapper">
                                 ${renderCoreSelectorHTML()}
                             </div>
+                            ` : ''}
                             <div class="code-footer" style="margin-top: 0;">
                                 <a href="#/plot/${model.id}" class="btn secondary">View Full Sized Version</a>
                             </div>
@@ -893,9 +905,11 @@ function renderUnifiedPlot(model, containerId = 'unifiedPlotContainer') {
 
         const shapes = [
             { type: 'rect', xref: 'x', yref: 'paper', x0: model.range.min, x1: model.range.max, y0: 0, y1: 1, fillcolor: 'rgba(52, 152, 219, 0.15)', line: { width: 0 }, layer: 'below' },
-            { type: 'line', xref: 'x', yref: 'paper', x0: 8.275, x1: 8.275, y0: 0, y1: 1, line: { color: 'green', width: 2, dash: 'dashdot' } },
-            { type: 'line', xref: 'x', yref: 'paper', x0: ModelPhysics.currentCoreRadius, x1: ModelPhysics.currentCoreRadius, y0: 0, y1: 0.6, line: { color: '#e67e22', width: 2, dash: 'dot' } }
+            { type: 'line', xref: 'x', yref: 'paper', x0: 8.275, x1: 8.275, y0: 0, y1: 1, line: { color: 'green', width: 2, dash: 'dashdot' } }
         ];
+        if (model.id !== 'rix2022gau') {
+            shapes.push({ type: 'line', xref: 'x', yref: 'paper', x0: ModelPhysics.currentCoreRadius, x1: ModelPhysics.currentCoreRadius, y0: 0, y1: 0.6, line: { color: '#e67e22', width: 2, dash: 'dot' } });
+        }
         Object.entries(model.parameters).forEach(([key, val]) => {
             if (key.toLowerCase().includes('break') || key.toLowerCase().includes('radius')) {
                 const r_break = parseFloat(val);
@@ -914,7 +928,9 @@ function renderUnifiedPlot(model, containerId = 'unifiedPlotContainer') {
 
         traces.push({ x: [null], y: [null], mode: 'lines', line: { color: 'rgba(52, 152, 219, 0.3)', width: 10 }, name: 'Valid Data Range' });
         traces.push({ x: [null], y: [null], mode: 'lines', line: { color: 'green', width: 2, dash: 'dashdot' }, name: 'Sun (R₀=8.275)' });
-        traces.push({ x: [null], y: [null], mode: 'lines', line: { color: '#e67e22', width: 2, dash: 'dot' }, name: `Core Radius (${ModelPhysics.currentCoreRadius} kpc)` });
+        if (model.id !== 'rix2022gau') {
+            traces.push({ x: [null], y: [null], mode: 'lines', line: { color: '#e67e22', width: 2, dash: 'dot' }, name: `Core Radius (${ModelPhysics.currentCoreRadius} kpc)` });
+        }
         traces.push({ x: [null], y: [null], mode: 'lines', line: { color: 'red', width: 1.5, dash: 'dot' }, name: 'Break/Scale Radii' });
         
         Plotly.newPlot(containerId, traces, layout, {responsive: true, displaylogo: false});

@@ -19,6 +19,7 @@ Suzuki et al. (2026),Broken Power Law,MSTO Stars,5 - 100,5.68e+08,3.33e+08,2.47e
 Wu et al. (2025),Single Power Law,BHB Stars,5 - 30,1.50e+09,2.54e+08,1.16e+08
 Wu et al. (2022),Sum Of Two Simple Power-Laws,K Giants,5 - 120,1.83e+09,2.69e+08,1.19e+08
 Rix et al. (2022),Single Power Law,Aurora (In Situ),0 - 5,1.33e+09,4.43e+08,2.65e+08
+Rix et al. (2022) (Gaussian),Gaussian density falloff,Aurora (In Situ),0 - 5,5.77e+08,5.77e+08,5.77e+08
 Cavieres et al. (2025),Triaxial Broken Power Law,nMSTO and RGB stars,20 - 100,5.79e+08,4.12e+08,3.42e+08
 Feng et al. (2024),Single Power Law,RR Lyrae,20 - 300,1.51e+09,4.56e+08,2.61e+08
 Fukushima et al. (2025),Broken Power Law,BHB Stars,36 - 575,1.82e+09,6.69e+08,4.18e+08
