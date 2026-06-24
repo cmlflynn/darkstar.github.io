@@ -454,30 +454,8 @@
   {
     "id": "rix2022",
     "title": "Rix et al. (2022)",
-    "subtitle": "The Poor Old Heart of the Milky Way",
-    "summary": "This study identifies 'Aurora' as the ancient, metal-poor core of the Milky Way, formed before the Galactic disk. It follows a steep, nearly spherical density profile. This model version includes a 1 kpc constant density core.",
-    "tracer": "Aurora (In Situ)",
-    "parameters": {
-      "Model": "Single Power Law",
-      "Power-law index (α)": "4.0",
-      "Core Radius (r_core)": "1.0 kpc",
-      "Flattening (q)": "1.0"
-    },
-    "range": {
-      "min": 0,
-      "max": 5
-    },
-    "luminosity": "1.34e+09 L⊙",
-    "paper_url": "https://ui.adsabs.harvard.edu/abs/2022ApJ...941...45R/abstract",
-    "plot_url": "assets/rix2022_density_profile.png",
-    "eqn_url": "assets/rix2022_eqn.png",
-    "code_url": "assets/rix2022_density_model.py"
-  },
-  {
-    "id": "rix2022gau",
-    "title": "Rix et al. (2022) (Gaussian)",
     "subtitle": "The Poor Old Heart of the Milky Way - Gaussian Falloff",
-    "summary": "This is the alternative model proposed by Rix et al. (2022), describing the ancient, metal-poor core 'Aurora' with a Gaussian density falloff instead of a single power law. It does not require a core radius regularization since the density remains finite at the Galactic center.",
+    "summary": "This study identifies 'Aurora' as the ancient, metal-poor core of the Milky Way, formed before the Galactic disk. This model describes 'Aurora' with a Gaussian density falloff. It does not require a core radius regularization since the density remains finite at the Galactic center.",
     "tracer": "Aurora (In Situ)",
     "parameters": {
       "Model": "Gaussian density falloff",
@@ -490,9 +468,9 @@
     },
     "luminosity": "5.77e+08 L⊙",
     "paper_url": "https://ui.adsabs.harvard.edu/abs/2022ApJ...941...45R/abstract",
-    "plot_url": "assets/rix2022gau_density_profile.png",
-    "eqn_url": "assets/rix2022gau_eqn.png",
-    "code_url": "assets/rix2022gau_density_model.py"
+    "plot_url": "assets/rix2022_density_profile.png",
+    "eqn_url": "assets/rix2022_eqn.png",
+    "code_url": "assets/rix2022_density_model.py"
   },
   {
     "id": "cavieres2025",
