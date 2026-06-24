@@ -81,6 +81,8 @@ document.addEventListener('click', (e) => {
 // Density Calculation and Geometry Data
 const ModelPhysics = {
     currentCoreRadius: 1.0,
+    currentRsun: null,
+    getRsun: (id) => ModelPhysics.currentRsun || (id === 'han2022' ? 8.122 : 8.275),
     RHO_LOCAL_PC3: 1.7e-5,
     R_SUN: 8.275,
 
@@ -176,14 +178,14 @@ const ModelPhysics = {
     },
 
     deason2011: (r) => {
-        const ai=2.3, ao=4.6, rb=27.0, core=ModelPhysics.currentCoreRadius, R_sun=8.275;
+        const ai=2.3, ao=4.6, rb=27.0, core=ModelPhysics.currentCoreRadius, R_sun=ModelPhysics.getRsun('deason2011');
         const getRaw = (rad) => rad < rb ? Math.pow(rad, -ai) : Math.pow(rb, ao-ai) * Math.pow(rad, -ao);
         const rho_norm = (1.7e-5) / getRaw(R_sun);
         return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
     },
 
     li2026: (r) => {
-        const a1=1.50, a2=3.45, a3=5.20, rb1=16.0, rb2=76.3, core=ModelPhysics.currentCoreRadius, R_sun=8.275;
+        const a1=1.50, a2=3.45, a3=5.20, rb1=16.0, rb2=76.3, core=ModelPhysics.currentCoreRadius, R_sun=ModelPhysics.getRsun('li2026');
         const getRaw = (rad) => {
             if (rad < rb1) return Math.pow(rad, -a1);
             if (rad < rb2) return Math.pow(rb1, a2-a1) * Math.pow(rad, -a2);
@@ -194,7 +196,7 @@ const ModelPhysics = {
     },
 
     han2022: (r) => {
-        const a1=1.7, a2=3.1, a3=4.6, rb1=12.0, rb2=28.0, R_sun=8.122, core=ModelPhysics.currentCoreRadius;
+        const a1=1.7, a2=3.1, a3=4.6, rb1=12.0, rb2=28.0, R_sun=ModelPhysics.getRsun('han2022'), core=ModelPhysics.currentCoreRadius;
         const getRaw = (rad) => {
             if (rad < rb1) return Math.pow(rad, -a1);
             if (rad < rb2) return Math.pow(rb1, a2-a1) * Math.pow(rad, -a2);
@@ -205,7 +207,7 @@ const ModelPhysics = {
     },
 
     amarante2024: (r) => {
-        const ai=2.9, ao=4.5, rb=19.1, core=ModelPhysics.currentCoreRadius, R_sun=8.275;
+        const ai=2.9, ao=4.5, rb=19.1, core=ModelPhysics.currentCoreRadius, R_sun=ModelPhysics.getRsun('amarante2024');
         const getRaw = (rad) => {
             if (rad < rb) return Math.pow(rad, -ai);
             return Math.pow(rb, ao-ai) * Math.pow(rad, -ao);
@@ -215,14 +217,14 @@ const ModelPhysics = {
     },
 
     ablimit2018: (r) => {
-        const ai=2.8, ao=4.8, rb=21.0, core=ModelPhysics.currentCoreRadius, R_sun=8.275;
+        const ai=2.8, ao=4.8, rb=21.0, core=ModelPhysics.currentCoreRadius, R_sun=ModelPhysics.getRsun('ablimit2018');
         const getRaw = (rad) => rad < rb ? Math.pow(rad, -ai) : Math.pow(rb, ao-ai) * Math.pow(rad, -ao);
         const rho_norm = (1.7e-5) / getRaw(R_sun);
         return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
     },
 
     chen2023: (r) => {
-        const s1=2.83, s2=4.49, r0=27.45, core=ModelPhysics.currentCoreRadius, R_sun=8.275;
+        const s1=2.83, s2=4.49, r0=27.45, core=ModelPhysics.currentCoreRadius, R_sun=ModelPhysics.getRsun('chen2023');
         const getRaw = (rad) => {
             if (rad < r0) return Math.pow(rad, -s1);
             return Math.pow(r0, s2-s1) * Math.pow(rad, -s2);
@@ -232,7 +234,7 @@ const ModelPhysics = {
     },
 
     yang2022: (r) => {
-        const a1=1.5, a2=2.8, a3=6.1, rb1=10.0, rb2=25.0, core=ModelPhysics.currentCoreRadius, R_sun=8.275;
+        const a1=1.5, a2=2.8, a3=6.1, rb1=10.0, rb2=25.0, core=ModelPhysics.currentCoreRadius, R_sun=ModelPhysics.getRsun('yang2022');
         const getRaw = (rad) => {
             if (rad < rb1) return Math.pow(rad, -a1);
             if (rad < rb2) return Math.pow(rb1, a2-a1) * Math.pow(rad, -a2);
@@ -243,91 +245,91 @@ const ModelPhysics = {
     },
 
     hernitschek2018: (r) => {
-        const a=4.40, core=ModelPhysics.currentCoreRadius, R_sun=8.275;
+        const a=4.40, core=ModelPhysics.currentCoreRadius, R_sun=ModelPhysics.getRsun('hernitschek2018');
         const rho_norm = (1.7e-5) / Math.pow(R_sun, -a);
         return ModelPhysics.applyCore(r, core, (rad) => rho_norm * Math.pow(rad, -a));
     },
 
     horta2021: (r) => {
-        const a=3.5, core=ModelPhysics.currentCoreRadius, R_sun=8.275;
+        const a=3.5, core=ModelPhysics.currentCoreRadius, R_sun=ModelPhysics.getRsun('horta2021');
         const rho_norm = (1.7e-5) / Math.pow(R_sun, -a);
         return ModelPhysics.applyCore(r, core, (rad) => rho_norm * Math.pow(rad, -a));
     },
 
     kurbatov2024: (r) => {
-        const a=3.4, core=ModelPhysics.currentCoreRadius, R_sun=8.275;
+        const a=3.4, core=ModelPhysics.currentCoreRadius, R_sun=ModelPhysics.getRsun('kurbatov2024');
         const rho_norm = (1.7e-5) / Math.pow(R_sun, -a);
         return ModelPhysics.applyCore(r, core, (rad) => rho_norm * Math.pow(rad, -a));
     },
 
     libinney2022: (r) => {
-        const ai=1.0, ao=4.5, rb=20.0, core=ModelPhysics.currentCoreRadius, R_sun=8.275;
+        const ai=1.0, ao=4.5, rb=20.0, core=ModelPhysics.currentCoreRadius, R_sun=ModelPhysics.getRsun('libinney2022');
         const getRaw = (rad) => rad < rb ? Math.pow(rad, -ai) : Math.pow(rb, ao-ai) * Math.pow(rad, -ao);
         const rho_norm = (1.7e-5) / getRaw(R_sun);
         return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
     },
 
     lopezcorredoira2024: (r) => {
-        const a=4.6, core=ModelPhysics.currentCoreRadius, R_sun=8.275;
+        const a=4.6, core=ModelPhysics.currentCoreRadius, R_sun=ModelPhysics.getRsun('lopezcorredoira2024');
         const rho_norm = (1.7e-5) / Math.pow(R_sun, -a);
         return ModelPhysics.applyCore(r, core, (rad) => rho_norm * Math.pow(rad, -a));
     },
 
     lucey2026: (r) => {
-        const a=4.0, core=ModelPhysics.currentCoreRadius, R_sun=8.275;
+        const a=4.0, core=ModelPhysics.currentCoreRadius, R_sun=ModelPhysics.getRsun('lucey2026');
         const rho_norm = (1.7e-5) / Math.pow(R_sun, -a);
         return ModelPhysics.applyCore(r, core, (rad) => rho_norm * Math.pow(rad, -a));
     },
 
     mackereth2020: (r) => {
-        const a=3.49, r_cut=25.0, core=ModelPhysics.currentCoreRadius, R_sun=8.275;
+        const a=3.49, r_cut=25.0, core=ModelPhysics.currentCoreRadius, R_sun=ModelPhysics.getRsun('mackereth2020');
         const getRaw = (rad) => Math.pow(rad, -a) * Math.exp(-rad / r_cut);
         const rho_norm = (1.7e-5) / getRaw(R_sun);
         return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
     },
 
     medina2024: (r) => {
-        const ai=2.05, ao=4.57, rb=24.3, core=ModelPhysics.currentCoreRadius, R_sun=8.275;
+        const ai=2.05, ao=4.57, rb=24.3, core=ModelPhysics.currentCoreRadius, R_sun=ModelPhysics.getRsun('medina2024');
         const getRaw = (rad) => rad < rb ? Math.pow(rad, -ai) : Math.pow(rb, ao-ai) * Math.pow(rad, -ao);
         const rho_norm = (1.7e-5) / getRaw(R_sun);
         return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
     },
 
     medina2018: (r) => {
-        const a=4.17, core=ModelPhysics.currentCoreRadius, R_sun=8.275;
+        const a=4.17, core=ModelPhysics.currentCoreRadius, R_sun=ModelPhysics.getRsun('medina2018');
         const rho_norm = (1.7e-5) / Math.pow(R_sun, -a);
         return ModelPhysics.applyCore(r, core, (rad) => rho_norm * Math.pow(rad, -a));
     },
 
     nibauer2025: (r) => {
-        const ai=1.0, ao=3.5, rb=20.0, core=ModelPhysics.currentCoreRadius, R_sun=8.275;
+        const ai=1.0, ao=3.5, rb=20.0, core=ModelPhysics.currentCoreRadius, R_sun=ModelPhysics.getRsun('nibauer2025');
         const getRaw = (rad) => rad < rb ? Math.pow(rad, -ai) : Math.pow(rb, ao-ai) * Math.pow(rad, -ao);
         const rho_norm = (1.7e-5) / getRaw(R_sun);
         return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
     },
 
     stringer2021: (r) => {
-        const ai=2.5, ao=4.25, rb=20.0, core=ModelPhysics.currentCoreRadius, R_sun=8.275;
+        const ai=2.5, ao=4.25, rb=20.0, core=ModelPhysics.currentCoreRadius, R_sun=ModelPhysics.getRsun('stringer2021');
         const getRaw = (rad) => rad < rb ? Math.pow(rad, -ai) : Math.pow(rb, ao-ai) * Math.pow(rad, -ao);
         const rho_norm = (1.7e-5) / getRaw(R_sun);
         return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
     },
 
     suzuki2026: (r) => {
-        const ai=3.3, ao=4.8, rb=17.4, core=ModelPhysics.currentCoreRadius, R_sun=8.275;
+        const ai=3.3, ao=4.8, rb=17.4, core=ModelPhysics.currentCoreRadius, R_sun=ModelPhysics.getRsun('suzuki2026');
         const getRaw = (rad) => rad < rb ? Math.pow(rad, -ai) : Math.pow(rb, ao-ai) * Math.pow(rad, -ao);
         const rho_norm = (1.7e-5) / getRaw(R_sun);
         return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
     },
 
     wu2025: (r) => {
-        const a=4.65, core=ModelPhysics.currentCoreRadius, R_sun=8.275;
+        const a=4.65, core=ModelPhysics.currentCoreRadius, R_sun=ModelPhysics.getRsun('wu2025');
         const rho_norm = (1.7e-5) / Math.pow(R_sun, -a);
         return ModelPhysics.applyCore(r, core, (rad) => rho_norm * Math.pow(rad, -a));
     },
 
     wu2022: (r) => {
-        const a1=4.92, a2=4.25, core=ModelPhysics.currentCoreRadius, R_sun=8.275;
+        const a1=4.92, a2=4.25, core=ModelPhysics.currentCoreRadius, R_sun=ModelPhysics.getRsun('wu2022');
         const r_match = Math.exp(3.0);
         const getRaw = (rad) => Math.pow(r_match, a1 - a2) * Math.pow(rad, -a1) + Math.pow(rad, -a2);
         const rho_norm = (1.7e-5) / getRaw(R_sun);
@@ -335,59 +337,59 @@ const ModelPhysics = {
     },
 
     rix2022: (r) => {
-        const sigma=2.7, R_sun=8.275;
+        const sigma=2.7, R_sun=ModelPhysics.getRsun('rix2022');
         const rho_norm = 1.7e-5;
         return rho_norm * Math.exp(-(r*r - R_sun*R_sun) / (2 * sigma*sigma));
     },
 
     cavieres2025: (r) => {
-        const ai=3.13, ao=7.46, rb=67.5, core=ModelPhysics.currentCoreRadius, R_sun=8.275;
+        const ai=3.13, ao=7.46, rb=67.5, core=ModelPhysics.currentCoreRadius, R_sun=ModelPhysics.getRsun('cavieres2025');
         const getRaw = (rad) => rad < rb ? Math.pow(rad, -ai) : Math.pow(rb, ao-ai) * Math.pow(rad, -ao);
         const rho_norm = (1.7e-5) / getRaw(R_sun);
         return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
     },
 
     feng2024: (r) => {
-        const a=4.09, core=ModelPhysics.currentCoreRadius, R_sun=8.275;
+        const a=4.09, core=ModelPhysics.currentCoreRadius, R_sun=ModelPhysics.getRsun('feng2024');
         const rho_norm = (1.7e-5) / Math.pow(R_sun, -a);
         return ModelPhysics.applyCore(r, core, (rad) => rho_norm * Math.pow(rad, -a));
     },
 
     fukushima2025: (r) => {
-        const ai=3.90, ao=9.1, rb=184.0, core=ModelPhysics.currentCoreRadius, R_sun=8.275;
+        const ai=3.90, ao=9.1, rb=184.0, core=ModelPhysics.currentCoreRadius, R_sun=ModelPhysics.getRsun('fukushima2025');
         const getRaw = (rad) => rad < rb ? Math.pow(rad, -ai) : Math.pow(rb, ao-ai) * Math.pow(rad, -ao);
         const rho_norm = (1.7e-5) / getRaw(R_sun);
         return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
     },
 
     ye2023: (r) => {
-        const ai=2.44, ao=4.41, rb=26.5, core=ModelPhysics.currentCoreRadius, R_sun=8.275;
+        const ai=2.44, ao=4.41, rb=26.5, core=ModelPhysics.currentCoreRadius, R_sun=ModelPhysics.getRsun('ye2023');
         const getRaw = (rad) => rad < rb ? Math.pow(rad, -ai) : Math.pow(rb, ao-ai) * Math.pow(rad, -ao);
         const rho_norm = (1.7e-5) / getRaw(R_sun);
         return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
     },
 
     yu2024: (r) => {
-        const a=4.34, core=ModelPhysics.currentCoreRadius, R_sun=8.275;
+        const a=4.34, core=ModelPhysics.currentCoreRadius, R_sun=ModelPhysics.getRsun('yu2024');
         const rho_norm = (1.7e-5) / Math.pow(R_sun, -a);
         return ModelPhysics.applyCore(r, core, (rad) => rho_norm * Math.pow(rad, -a));
     },
 
     tao2026: (r) => {
-        const a=3.5, core=ModelPhysics.currentCoreRadius, R_sun=8.275;
+        const a=3.5, core=ModelPhysics.currentCoreRadius, R_sun=ModelPhysics.getRsun('tao2026');
         const rho_norm = (1.7e-5) / Math.pow(R_sun, -a);
         return ModelPhysics.applyCore(r, core, (rad) => rho_norm * Math.pow(rad, -a));
     },
 
     thomas2018: (r) => {
-        const ai=4.24, ao=3.21, rb=41.4, core=ModelPhysics.currentCoreRadius, R_sun=8.275;
+        const ai=4.24, ao=3.21, rb=41.4, core=ModelPhysics.currentCoreRadius, R_sun=ModelPhysics.getRsun('thomas2018');
         const getRaw = (rad) => rad < rb ? Math.pow(rad, -ai) : Math.pow(rb, ao-ai) * Math.pow(rad, -ao);
         const rho_norm = (1.7e-5) / getRaw(R_sun);
         return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
     },
 
     lane2023: (r) => {
-        const a1=1.5, a2=3.5, a3=5.0, rb1=12.0, rb2=28.0, core=ModelPhysics.currentCoreRadius, R_sun=8.275;
+        const a1=1.5, a2=3.5, a3=5.0, rb1=12.0, rb2=28.0, core=ModelPhysics.currentCoreRadius, R_sun=ModelPhysics.getRsun('lane2023');
         const getRaw = (rad) => {
             if (rad < rb1) return Math.pow(rad, -a1);
             if (rad < rb2) return Math.pow(rb1, a2-a1) * Math.pow(rad, -a2);
@@ -401,9 +403,11 @@ const ModelPhysics = {
         return ModelPhysics[id](r);
     },
 
-    calculateLuminosity: (id, coreRadius) => {
+    calculateLuminosity: (id, coreRadius, rsun = null) => {
         const savedCore = ModelPhysics.currentCoreRadius;
+        const savedRsun = ModelPhysics.currentRsun;
         ModelPhysics.currentCoreRadius = coreRadius;
+        ModelPhysics.currentRsun = rsun;
         
         const cr_plot_max = 500;
         const integrationSteps = 5000;
@@ -426,6 +430,7 @@ const ModelPhysics = {
         }
 
         ModelPhysics.currentCoreRadius = savedCore;
+        ModelPhysics.currentRsun = savedRsun;
         return runningL;
     }
 };
@@ -793,8 +798,14 @@ function renderDetail(id) {
                         </table>
                         <div class="luminosity-highlight">
                             <h3>Total Halo Luminosity</h3>
-                            <p>Local norm: 1.7E-5 L<sub>&odot;</sub>/pc<sup>3</sup> at R=8.275 kpc</p>
-                            <div class="luminosity-value">${formatLuminosity(getLuminosityValue(model))}</div>
+                            <div style="margin-bottom: 12px;">
+                                <p style="margin-bottom: 2px;">Local norm: 1.7E-5 L<sub>&odot;</sub>/pc<sup>3</sup> at R=${model.id === 'han2022' ? '8.122' : '8.275'} kpc</p>
+                                <div class="luminosity-value">${formatLuminosity(getLuminosityValue(model))}</div>
+                            </div>
+                            <div style="border-top: 1px dashed rgba(255,255,255,0.3); padding-top: 8px; margin-top: 8px;">
+                                <p style="margin-bottom: 2px;">Assuming R = 8.0 kpc (local norm at R = 8.0 kpc):</p>
+                                <div class="luminosity-value" style="color: #a5d6a7;">${formatLuminosity(ModelPhysics.calculateLuminosity(model.id, ModelPhysics.currentCoreRadius, 8.0))}</div>
+                            </div>
                             ${model.id !== 'rix2022' ? `
                             <div class="core-sensitivity-container" style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 15px;">
                                 <h4 style="font-size: 0.95rem; margin-bottom: 10px; color: var(--accent-color);">Sensitivity to Core Radius (R<sub>core</sub>)</h4>
