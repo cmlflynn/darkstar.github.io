@@ -122,7 +122,7 @@ const ModelPhysics = {
             fukushima2025: 4 * Math.PI * 1.0 * 1.56,
             ye2023: 4 * Math.PI * 1.0 * 0.73,
             tao2026: 4 * Math.PI * 1.0 * 0.8,
-            lane2023: 4 * Math.PI * 1.0 * 1.25
+            lane2023: 4 * Math.PI * 0.9 * 0.58
         };
         const f = factors[id];
         return (typeof f === 'function') ? f(r) : f;
@@ -160,7 +160,7 @@ const ModelPhysics = {
             fukushima2025: 1.56,
             ye2023: 0.73,
             tao2026: 0.8,
-            lane2023: 1.25
+            lane2023: 0.58
         };
         const q = qFactors[id];
         return (typeof q === 'function') ? q(r) : q;
@@ -389,12 +389,8 @@ const ModelPhysics = {
     },
 
     lane2023: (r) => {
-        const a1=1.5, a2=3.5, a3=5.0, rb1=12.0, rb2=28.0, core=ModelPhysics.currentCoreRadius, R_sun=ModelPhysics.getRsun('lane2023');
-        const getRaw = (rad) => {
-            if (rad < rb1) return Math.pow(rad, -a1);
-            if (rad < rb2) return Math.pow(rb1, a2-a1) * Math.pow(rad, -a2);
-            return Math.pow(rb1, a2-a1) * Math.pow(rb2, a3-a2) * Math.pow(rad, -a3);
-        };
+        const a=2.5, core=ModelPhysics.currentCoreRadius, R_sun=ModelPhysics.getRsun('lane2023');
+        const getRaw = (rad) => Math.pow(rad, -a);
         const rho_norm = (1.7e-5) / getRaw(R_sun);
         return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
     },

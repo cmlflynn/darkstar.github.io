@@ -239,24 +239,20 @@
     "id": "lane2023",
     "title": "Lane et al. (2023)",
     "subtitle": "The stellar mass of the Gaia-Sausage/Enceladus accretion remnant",
-    "summary": "This study uses the H3 Survey and APOGEE data to measure the density of the Gaia-Sausage/Enceladus (GSE) debris, finding a doubly-broken power-law profile with a prolate and tilted shape. This model version includes a 1 kpc constant density core.",
+    "summary": "This study uses the H3 Survey and APOGEE data to measure the density of the stellar halo, finding a single power-law profile for the total halo sample with a triaxial, oblate shape. This model version includes a constant density core.",
     "tracer": "APOGEE Giants",
     "parameters": {
-      "Model": "Prolate Tilted Doubly Broken Power Law",
-      "Break Radius 1 (rb1)": "12.0 kpc",
-      "Break Radius 2 (rb2)": "28.0 kpc",
+      "Model": "Triaxial Oblate Single Power Law",
+      "Power-law index (α)": "2.5",
       "Core Radius (r_core)": "1.0 kpc",
-      "Inner Index (α1)": "1.5",
-      "Middle Index (α2)": "3.5",
-      "Outer Index (α3)": "5.0",
-      "Flattening (q)": "1.25 (Prolate)",
-      "Tilt": "16°"
+      "Flattening (q)": "0.58 (Oblate)",
+      "Axis ratio (p)": "0.9"
     },
     "range": {
       "min": 5,
       "max": 50
     },
-    "luminosity": "4.43e+08 L⊙",
+    "luminosity": "9.46e+08 L⊙",
     "paper_url": "https://ui.adsabs.harvard.edu/abs/2023MNRAS.526.1209L/abstract",
     "plot_url": "assets/lane2023_density_profile.png",
     "eqn_url": "assets/lane2023_eqn.png",

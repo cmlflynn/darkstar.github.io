@@ -321,7 +321,7 @@ main {
 .equation-img {
     max-width: 100%;
     height: auto;
-    filter: contrast(1.1);
+    filter: contrast(1.2) brightness(0.3);
 }
 
 .data-section {
