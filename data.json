@@ -308,21 +308,21 @@
     "id": "medina2024",
     "title": "Medina et al. (2024)",
     "subtitle": "Taking the pulse of the outer Milky Way with HOWVAST: an RR Lyrae density profile out to >200 kpc",
-    "summary": "This study extends the RR Lyrae density profile constraint out to >200 kpc, identifying a break at ~24 kpc. This model version follows their ellipsoidal broken power-law fit and includes a 1 kpc constant density core.",
+    "summary": "This study extends the RR Lyrae density profile constraint out to >200 kpc, identifying a break at ~18.1 kpc. This model version follows their spheroidal broken power-law fit and includes a 1 kpc constant density core.",
     "tracer": "RR Lyrae",
     "parameters": {
       "Model": "Broken Power Law",
-      "Break Radius (r_break)": "24.3 kpc",
+      "Break Radius (r_break)": "18.1 kpc",
       "Core Radius (r_core)": "1.0 kpc",
       "Inner Slope (α_in)": "2.05",
-      "Outer Slope (α_out)": "4.57",
-      "Flattening (q)": "0.7"
+      "Outer Slope (α_out)": "4.47",
+      "Flattening (q)": "1.0"
     },
     "range": {
       "min": 5,
       "max": 200
     },
-    "luminosity": "3.90e+08 L⊙",
+    "luminosity": "4.30e+08 L⊙",
     "paper_url": "https://ui.adsabs.harvard.edu/abs/2024MNRAS.531.4762M/abstract",
     "plot_url": "assets/medina2024_density_profile.png",
     "eqn_url": "assets/medina2024_eqn.png",
@@ -595,13 +595,13 @@
       "Model": "Single Power Law",
       "Power-law index (α)": "4.17",
       "Core Radius (r_core)": "1.0 kpc",
-      "Flattening (q)": "0.7"
+      "Flattening (q)": "1.0"
     },
     "range": {
       "min": 10,
       "max": 200
     },
-    "luminosity": "1.19e+09 L⊙",
+    "luminosity": "1.70e+09 L⊙",
     "paper_url": "https://ui.adsabs.harvard.edu/abs/2018ApJ...855...43M/abstract",
     "plot_url": "assets/medina2018_density_profile.png",
     "eqn_url": "assets/medina2018_eqn.png",

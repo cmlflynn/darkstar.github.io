@@ -106,8 +106,8 @@ const ModelPhysics = {
             lopezcorredoira2024: 4 * Math.PI * 1.0 * 1.0,
             lucey2026: (rad) => rad < 10.0 ? 4 * Math.PI * 1.0 * 1.31 : 4 * Math.PI * 1.0 * 0.70,
             mackereth2020: 4 * Math.PI * 0.73 * 0.56,
-            medina2024: 4 * Math.PI * 1.0 * 0.7,
-            medina2018: 4 * Math.PI * 1.0 * 0.7,
+            medina2024: 4 * Math.PI * 1.0 * 1.0,
+            medina2018: 4 * Math.PI * 1.0 * 1.0,
             nibauer2025: 4 * Math.PI * 0.75 * 0.70,
             stringer2021: 4 * Math.PI * 1.0 * 0.7,
             suzuki2026: 4 * Math.PI * 1.0 * 1.0,
@@ -143,8 +143,8 @@ const ModelPhysics = {
             lopezcorredoira2024: 1.0,
             lucey2026: (rad) => rad < 10.0 ? 1.31 : 0.70,
             mackereth2020: 0.56,
-            medina2024: 0.7,
-            medina2018: 0.7,
+            medina2024: 1.0,
+            medina2018: 1.0,
             nibauer2025: 0.7,
             stringer2021: 0.7,
             suzuki2026: 1.0,
@@ -289,7 +289,7 @@ const ModelPhysics = {
     },
 
     medina2024: (r) => {
-        const ai=2.05, ao=4.57, rb=24.3, core=ModelPhysics.currentCoreRadius, R_sun=ModelPhysics.getRsun('medina2024');
+        const ai=2.05, ao=4.47, rb=18.1, core=ModelPhysics.currentCoreRadius, R_sun=ModelPhysics.getRsun('medina2024');
         const getRaw = (rad) => rad < rb ? Math.pow(rad, -ai) : Math.pow(rb, ao-ai) * Math.pow(rad, -ao);
         const rho_norm = (1.7e-5) / getRaw(R_sun);
         return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
