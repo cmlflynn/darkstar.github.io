@@ -3,12 +3,12 @@ import matplotlib.pyplot as plt
 
 def calculate_medina2024_halo():
     # Parameters from Medina et al. (2024) - MNRAS 531, 4762
-    # Model: Broken Power Law (Ellipsoidal version with q=0.7)
+    # Model: Broken Power Law (Spherical version with q=1.0)
     alpha_in = 2.05
-    alpha_out = 4.57
-    r_break = 24.3
+    alpha_out = 4.47
+    r_break = 18.1
     r_core = 1.0   # 1 kpc constant density core (project requirement)
-    q = 0.7        # Oblate flattening
+    q = 1.0        # Spherical flattening
     R_sun = 8.275 
 
     # User local norm

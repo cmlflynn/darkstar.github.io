@@ -6,7 +6,7 @@ def calculate_medina2018_halo():
     # Model: Single Power Law
     alpha = 4.17
     r_core = 1.0   # 1 kpc constant density core (project requirement)
-    q = 0.7        # Oblate flattening
+    q = 1.0        # Spherical halo
     R_sun = 8.275 
 
     # User local norm
