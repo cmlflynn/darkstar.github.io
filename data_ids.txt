@@ -17,7 +17,6 @@ lucey2026
 mackereth2020
 medina2018
 medina2024
-nibauer2025
 rix2022
 staf256
 stringer2021
@@ -27,5 +26,4 @@ thomas2018
 wu2022
 wu2025
 yang2022
-ye2023
 yu2024

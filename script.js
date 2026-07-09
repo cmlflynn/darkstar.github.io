@@ -108,7 +108,6 @@ const ModelPhysics = {
             mackereth2020: 4 * Math.PI * 0.73 * 0.56,
             medina2024: 4 * Math.PI * 1.0 * 1.0,
             medina2018: 4 * Math.PI * 1.0 * 1.0,
-            nibauer2025: 4 * Math.PI * 0.75 * 0.70,
             stringer2021: 4 * Math.PI * 1.0 * 0.7,
             suzuki2026: 4 * Math.PI * 1.0 * 1.0,
             thomas2018: 4 * Math.PI * 1.0 * 0.86,
@@ -120,7 +119,7 @@ const ModelPhysics = {
             cavieres2025: 4 * Math.PI * 1.0 * 0.98,
             feng2024: 4 * Math.PI * 1.0 * 1.0,
             fukushima2025: 4 * Math.PI * 1.0 * 1.56,
-            ye2023: 4 * Math.PI * 1.0 * 0.73,
+            ye2023: 4 * Math.PI * 1.0 * 0.81,
             tao2026: 4 * Math.PI * 1.0 * 0.8,
             lane2023: 4 * Math.PI * 0.9 * 0.58
         };
@@ -145,7 +144,6 @@ const ModelPhysics = {
             mackereth2020: 0.56,
             medina2024: 1.0,
             medina2018: 1.0,
-            nibauer2025: 0.7,
             stringer2021: 0.7,
             suzuki2026: 1.0,
             thomas2018: 0.86,
@@ -158,7 +156,7 @@ const ModelPhysics = {
             cavieres2025: 0.98,
             feng2024: 1.0,
             fukushima2025: 1.56,
-            ye2023: 0.73,
+            ye2023: 0.81,
             tao2026: 0.8,
             lane2023: 0.58
         };
@@ -301,15 +299,8 @@ const ModelPhysics = {
         return ModelPhysics.applyCore(r, core, (rad) => rho_norm * Math.pow(rad, -a));
     },
 
-    nibauer2025: (r) => {
-        const ai=1.0, ao=3.5, rb=20.0, core=ModelPhysics.currentCoreRadius, R_sun=ModelPhysics.getRsun('nibauer2025');
-        const getRaw = (rad) => rad < rb ? Math.pow(rad, -ai) : Math.pow(rb, ao-ai) * Math.pow(rad, -ao);
-        const rho_norm = (1.7e-5) / getRaw(R_sun);
-        return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
-    },
-
     stringer2021: (r) => {
-        const ai=2.5, ao=4.25, rb=20.0, core=ModelPhysics.currentCoreRadius, R_sun=ModelPhysics.getRsun('stringer2021');
+        const ai=2.54, ao=5.42, rb=32.1, core=ModelPhysics.currentCoreRadius, R_sun=ModelPhysics.getRsun('stringer2021');
         const getRaw = (rad) => rad < rb ? Math.pow(rad, -ai) : Math.pow(rb, ao-ai) * Math.pow(rad, -ao);
         const rho_norm = (1.7e-5) / getRaw(R_sun);
         return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
@@ -363,7 +354,7 @@ const ModelPhysics = {
     },
 
     ye2023: (r) => {
-        const ai=2.44, ao=4.41, rb=26.5, core=ModelPhysics.currentCoreRadius, R_sun=ModelPhysics.getRsun('ye2023');
+        const ai=2.34, ao=2.86, rb=22.99, core=ModelPhysics.currentCoreRadius, R_sun=ModelPhysics.getRsun('ye2023');
         const getRaw = (rad) => rad < rb ? Math.pow(rad, -ai) : Math.pow(rb, ao-ai) * Math.pow(rad, -ao);
         const rho_norm = (1.7e-5) / getRaw(R_sun);
         return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));

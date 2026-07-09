@@ -13,8 +13,7 @@ Lane et al. (2023),Triaxial Oblate Single Power Law,APOGEE Giants,5 - 50,9.46e+0
 Lucey et al. (2026),Single Power Law With Variable q,RR Lyrae,0.2 - 120,1.69e+09,5.21e+08,2.87e+08,1.47e+09,4.55e+08,2.51e+08
 Mackereth & Bovy (2020),Triaxial Power Law With Exponential Cut-Off,Red Giants,5 - 30,3.31e+08,1.49e+08,9.53e+07,2.91e+08,1.31e+08,8.38e+07
 Medina et al. (2024),Broken Power Law,RR Lyrae,5 - 200,4.30e+08,4.08e+08,3.87e+08,4.01e+08,3.81e+08,3.61e+08
-Nibauer et al. (2025),Tilted Triaxial Broken Power Law,GD-1 Stream Stars,5 - 30,7.80e+08,7.78e+08,7.76e+08,7.54e+08,7.53e+08,7.50e+08
-Stringer et al. (2021),Broken Power Law,RR Lyrae,10 - 100,3.18e+08,2.82e+08,2.57e+08,2.92e+08,2.59e+08,2.36e+08
+Stringer et al. (2021),Broken Power Law,RR Lyrae,9 - 100,3.50e+08,3.11e+08,2.85e+08,3.21e+08,2.86e+08,2.62e+08
 Suzuki et al. (2026),Broken Power Law,MSTO Stars,5 - 100,5.68e+08,3.33e+08,2.47e+08,5.08e+08,2.97e+08,2.21e+08
 Wu et al. (2025),Single Power Law,BHB Stars,5 - 30,1.50e+09,2.54e+08,1.16e+08,1.28e+09,2.17e+08,9.92e+07
 Wu et al. (2022),Sum Of Two Simple Power-Laws,K Giants,5 - 120,1.83e+09,2.69e+08,1.19e+08,1.56e+09,2.29e+08,1.02e+08
@@ -22,7 +21,6 @@ Rix et al. (2022),Gaussian density falloff,Aurora (In Situ),0 - 5,5.77e+08,5.77e
 Cavieres et al. (2025),Triaxial Broken Power Law,nMSTO and RGB stars,20 - 100,5.79e+08,4.12e+08,3.42e+08,5.21e+08,3.71e+08,3.08e+08
 Feng et al. (2024),Single Power Law,RR Lyrae,20 - 300,1.51e+09,4.56e+08,2.61e+08,1.32e+09,3.97e+08,2.27e+08
 Fukushima et al. (2025),Broken Power Law,BHB Stars,36 - 575,1.82e+09,6.69e+08,4.18e+08,1.59e+09,5.86e+08,3.67e+08
-Ye et al. (2023),Broken Power Law,RR Lyrae,6 - 120,3.82e+08,3.48e+08,3.24e+08,3.52e+08,3.21e+08,2.99e+08
 Tao et al. (2026),Single Power Law,Integrated Light,10 - 100,6.25e+08,3.50e+08,2.66e+08,5.55e+08,3.11e+08,2.36e+08
 Medina et al. (2018),Single Power Law,RR Lyrae,10 - 200,1.70e+09,4.71e+08,2.59e+08,1.48e+09,4.09e+08,2.25e+08
 Deason et al. (2011),Broken Power Law,BHB Stars,1 - 40,3.17e+08,2.96e+08,2.80e+08,2.93e+08,2.74e+08,2.59e+08

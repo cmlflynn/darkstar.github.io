@@ -1,0 +1,37 @@
+{
+  "ye2023_data_json": {
+    "id": "ye2023",
+    "title": "Ye et al. (2023)",
+    "subtitle": "Discovery of the shell structure via break radii in the outer halo of the Milky Way",
+    "summary": "This study uses Gaia DR3 RR Lyrae stars to map the stellar halo density profile, identifying shell structures via density break radii. This model version represents their classical BPL fit in the 6 - 26 kpc bin (coinciding with the first GSE apocentre break) and includes a 1 kpc constant density core.",
+    "tracer": "RR Lyrae",
+    "parameters": {
+      "Model": "Broken Power Law",
+      "Break Radius (r_break)": "22.99 kpc",
+      "Core Radius (r_core)": "1.0 kpc",
+      "Inner Slope (α_in)": "2.34",
+      "Outer Slope (α_out)": "2.86",
+      "Flattening (q)": "0.81"
+    },
+    "range": {
+      "min": 6,
+      "max": 26
+    },
+    "luminosity": "1.01e+09 L⊙",
+    "paper_url": "https://ui.adsabs.harvard.edu/abs/2023MNRAS.525.2472Y/abstract",
+    "plot_url": "assets/ye2023_density_profile.png",
+    "eqn_url": "assets/ye2023_eqn.png",
+    "code_url": "assets/ye2023_density_model.py"
+  },
+  "ye2023_csv_line": "Ye et al. (2023),Broken Power Law,RR Lyrae,6 - 26,1.01e+09,9.74e+08,9.51e+08,9.29e+08,9.00e+08,8.78e+08",
+  "ye2023_script_js": {
+    "volume_factor": "ye2023: 4 * Math.PI * 1.0 * 0.81,",
+    "q_factor": "ye2023: 0.81,",
+    "density_profile": "ye2023: (r) => {\n        const ai=2.34, ao=2.86, rb=22.99, core=ModelPhysics.currentCoreRadius, R_sun=ModelPhysics.getRsun('ye2023');\n        const getRaw = (rad) => rad < rb ? Math.pow(rad, -ai) : Math.pow(rb, ao-ai) * Math.pow(rad, -ao);\n        const rho_norm = (1.7e-5) / getRaw(R_sun);\n        return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));\n    },"
+  },
+  "ye2023_compendium_plots_py": {
+    "model_dict": "  {\n    \"id\": \"ye2023\",\n    \"title\": \"Ye et al. (2023)\",\n    \"luminosity\": \"1.01e+09 L⊙\",\n    \"range\": {\"min\": 6, \"max\": 26}\n  },",
+    "volume_factor": "'ye2023': 4 * np.pi * 1.0 * 0.81,",
+    "density_mapping": "        if id == 'ye2023': return bpl(r, 2.34, 2.86, 22.99, core)"
+  }
+}
