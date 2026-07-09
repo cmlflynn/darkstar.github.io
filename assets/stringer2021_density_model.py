@@ -4,9 +4,9 @@ import matplotlib.pyplot as plt
 def calculate_stringer2021_halo():
     # Parameters from Stringer et al. (2021) - ApJ 911, 109
     # Model: Broken Power Law (RR Lyrae stars)
-    alpha_in = 2.5
-    alpha_out = 4.25 # Typical outer slope found
-    r_break = 20.0
+    alpha_in = 2.54
+    alpha_out = 5.42 
+    r_break = 32.1
     r_core = 1.0     # 1 kpc constant density core (project requirement)
     q = 0.7          # Standard oblate flattening used
     R_sun = 8.275 
@@ -55,7 +55,7 @@ def calculate_stringer2021_halo():
     rho_vals = np.array([rho_0 * profile(r) for r in r_vals])
 
     plt.figure(figsize=(10, 7))
-    plt.axvspan(10, 100, color='lightblue', alpha=0.3, label='Valid Data Range (10-100 kpc)')
+    plt.axvspan(9, 100, color='lightblue', alpha=0.3, label='Valid Data Range (9-100 kpc)')
     plt.loglog(r_vals, rho_vals / (1000**3), color='darkgoldenrod', linewidth=2, label='Stringer et al. (2021) BPL Model (1 kpc Core)')
     
     # Markers

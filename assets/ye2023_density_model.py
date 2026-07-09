@@ -4,11 +4,11 @@ import matplotlib.pyplot as plt
 def calculate_ye2023_halo():
     # Parameters from Ye et al. (2023) - MNRAS 525, 2472
     # Model: Broken Power Law (Gaia DR3 RR Lyrae)
-    alpha_in = 2.44
-    alpha_out = 4.41
-    r_break = 26.5
+    alpha_in = 2.34
+    alpha_out = 2.86
+    r_break = 22.99
     r_core = 1.0   # 1 kpc constant density core (project requirement)
-    q = 0.73       # Constant flattening
+    q = 0.81       # Constant flattening
     R_sun = 8.275 
 
     # User local norm
@@ -34,6 +34,7 @@ def calculate_ye2023_halo():
     # Analytical Integration for Luminosity
     # L = 4 * pi * q * Integral[ rho(r) * r^2 dr ]
     
+    # Numerical Integration for Luminosity (integrated to 500 kpc)
     def integrand(r):
         return profile(r) * r**2
     
@@ -56,7 +57,7 @@ def calculate_ye2023_halo():
     rho_vals = np.array([rho_0 * profile(r) for r in r_vals])
 
     plt.figure(figsize=(10, 7))
-    plt.axvspan(6, 120, color='lightblue', alpha=0.3, label='Valid Data Range (6-120 kpc)')
+    plt.axvspan(6, 26, color='lightblue', alpha=0.3, label='Valid Data Range (6-26 kpc)')
     plt.loglog(r_vals, rho_vals / (1000**3), color='forestgreen', linewidth=2, label='Ye et al. (2023) RR Lyrae Model (1 kpc Core)')
     
     # Markers
