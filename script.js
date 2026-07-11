@@ -119,10 +119,10 @@ const ModelPhysics = {
             cavieres2025: 4 * Math.PI * 1.0 * 0.98,
             feng2024: 4 * Math.PI * 1.0 * 1.0,
             fukushima2025: 4 * Math.PI * 1.0 * 1.56,
-            ye2023: 4 * Math.PI * 1.0 * 0.81,
             tao2026: 4 * Math.PI * 1.0 * 0.8,
             lane2023: 4 * Math.PI * 0.8 * 0.58,
-            ye2023: (rad) => 4 * Math.PI * 1.0 * ModelPhysics.getQ('ye2023', rad)
+            ye2023: (rad) => 4 * Math.PI * 1.0 * ModelPhysics.getQ('ye2023', rad),
+            bird2026: 4 * Math.PI * 1.0 * 1.0
         };
         const f = factors[id];
         return (typeof f === 'function') ? f(r) : f;
@@ -166,7 +166,8 @@ const ModelPhysics = {
                 return 0.90;
             },
             tao2026: 0.8,
-            lane2023: 0.58
+            lane2023: 0.58,
+            bird2026: 1.0
         };
         const q = qFactors[id];
         return (typeof q === 'function') ? q(r) : q;
@@ -447,6 +448,20 @@ const ModelPhysics = {
         return ModelPhysics.applyCore(r, core, (rad) => rho_local * getRawDensity(rad));
     },
 
+    bird2026: (r) => {
+        const core = ModelPhysics.currentCoreRadius, R_sun = ModelPhysics.getRsun('bird2026');
+        const alpha_in = 2.5, alpha_out = 4.0, r_break = 20.0;
+        const getRaw = (rad) => {
+            if (rad < r_break) {
+                return Math.pow(rad, -alpha_in);
+            } else {
+                return Math.pow(r_break, alpha_out - alpha_in) * Math.pow(rad, -alpha_out);
+            }
+        };
+        const rho_norm = (1.7e-5) / getRaw(R_sun);
+        return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
+    },
+
     getDensity: (id, r) => {
         return ModelPhysics[id](r);
     },
@@ -473,6 +488,37 @@ const ModelPhysics = {
             const r = Math.pow(10, v);
             const rho_kpc3 = physFunc(r) * (1000**3);
             const volFactor = ModelPhysics.getVolumeFactor(id, r);
+            const dL = rho_kpc3 * volFactor * (r**2) * (r * ln10 * dv);
+            runningL += dL;
+        }
+
+        ModelPhysics.currentCoreRadius = savedCore;
+        ModelPhysics.currentRsun = savedRsun;
+        return runningL;
+    },
+
+    calculateBirdNoCoreLuminosity: (rsun = null) => {
+        const savedCore = ModelPhysics.currentCoreRadius;
+        const savedRsun = ModelPhysics.currentRsun;
+        ModelPhysics.currentCoreRadius = 0.01;
+        if (rsun !== null) ModelPhysics.currentRsun = rsun;
+        
+        const cr_plot_max = 100;
+        const integrationSteps = 5000;
+        const logIntMin = -2; // 0.01 kpc
+        const logIntMax = 2;  // 100 kpc
+        const dv = (logIntMax - logIntMin) / integrationSteps;
+        const ln10 = Math.log(10);
+        let runningL = 0;
+
+        const physFunc = ModelPhysics.bird2026;
+        if (!physFunc) return 0;
+
+        for (let j = 0; j <= integrationSteps; j++) {
+            const v = logIntMin + j * dv;
+            const r = Math.pow(10, v);
+            const rho_kpc3 = physFunc(r) * (1000**3);
+            const volFactor = ModelPhysics.getVolumeFactor('bird2026', r);
             const dL = rho_kpc3 * volFactor * (r**2) * (r * ln10 * dv);
             runningL += dL;
         }
@@ -817,8 +863,15 @@ function renderDetail(id) {
     const currentIndex = modelData.findIndex(m => m.id === id);
     const prevModel = currentIndex > 0 ? modelData[currentIndex - 1] : null;
     const nextModel = currentIndex < modelData.length - 1 ? modelData[currentIndex + 1] : null;
-    const paramRows = Object.entries(model.parameters)
-        .map(([key, val]) => `<tr><th>${key}</th><td>${val}</td></tr>`).join('');
+    let paramRows = '';
+    Object.entries(model.parameters).forEach(([key, val]) => {
+        if (model.id === 'bird2026' && key === 'Core Radius (r_core)') {
+            const rsunVal = ModelPhysics.getRsun('bird2026');
+            const noCoreL = ModelPhysics.calculateBirdNoCoreLuminosity(rsunVal);
+            paramRows += `<tr><th>Luminosity (0.01 - 100 kpc, no core)</th><td><strong>${formatLuminosity(noCoreL)}</strong></td></tr>`;
+        }
+        paramRows += `<tr><th>${key}</th><td>${val}</td></tr>`;
+    });
     app.innerHTML = `
         <div class="model-detail">
             <div class="detail-header">
@@ -841,7 +894,7 @@ function renderDetail(id) {
                         <h3>Model Parameters</h3>
                         <table class="parameters-table">
                             <tr><th>Tracer Stars</th><td>${model.tracer || 'N/A'}</td></tr>
-                            <tr><th>Valid Data Range</th><td>${model.range ? `${model.range.min} - ${model.range.max} kpc` : 'N/A'}</td></tr>
+                            <tr><th>${model.id === 'bird2026' ? 'Model Extrapolation Range' : 'Valid Data Range'}</th><td>${model.range ? `${model.range.min} - ${model.range.max} kpc` : 'N/A'}</td></tr>
                             ${paramRows}
                         </table>
                         <div class="luminosity-highlight">
@@ -866,6 +919,13 @@ function renderDetail(id) {
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        ${model.id === 'bird2026' ? `
+                                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                                                <td style="padding:6px 0; font-style: italic;">0.01 - 100 kpc (no core)</td>
+                                                <td style="padding:6px 0;">${formatLuminosity(ModelPhysics.calculateBirdNoCoreLuminosity(ModelPhysics.currentRsun))}</td>
+                                                <td style="padding:6px 0; text-align:right; color:#ff9f43;">—</td>
+                                            </tr>
+                                        ` : ''}
                                         ${[1.0, 3.0, 5.0].map(c => {
                                             const val = ModelPhysics.calculateLuminosity(model.id, c);
                                             const baseVal = ModelPhysics.calculateLuminosity(model.id, 1.0);

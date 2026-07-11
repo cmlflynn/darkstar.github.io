@@ -201,6 +201,12 @@ MODELS_JSON = """
     "title": "Ye et al. (2023)",
     "luminosity": "3.93e+08 L⊙",
     "range": {"min": 6, "max": 116}
+  },
+  {
+    "id": "bird2026",
+    "title": "Bird et al. (2026)",
+    "luminosity": "4.87e+08 L⊙",
+    "range": {"min": 0.1, "max": 100}
   }
 ]
 
@@ -249,7 +255,8 @@ class ModelPhysics:
             'thomas2018': 4 * np.pi * 1.0 * 0.5,
             'li2026': 4 * np.pi * 1.0 * 0.6,
             'yu2024': 4 * np.pi * 1.0 * 0.7,
-            'ablimit2018': 4 * np.pi * 1.0 * 0.65
+            'ablimit2018': 4 * np.pi * 1.0 * 0.65,
+            'bird2026': 4 * np.pi * 1.0 * 1.0
         }
         return factors.get(id, 4 * np.pi)
 
@@ -363,6 +370,7 @@ class ModelPhysics:
         if id == 'yu2024': return spl(r, 4.34, core)
         if id == 'tao2026': return spl(r, 3.5, core)
         if id == 'li2026': return dbpl(r, 1.50, 3.45, 5.20, 16.0, 76.3, core)
+        if id == 'bird2026': return bpl(r, 2.5, 4.0, 20.0, core)
         return 0
 
 def calculate_luminosity(id, core_radius=1.0, r_sun=None):

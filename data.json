@@ -700,5 +700,29 @@
     "plot_url": "assets/ye2023_density_profile.png",
     "eqn_url": "assets/ye2023_eqn.png",
     "code_url": "assets/ye2023_density_model.py"
+  },
+  {
+    "id": "bird2026",
+    "title": "Bird et al. (2026)",
+    "subtitle": "Galactic Stellar Halo Luminosity Function",
+    "summary": "This study assumes a spherical broken power law profile for the stellar halo, estimating luminosity in spherical shells from 0.1 to 100 kpc. This model version includes a 1 kpc constant density core.",
+    "tracer": "Stars (Model)",
+    "parameters": {
+      "Model": "Broken Power Law",
+      "Break Radius (r_break)": "20.0 kpc",
+      "Core Radius (r_core)": "1.0 kpc",
+      "Inner Slope (α_in)": "2.5",
+      "Outer Slope (α_out)": "4.0",
+      "Flattening (q)": "1.0"
+    },
+    "range": {
+      "min": 0.1,
+      "max": 100
+    },
+    "luminosity": "4.87e+08 L⊙",
+    "paper_url": "#",
+    "plot_url": "assets/bird2026_density_profile.png",
+    "eqn_url": "assets/bird2026_eqn.png",
+    "code_url": "assets/bird2026_density_model.py"
   }
 ]
