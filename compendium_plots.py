@@ -195,8 +195,15 @@ MODELS_JSON = """
     "title": "Ablimit et al. (2018)",
     "luminosity": "4.40e+08 L⊙",
     "range": {"min": 9, "max": 50}
+  },
+  {
+    "id": "ye2023",
+    "title": "Ye et al. (2023)",
+    "luminosity": "3.93e+08 L⊙",
+    "range": {"min": 6, "max": 116}
   }
 ]
+
 """
 
 class ModelPhysics:
@@ -230,7 +237,13 @@ class ModelPhysics:
             'cavieres2025': 4 * np.pi * 1.0 * 0.98,
             'feng2024': 4 * np.pi * 1.0 * 1.0,
             'fukushima2025': 4 * np.pi * 1.0 * 1.56,
-#            'ye2023': 4 * np.pi * 1.0 * 0.81,
+            'ye2023': 4 * np.pi * 1.0 * (
+                0.68 if r <= 26.0 else (
+                0.86 if r <= 36.0 else (
+                0.81 if r <= 46.0 else (
+                0.84 if r <= 76.0 else (
+                0.91 if r <= 96.0 else 0.90
+            ))))),
             'tao2026': 4 * np.pi * 1.0 * 0.8,
             'lane2023': 4 * np.pi * 0.8 * 0.58,
             'thomas2018': 4 * np.pi * 1.0 * 0.5,
@@ -281,6 +294,47 @@ class ModelPhysics:
         if id == 'libinney2022': return bpl(r, 1.0, 4.5, 20.0, core)
         if id == 'lopezcorredoira2024': return spl(r, 4.6, core)
         if id == 'lane2023': return spl(r, 2.5, core)
+        if id == 'ye2023':
+            bins = [
+                {"range": (6.0, 26.0), "r_break": 24.0, "n": 2.1, "q": 0.68, "delta_n": 0.5},
+                {"range": (26.0, 36.0), "r_break": 31.0, "n": 2.9, "q": 0.86, "delta_n": 0.5},
+                {"range": (36.0, 46.0), "r_break": 43.0, "n": 3.4, "q": 0.81, "delta_n": -0.3},
+                {"range": (46.0, 76.0), "r_break": 57.0, "n": 3.2, "q": 0.84, "delta_n": 0.2},
+                {"range": (76.0, 96.0), "r_break": 91.0, "n": 3.4, "q": 0.91, "delta_n": 0.2},
+                {"range": (96.0, 116.0), "r_break": 107.0, "n": 3.8, "q": 0.90, "delta_n": 0.4},
+            ]
+            def g_func(r_e, n, delta_n, r_break):
+                return n + 0.5 * delta_n + (delta_n / np.pi) * np.arctan(r_e - r_break)
+
+            rho_rel = [1.0]
+            for idx in range(1, len(bins)):
+                prev_bin = bins[idx-1]
+                curr_bin = bins[idx]
+                r_bound = prev_bin["range"][1]
+                g_prev = g_func(r_bound, prev_bin["n"], prev_bin["delta_n"], prev_bin["r_break"])
+                density_bound = rho_rel[-1] * (r_sun / r_bound) ** g_prev
+                g_curr = g_func(r_bound, curr_bin["n"], curr_bin["delta_n"], curr_bin["r_break"])
+                rho_rel_curr = density_bound / ((r_sun / r_bound) ** g_curr)
+                rho_rel.append(rho_rel_curr)
+
+            r_eff = max(r, core)
+            active_bin = None
+            active_idx = 0
+            for idx, b in enumerate(bins):
+                r_min, r_max = b["range"]
+                if idx == 0:
+                    if r_eff <= r_max: active_bin = b; active_idx = idx; break
+                elif idx == len(bins) - 1:
+                    if r_eff > r_min: active_bin = b; active_idx = idx; break
+                else:
+                    if r_min < r_eff <= r_max: active_bin = b; active_idx = idx; break
+            if active_bin is None:
+                active_bin = bins[-1]
+                active_idx = len(bins) - 1
+
+            g = g_func(r_eff, active_bin["n"], active_bin["delta_n"], active_bin["r_break"])
+            raw_density = rho_rel[active_idx] * (r_sun / r_eff) ** g
+            return ModelPhysics.RHO_LOCAL_PC3 * raw_density
         if id == 'lucey2026': return spl(r, 4.0, core)
         if id == 'mackereth2020':
             a, r_cut = 3.49, 25.0

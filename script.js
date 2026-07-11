@@ -121,7 +121,8 @@ const ModelPhysics = {
             fukushima2025: 4 * Math.PI * 1.0 * 1.56,
             ye2023: 4 * Math.PI * 1.0 * 0.81,
             tao2026: 4 * Math.PI * 1.0 * 0.8,
-            lane2023: 4 * Math.PI * 0.8 * 0.58
+            lane2023: 4 * Math.PI * 0.8 * 0.58,
+            ye2023: (rad) => 4 * Math.PI * 1.0 * ModelPhysics.getQ('ye2023', rad)
         };
         const f = factors[id];
         return (typeof f === 'function') ? f(r) : f;
@@ -156,7 +157,14 @@ const ModelPhysics = {
             cavieres2025: 0.98,
             feng2024: 1.0,
             fukushima2025: 1.56,
-            ye2023: 0.81,
+            ye2023: (rad) => {
+                if (rad <= 26.0) return 0.68;
+                if (rad <= 36.0) return 0.86;
+                if (rad <= 46.0) return 0.81;
+                if (rad <= 76.0) return 0.84;
+                if (rad <= 96.0) return 0.91;
+                return 0.90;
+            },
             tao2026: 0.8,
             lane2023: 0.58
         };
@@ -384,6 +392,59 @@ const ModelPhysics = {
         const getRaw = (rad) => Math.pow(rad, -a);
         const rho_norm = (1.7e-5) / getRaw(R_sun);
         return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
+    },
+
+    ye2023: (r) => {
+        const core = ModelPhysics.currentCoreRadius;
+        const R_sun = ModelPhysics.getRsun('ye2023');
+        
+        const bins = [
+            { min: 6.0, max: 26.0, r_break: 24.0, n: 2.1, q: 0.68, delta_n: 0.5 },
+            { min: 26.0, max: 36.0, r_break: 31.0, n: 2.9, q: 0.86, delta_n: 0.5 },
+            { min: 36.0, max: 46.0, r_break: 43.0, n: 3.4, q: 0.81, delta_n: -0.3 },
+            { min: 46.0, max: 76.0, r_break: 57.0, n: 3.2, q: 0.84, delta_n: 0.2 },
+            { min: 76.0, max: 96.0, r_break: 91.0, n: 3.4, q: 0.91, delta_n: 0.2 },
+            { min: 96.0, max: 120.0, r_break: 107.0, n: 3.8, q: 0.90, delta_n: 0.4 }
+        ];
+
+        const g_func = (r_e, n, delta_n, r_break) => {
+            return n + 0.5 * delta_n + (delta_n / Math.PI) * Math.atan(r_e - r_break);
+        };
+
+        const rho_rel = [1.0];
+        for (let idx = 1; idx < bins.length; idx++) {
+            const prev = bins[idx-1];
+            const curr = bins[idx];
+            const r_bound = prev.max;
+            
+            const g_prev = g_func(r_bound, prev.n, prev.delta_n, prev.r_break);
+            const density_bound = rho_rel[idx-1] * Math.pow(R_sun / r_bound, g_prev);
+            
+            const g_curr = g_func(r_bound, curr.n, curr.delta_n, curr.r_break);
+            const rho_rel_curr = density_bound / Math.pow(R_sun / r_bound, g_curr);
+            rho_rel.push(rho_rel_curr);
+        }
+
+        const getRawDensity = (rad) => {
+            let active_bin = bins[bins.length - 1];
+            let active_idx = bins.length - 1;
+            for (let idx = 0; idx < bins.length; idx++) {
+                const b = bins[idx];
+                if (idx === 0) {
+                    if (rad <= b.max) { active_bin = b; active_idx = idx; break; }
+                } else if (idx === bins.length - 1) {
+                    if (rad > b.min) { active_bin = b; active_idx = idx; break; }
+                } else {
+                    if (rad > b.min && rad <= b.max) { active_bin = b; active_idx = idx; break; }
+                }
+            }
+
+            const g = g_func(rad, active_bin.n, active_bin.delta_n, active_bin.r_break);
+            return rho_rel[active_idx] * Math.pow(R_sun / rad, g);
+        };
+
+        const rho_local = 1.7e-5;
+        return ModelPhysics.applyCore(r, core, (rad) => rho_local * getRawDensity(rad));
     },
 
     getDensity: (id, r) => {

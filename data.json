@@ -675,5 +675,30 @@
     "plot_url": "assets/ablimit2018_density_profile.png",
     "eqn_url": "assets/ablimit2018_eqn.png",
     "code_url": "assets/ablimit2018_density_model.py"
+  },
+  {
+    "id": "ye2023",
+    "title": "Ye et al. (2023)",
+    "subtitle": "Discovery of the shell structure via break radii in the outer halo of the Milky Way",
+    "summary": "This study uses Gaia DR3 RR Lyrae stars to map the stellar halo density profile, identifying shell structures via density break radii. This model version represents their 6-segment power-law fit with breaks at 24.0, 31.0, 43.0, 57.0, 91.0, and 107.0 kpc, and includes a 1 kpc constant density core.",
+    "tracer": "RR Lyrae",
+    "parameters": {
+      "Model": "6-Segment Power Law",
+      "Core Radius (r_core)": "1.0 kpc",
+      "Inner Slope (α_in)": "2.1",
+      "Outer Slope (α_out)": "3.8",
+      "Flattening (q)": "0.68 - 0.91 (variable)",
+      "Breaks (r_break)": "24.0, 31.0, 43.0, 57.0, 91.0, 107.0 kpc",
+      "Slope Variations (δ_n)": "0.5, 0.5, -0.3, 0.2, 0.2, 0.4"
+    },
+    "range": {
+      "min": 6,
+      "max": 116
+    },
+    "luminosity": "3.93e+08 L⊙",
+    "paper_url": "https://ui.adsabs.harvard.edu/abs/2023MNRAS.525.2472Y/abstract",
+    "plot_url": "assets/ye2023_density_profile.png",
+    "eqn_url": "assets/ye2023_eqn.png",
+    "code_url": "assets/ye2023_density_model.py"
   }
 ]
