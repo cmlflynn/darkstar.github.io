@@ -246,13 +246,13 @@
       "Power-law index (α)": "2.5",
       "Core Radius (r_core)": "1.0 kpc",
       "Flattening (q)": "0.58 (Oblate)",
-      "Axis ratio (p)": "0.9"
+      "Axis ratio (p)": "0.8"
     },
     "range": {
-      "min": 5,
-      "max": 50
+      "min": 2,
+      "max": 40
     },
-    "luminosity": "9.46e+08 L⊙",
+    "luminosity": "8.41e+08 L⊙",
     "paper_url": "https://ui.adsabs.harvard.edu/abs/2023MNRAS.526.1209L/abstract",
     "plot_url": "assets/lane2023_density_profile.png",
     "eqn_url": "assets/lane2023_eqn.png",

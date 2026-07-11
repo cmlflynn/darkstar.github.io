@@ -121,7 +121,7 @@ const ModelPhysics = {
             fukushima2025: 4 * Math.PI * 1.0 * 1.56,
             ye2023: 4 * Math.PI * 1.0 * 0.81,
             tao2026: 4 * Math.PI * 1.0 * 0.8,
-            lane2023: 4 * Math.PI * 0.9 * 0.58
+            lane2023: 4 * Math.PI * 0.8 * 0.58
         };
         const f = factors[id];
         return (typeof f === 'function') ? f(r) : f;
