@@ -86,6 +86,41 @@ const ModelPhysics = {
     RHO_LOCAL_PC3: 1.7e-5,
     R_SUN: 8.275,
 
+    evaluateLuceyGMM: (r) => {
+        const A = 0.37;
+        const q_ig = 1.311;
+        const q_halo = 0.697;
+        const alpha = 17.7 * Math.PI / 180.0;
+        const phi = -27.2 * Math.PI / 180.0;
+        const A_IG = [7.00e-2, 6.53e-2, 6.03e-2, 5.05e-2, 7.53e-1];
+        const A_H = [9.99e-5, 1.14e-4, 5.60e-2, 7.70e-1, 1.32e-1, 4.25e-2];
+        const sum_IG = A_IG.reduce((a, b) => a + b, 0);
+        const sum_H = A_H.reduce((a, b) => a + b, 0);
+        const S = Math.pow(Math.cos(alpha) * Math.cos(phi), 2) + Math.pow(Math.sin(alpha), 2) + Math.pow(Math.cos(alpha) * Math.sin(phi), 2) / (q_halo * q_halo);
+        const q_eff_halo = q_halo * Math.pow(S, 1.5);
+        let rho_ig = 0.0;
+        const k_ig = 0.1;
+        for (let j = 0; j < 5; j++) {
+            const sigma_xy = k_ig * Math.pow(2.0, j);
+            const sigma_z = q_ig * sigma_xy;
+            const det_cov = sigma_xy * sigma_xy * sigma_z;
+            const norm = 1.0 / (Math.pow(2.0 * Math.PI, 1.5) * det_cov);
+            rho_ig += (A_IG[j] / sum_IG) * norm * Math.exp(-0.5 * (r * r) / (sigma_xy * sigma_xy));
+        }
+        let rho_halo = 0.0;
+        const k_halo = 1.5;
+        for (let j = 0; j < 6; j++) {
+            const sigma_xy = k_halo * Math.pow(2.0, j);
+            const sigma_z = q_halo * sigma_xy;
+            const det_cov = sigma_xy * sigma_xy * sigma_z;
+            const norm = 1.0 / (Math.pow(2.0 * Math.PI, 1.5) * det_cov);
+            rho_halo += (A_H[j] / sum_H) * norm * Math.exp(-0.5 * (r * r) * S / (sigma_xy * sigma_xy));
+        }
+        const rho_total = (1.0 - A) * rho_halo + A * rho_ig;
+        const q_val = ((1.0 - A) * rho_halo * q_eff_halo + A * rho_ig * q_ig) / rho_total;
+        return { rho_total, q_val };
+    },
+
     // Volume factor helper: returns 4 * pi * p * q
     getVolumeFactor: (id, r) => {
         const factors = {
@@ -104,7 +139,7 @@ const ModelPhysics = {
             kurbatov2024: 4 * Math.PI * 1.0 * 0.5,
             libinney2022: 4 * Math.PI * 1.0 * 0.65,
             lopezcorredoira2024: 4 * Math.PI * 1.0 * 1.0,
-            lucey2026: (rad) => rad < 10.0 ? 4 * Math.PI * 1.0 * 1.31 : 4 * Math.PI * 1.0 * 0.70,
+            lucey2026: (rad) => 4 * Math.PI * ModelPhysics.getQ('lucey2026', rad),
             mackereth2020: 4 * Math.PI * 0.73 * 0.56,
             medina2024: 4 * Math.PI * 1.0 * 1.0,
             medina2018: 4 * Math.PI * 1.0 * 1.0,
@@ -141,7 +176,7 @@ const ModelPhysics = {
             kurbatov2024: 0.5,
             libinney2022: 0.65,
             lopezcorredoira2024: 1.0,
-            lucey2026: (rad) => rad < 10.0 ? 1.31 : 0.70,
+            lucey2026: (rad) => ModelPhysics.evaluateLuceyGMM(rad).q_val,
             mackereth2020: 0.56,
             medina2024: 1.0,
             medina2018: 1.0,
@@ -283,9 +318,11 @@ const ModelPhysics = {
     },
 
     lucey2026: (r) => {
-        const a=4.0, core=ModelPhysics.currentCoreRadius, R_sun=ModelPhysics.getRsun('lucey2026');
-        const rho_norm = (1.7e-5) / Math.pow(R_sun, -a);
-        return ModelPhysics.applyCore(r, core, (rad) => rho_norm * Math.pow(rad, -a));
+        const R_sun = ModelPhysics.getRsun('lucey2026');
+        const core = ModelPhysics.currentCoreRadius;
+        const getRaw = (rad) => ModelPhysics.evaluateLuceyGMM(rad).rho_total;
+        const rho_norm = (1.7e-5) / getRaw(R_sun);
+        return ModelPhysics.applyCore(r, core, (rad) => rho_norm * getRaw(rad));
     },
 
     mackereth2020: (r) => {

@@ -262,19 +262,23 @@
     "id": "lucey2026",
     "title": "Lucey et al. (2026)",
     "subtitle": "Inferring Stellar Densities with Flexible Models. I. The Distribution of RR Lyrae in the Milky Way with Gaia DR3",
-    "summary": "This study uses Gaia DR3 RR Lyrae stars to map the stellar halo, showing that the traditionally observed 'break' in the radial density profile may be explained by a transition in the halo's flattening. This model version follows their broken power-law fit and includes a 1 kpc constant density core.",
+    "summary": "This study uses Gaia DR3 RR Lyrae stars to map the stellar halo. While they state that the outer halo (r_gc > 12 kpc) follows a single power law, their actual best-fitting model is a hierarchical Bayesian Gaussian Mixture Model (GMM). This version implements their full 11-component GMM (5 inner Galaxy components and 6 halo components).",
     "tracer": "RR Lyrae",
     "parameters": {
-      "Model": "Single Power Law With Variable q",
-      "Power-law index (α)": "4.0",
-      "Core Radius (r_core)": "1.0 kpc",
-      "Flattening (q)": "1.31 (R < 10 kpc) to 0.70 (R > 10 kpc)"
+      "Model": "Bayesian Gaussian Mixture Model",
+      "Total Components": "11 (5 Inner Galaxy, 6 Halo)",
+      "Inner Galaxy Scale (k)": "0.1 kpc",
+      "Halo Scale (k)": "1.5 kpc",
+      "Inner Galaxy Flattening (q_IG)": "1.311",
+      "Halo Flattening (q_H)": "0.697",
+      "Halo Rotation (θ, φ)": "17.7°, -27.2°",
+      "Inner Galaxy Weight (A)": "0.37"
     },
     "range": {
       "min": 0.2,
       "max": 120
     },
-    "luminosity": "1.68e+09 L⊙",
+    "luminosity": "6.46e+08 L⊙",
     "paper_url": "https://ui.adsabs.harvard.edu/abs/2026AJ....171..249L/abstract",
     "plot_url": "assets/lucey2026_density_profile.png",
     "eqn_url": "assets/lucey2026_eqn.png",
