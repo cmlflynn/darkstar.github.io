@@ -7,20 +7,26 @@
     "tracer": "APOGEE Giants",
     "parameters": {
       "Model": "Triaxial Plummer",
-      "Scale Radius (a)": "3.48 ± 0.10 kpc",
-      "Flattening (p)": "0.80 ± 0.03",
-      "Flattening (q)": "0.66 ± 0.02",
-      "Solar Distance (R₀)": "8.275 kpc"
+      "Scale Radius (a)": "3.48 \u00b1 0.10 kpc",
+      "Flattening (p)": "0.80 \u00b1 0.03",
+      "Flattening (q)": "0.66 \u00b1 0.02",
+      "Solar Distance (R\u2080)": "8.275 kpc",
+      "Total Stars (N_stars)": "1.76e+09 stars",
+      "Abs. Visual Mag (M_V)": "-15.78 mag",
+      "Abs. G-Band Mag (M_G)": "-15.94 mag"
     },
     "range": {
       "min": 0,
       "max": 12
     },
-    "luminosity": "1.81e+08 L⊙",
+    "luminosity": "1.81e+08 L\u2299",
     "paper_url": "https://ui.adsabs.harvard.edu/abs/2025MNRAS.537.3730H/abstract",
     "plot_url": "assets/staf256_density_profile.png",
     "eqn_url": "assets/staf256_eqn.png",
-    "code_url": "assets/staf256_density_model.py"
+    "code_url": "assets/staf256_density_model.py",
+    "total_stars": "1.76e+09 stars",
+    "abs_magnitude_v": "-15.78 mag",
+    "abs_magnitude_g": "-15.94 mag"
   },
   {
     "id": "han2022",
@@ -33,22 +39,28 @@
       "Break Radius 1 (rb1)": "12.0 kpc",
       "Break Radius 2 (rb2)": "28.0 kpc",
       "Core Radius (r_core)": "1.0 kpc",
-      "Inner Index (α1)": "1.7",
-      "Middle Index (α2)": "3.1",
-      "Outer Index (α3)": "4.6",
+      "Inner Index (\u03b11)": "1.7",
+      "Middle Index (\u03b12)": "3.1",
+      "Outer Index (\u03b13)": "4.6",
       "Flattening (p)": "0.81",
       "Flattening (q)": "0.73",
-      "Tilt (Pitch)": "25°"
+      "Tilt (Pitch)": "25\u00b0",
+      "Total Stars (N_stars)": "2.40e+09 stars",
+      "Abs. Visual Mag (M_V)": "-16.12 mag",
+      "Abs. G-Band Mag (M_G)": "-16.28 mag"
     },
     "range": {
       "min": 6,
       "max": 60
     },
-    "luminosity": "2.40e+08 L⊙",
+    "luminosity": "2.40e+08 L\u2299",
     "paper_url": "https://ui.adsabs.harvard.edu/abs/2022AJ....164..249H/abstract",
     "plot_url": "assets/han2022_density_profile.png",
     "eqn_url": "assets/han2022_eqn.png",
-    "code_url": "assets/han2022_density_model.py"
+    "code_url": "assets/han2022_density_model.py",
+    "total_stars": "2.40e+09 stars",
+    "abs_magnitude_v": "-16.12 mag",
+    "abs_magnitude_g": "-16.28 mag"
   },
   {
     "id": "amarante2024",
@@ -58,45 +70,57 @@
     "tracer": "BHB Stars",
     "parameters": {
       "Model": "Broken Power Law",
-      "Break Radius (r_br)": "19.1 ± 1.8 kpc",
+      "Break Radius (r_br)": "19.1 \u00b1 1.8 kpc",
       "Core Radius (r_core)": "1.0 kpc",
-      "Inner Slope (α_in)": "2.9 ± 0.1",
-      "Outer Slope (α_out)": "4.5 ± 0.1",
-      "Flattening (q)": "0.77 (r < 30 kpc), 0.99 (r > 30 kpc)"
+      "Inner Slope (\u03b1_in)": "2.9 \u00b1 0.1",
+      "Outer Slope (\u03b1_out)": "4.5 \u00b1 0.1",
+      "Flattening (q)": "0.77 (r < 30 kpc), 0.99 (r > 30 kpc)",
+      "Total Stars (N_stars)": "3.61e+09 stars",
+      "Abs. Visual Mag (M_V)": "-16.56 mag",
+      "Abs. G-Band Mag (M_G)": "-16.72 mag"
     },
     "range": {
       "min": 5,
       "max": 120
     },
-    "luminosity": "3.61e+08 L⊙",
+    "luminosity": "3.61e+08 L\u2299",
     "paper_url": "https://ui.adsabs.harvard.edu/abs/2024A%26A...690A.166A/abstract",
     "plot_url": "assets/amarante2024_density_profile.png",
     "eqn_url": "assets/amarante2024_eqn.png",
-    "code_url": "assets/amarante2024_density_model.py"
+    "code_url": "assets/amarante2024_density_model.py",
+    "total_stars": "3.61e+09 stars",
+    "abs_magnitude_v": "-16.56 mag",
+    "abs_magnitude_g": "-16.72 mag"
   },
   {
     "id": "chen2023",
     "title": "Chen et al. (2023)",
-    "subtitle": "Mapping the milky way’s stellar halo with 2D data",
+    "subtitle": "Mapping the milky way\u2019s stellar halo with 2D data",
     "summary": "This paper proposes a new method for measuring the spatial density distribution of the stellar halo using RR Lyrae stars. This model version includes a 1 kpc constant density core to regularize the central density.",
     "tracer": "RR Lyrae",
     "parameters": {
       "Model": "Broken Power Law",
-      "Break Radius (r0)": "27.45 ± 9.68 kpc",
+      "Break Radius (r0)": "27.45 \u00b1 9.68 kpc",
       "Core Radius (r_core)": "1.0 kpc",
-      "Inner Slope (s1)": "2.83 ± 0.25",
-      "Outer Slope (s2)": "4.49 ± 1.43",
-      "Flattening (q)": "0.73 ± 0.24"
+      "Inner Slope (s1)": "2.83 \u00b1 0.25",
+      "Outer Slope (s2)": "4.49 \u00b1 1.43",
+      "Flattening (q)": "0.73 \u00b1 0.24",
+      "Total Stars (N_stars)": "3.67e+09 stars",
+      "Abs. Visual Mag (M_V)": "-16.58 mag",
+      "Abs. G-Band Mag (M_G)": "-16.74 mag"
     },
     "range": {
       "min": 5,
       "max": 100
     },
-    "luminosity": "3.68e+08 L⊙",
+    "luminosity": "3.68e+08 L\u2299",
     "paper_url": "https://ui.adsabs.harvard.edu/abs/2023MNRAS.525.3075C/abstract",
     "plot_url": "assets/chen2023_density_profile.png",
     "eqn_url": "assets/chen2023_eqn.png",
-    "code_url": "assets/chen2023_density_model.py"
+    "code_url": "assets/chen2023_density_model.py",
+    "total_stars": "3.67e+09 stars",
+    "abs_magnitude_v": "-16.58 mag",
+    "abs_magnitude_g": "-16.74 mag"
   },
   {
     "id": "yang2022",
@@ -109,42 +133,54 @@
       "Inner Break (rb1)": "10.0 kpc",
       "Outer Break (rb2)": "25.0 kpc",
       "Core Radius (r_core)": "1.0 kpc",
-      "Inner Index (α1)": "1.5",
-      "Middle Index (α2)": "2.8",
-      "Outer Index (α3)": "6.1",
-      "Flattening (q)": "0.5 (inner) to 0.8 (outer)"
+      "Inner Index (\u03b11)": "1.5",
+      "Middle Index (\u03b12)": "2.8",
+      "Outer Index (\u03b13)": "6.1",
+      "Flattening (q)": "0.5 (inner) to 0.8 (outer)",
+      "Total Stars (N_stars)": "2.07e+09 stars",
+      "Abs. Visual Mag (M_V)": "-15.96 mag",
+      "Abs. G-Band Mag (M_G)": "-16.12 mag"
     },
     "range": {
       "min": 5,
       "max": 50
     },
-    "luminosity": "2.07e+08 L⊙",
+    "luminosity": "2.07e+08 L\u2299",
     "paper_url": "https://ui.adsabs.harvard.edu/abs/2022AJ....164..241Y/abstract",
     "plot_url": "assets/yang2022_density_profile.png",
     "eqn_url": "assets/yang2022_eqn.png",
-    "code_url": "assets/yang2022_density_model.py"
+    "code_url": "assets/yang2022_density_model.py",
+    "total_stars": "2.07e+09 stars",
+    "abs_magnitude_v": "-15.96 mag",
+    "abs_magnitude_g": "-16.12 mag"
   },
   {
     "id": "hernitschek2018",
     "title": "Hernitschek et al. (2018)",
-    "subtitle": "The Profile of the Galactic Halo from Pan-STARRS1 3π RR Lyrae",
+    "subtitle": "The Profile of the Galactic Halo from Pan-STARRS1 3\u03c0 RR Lyrae",
     "summary": "This study uses Pan-STARRS1 RR Lyrae stars to map the stellar halo out to 150 kpc, finding it follows a broken power law with significant flattening in the inner regions. This model version includes a 1 kpc constant density core.",
     "tracer": "RR Lyrae",
     "parameters": {
       "Model": "Single Power Law",
       "Core Radius (r_core)": "1.0 kpc",
-      "Power-law index (α)": "4.40",
-      "Flattening (q)": "0.918"
+      "Power-law index (\u03b1)": "4.40",
+      "Flattening (q)": "0.918",
+      "Total Stars (N_stars)": "2.24e+10 stars",
+      "Abs. Visual Mag (M_V)": "-18.55 mag",
+      "Abs. G-Band Mag (M_G)": "-18.71 mag"
     },
     "range": {
       "min": 20,
       "max": 131
     },
-    "luminosity": "2.24e+09 L⊙",
+    "luminosity": "2.24e+09 L\u2299",
     "paper_url": "https://ui.adsabs.harvard.edu/abs/2018ApJ...859...31H/abstract",
     "plot_url": "assets/hernitschek2018_density_profile.png",
     "eqn_url": "assets/hernitschek2018_eqn.png",
-    "code_url": "assets/hernitschek2018_density_model.py"
+    "code_url": "assets/hernitschek2018_density_model.py",
+    "total_stars": "2.24e+10 stars",
+    "abs_magnitude_v": "-18.55 mag",
+    "abs_magnitude_g": "-18.71 mag"
   },
   {
     "id": "horta2021",
@@ -154,20 +190,26 @@
     "tracer": "APOGEE Giants",
     "parameters": {
       "Model": "Triaxial Disc Cut-off (TRI-CUT-DISC)",
-      "Power-law index (α)": "3.5",
+      "Power-law index (\u03b1)": "3.5",
       "Core Radius (r_core)": "1.0 kpc",
       "Azimuthal Flattening (p)": "0.73",
-      "Vertical Flattening (q)": "0.56"
+      "Vertical Flattening (q)": "0.56",
+      "Total Stars (N_stars)": "1.76e+09 stars",
+      "Abs. Visual Mag (M_V)": "-15.78 mag",
+      "Abs. G-Band Mag (M_G)": "-15.94 mag"
     },
     "range": {
       "min": 0,
       "max": 10
     },
-    "luminosity": "3.32e+08 L⊙",
+    "luminosity": "3.32e+08 L\u2299",
     "paper_url": "https://ui.adsabs.harvard.edu/abs/2021MNRAS.500.5462H/abstract",
     "plot_url": "assets/horta2021_density_profile.png",
     "eqn_url": "assets/horta2021_eqn.png",
-    "code_url": "assets/horta2021_density_model.py"
+    "code_url": "assets/horta2021_density_model.py",
+    "total_stars": "1.76e+09 stars",
+    "abs_magnitude_v": "-15.78 mag",
+    "abs_magnitude_g": "-15.94 mag"
   },
   {
     "id": "kurbatov2024",
@@ -177,19 +219,25 @@
     "tracer": "RGB Stars",
     "parameters": {
       "Model": "Single Power Law",
-      "Power-law index (α)": "3.4",
+      "Power-law index (\u03b1)": "3.4",
       "Core Radius (r_core)": "1.0 kpc",
-      "Flattening (q)": "0.5"
+      "Flattening (q)": "0.5",
+      "Total Stars (N_stars)": "3.70e+09 stars",
+      "Abs. Visual Mag (M_V)": "-16.59 mag",
+      "Abs. G-Band Mag (M_G)": "-16.75 mag"
     },
     "range": {
       "min": 1,
       "max": 18
     },
-    "luminosity": "3.99e+08 L⊙",
+    "luminosity": "3.99e+08 L\u2299",
     "paper_url": "https://ui.adsabs.harvard.edu/abs/2024arXiv241022250K/abstract",
     "plot_url": "assets/kurbatov2024_density_profile.png",
     "eqn_url": "assets/kurbatov2024_eqn.png",
-    "code_url": "assets/kurbatov2024_density_model.py"
+    "code_url": "assets/kurbatov2024_density_model.py",
+    "total_stars": "3.70e+09 stars",
+    "abs_magnitude_v": "-16.59 mag",
+    "abs_magnitude_g": "-16.75 mag"
   },
   {
     "id": "libinney2022",
@@ -199,41 +247,53 @@
     "tracer": "RR Lyrae",
     "parameters": {
       "Model": "Softened Double Power Law",
-      "Outer Slope (α_out)": "4.5",
+      "Outer Slope (\u03b1_out)": "4.5",
       "Core Radius (r_core)": "1.0 kpc",
-      "Flattening (q)": "0.65"
+      "Flattening (q)": "0.65",
+      "Total Stars (N_stars)": "5.34e+09 stars",
+      "Abs. Visual Mag (M_V)": "-16.99 mag",
+      "Abs. G-Band Mag (M_G)": "-17.15 mag"
     },
     "range": {
       "min": 0,
       "max": 100
     },
-    "luminosity": "5.36e+08 L⊙",
+    "luminosity": "5.36e+08 L\u2299",
     "paper_url": "https://ui.adsabs.harvard.edu/abs/2022MNRAS.510.4706L/abstract",
     "plot_url": "assets/libinney2022_density_profile.png",
     "eqn_url": "assets/libinney2022_eqn.png",
-    "code_url": "assets/libinney2022_density_model.py"
+    "code_url": "assets/libinney2022_density_model.py",
+    "total_stars": "5.34e+09 stars",
+    "abs_magnitude_v": "-16.99 mag",
+    "abs_magnitude_g": "-17.15 mag"
   },
   {
     "id": "lopezcorredoira2024",
-    "title": "López-Corredoira et al. (2024)",
+    "title": "L\u00f3pez-Corredoira et al. (2024)",
     "subtitle": "Stellar halo density with LAMOST K and M giants",
     "summary": "This study probes the outer halo using LAMOST giants, finding a spherical distribution and a steep power-law fall-off. This model version includes a 1 kpc constant density core.",
     "tracer": "K/M Giants",
     "parameters": {
       "Model": "Single Power Law",
-      "Power-law index (α)": "4.6",
+      "Power-law index (\u03b1)": "4.6",
       "Core Radius (r_core)": "1.0 kpc",
-      "Flattening (q)": "1.0"
+      "Flattening (q)": "1.0",
+      "Total Stars (N_stars)": "3.41e+10 stars",
+      "Abs. Visual Mag (M_V)": "-19.00 mag",
+      "Abs. G-Band Mag (M_G)": "-19.16 mag"
     },
     "range": {
       "min": 25,
       "max": 90
     },
-    "luminosity": "3.41e+09 L⊙",
+    "luminosity": "3.41e+09 L\u2299",
     "paper_url": "https://ui.adsabs.harvard.edu/abs/2024A%26A...684A.135L/abstract",
     "plot_url": "assets/lopezcorredoira2024_density_profile.png",
     "eqn_url": "assets/lopezcorredoira2024_eqn.png",
-    "code_url": "assets/lopezcorredoira2024_density_model.py"
+    "code_url": "assets/lopezcorredoira2024_density_model.py",
+    "total_stars": "3.41e+10 stars",
+    "abs_magnitude_v": "-19.00 mag",
+    "abs_magnitude_g": "-19.16 mag"
   },
   {
     "id": "lane2023",
@@ -243,20 +303,26 @@
     "tracer": "APOGEE Giants",
     "parameters": {
       "Model": "Triaxial Oblate Single Power Law",
-      "Power-law index (α)": "2.5",
+      "Power-law index (\u03b1)": "2.5",
       "Core Radius (r_core)": "1.0 kpc",
       "Flattening (q)": "0.58 (Oblate)",
-      "Axis ratio (p)": "0.8"
+      "Axis ratio (p)": "0.8",
+      "Total Stars (N_stars)": "8.41e+09 stars",
+      "Abs. Visual Mag (M_V)": "-17.48 mag",
+      "Abs. G-Band Mag (M_G)": "-17.64 mag"
     },
     "range": {
       "min": 2,
       "max": 40
     },
-    "luminosity": "8.41e+08 L⊙",
+    "luminosity": "8.41e+08 L\u2299",
     "paper_url": "https://ui.adsabs.harvard.edu/abs/2023MNRAS.526.1209L/abstract",
     "plot_url": "assets/lane2023_density_profile.png",
     "eqn_url": "assets/lane2023_eqn.png",
-    "code_url": "assets/lane2023_density_model.py"
+    "code_url": "assets/lane2023_density_model.py",
+    "total_stars": "8.41e+09 stars",
+    "abs_magnitude_v": "-17.48 mag",
+    "abs_magnitude_g": "-17.64 mag"
   },
   {
     "id": "lucey2026",
@@ -271,18 +337,24 @@
       "Halo Scale (k)": "1.5 kpc",
       "Inner Galaxy Flattening (q_IG)": "1.311",
       "Halo Flattening (q_H)": "0.697",
-      "Halo Rotation (θ, φ)": "17.7°, -27.2°",
-      "Inner Galaxy Weight (A)": "0.37"
+      "Halo Rotation (\u03b8, \u03c6)": "17.7\u00b0, -27.2\u00b0",
+      "Inner Galaxy Weight (A)": "0.37",
+      "Total Stars (N_stars)": "6.46e+09 stars",
+      "Abs. Visual Mag (M_V)": "-17.20 mag",
+      "Abs. G-Band Mag (M_G)": "-17.36 mag"
     },
     "range": {
       "min": 0.2,
       "max": 120
     },
-    "luminosity": "6.46e+08 L⊙",
+    "luminosity": "6.46e+08 L\u2299",
     "paper_url": "https://ui.adsabs.harvard.edu/abs/2026AJ....171..249L/abstract",
     "plot_url": "assets/lucey2026_density_profile.png",
     "eqn_url": "assets/lucey2026_eqn.png",
-    "code_url": "assets/lucey2026_density_model.py"
+    "code_url": "assets/lucey2026_density_model.py",
+    "total_stars": "6.46e+09 stars",
+    "abs_magnitude_v": "-17.20 mag",
+    "abs_magnitude_g": "-17.36 mag"
   },
   {
     "id": "mackereth2020",
@@ -292,21 +364,27 @@
     "tracer": "Red Giants",
     "parameters": {
       "Model": "Triaxial Power Law With Exponential Cut-Off",
-      "Power-law index (α)": "3.49",
+      "Power-law index (\u03b1)": "3.49",
       "Cut-off Radius (r_cut)": "25.0 kpc",
       "Core Radius (r_core)": "1.0 kpc",
       "Vertical Flattening (q)": "0.56",
-      "Azimuthal Flattening (p)": "0.73"
+      "Azimuthal Flattening (p)": "0.73",
+      "Total Stars (N_stars)": "3.31e+09 stars",
+      "Abs. Visual Mag (M_V)": "-16.47 mag",
+      "Abs. G-Band Mag (M_G)": "-16.63 mag"
     },
     "range": {
       "min": 5,
       "max": 30
     },
-    "luminosity": "3.31e+08 L⊙",
+    "luminosity": "3.31e+08 L\u2299",
     "paper_url": "https://ui.adsabs.harvard.edu/abs/2020MNRAS.492.3631M/abstract",
     "plot_url": "assets/mackereth2020_density_profile.png",
     "eqn_url": "assets/mackereth2020_eqn.png",
-    "code_url": "assets/mackereth2020_density_model.py"
+    "code_url": "assets/mackereth2020_density_model.py",
+    "total_stars": "3.31e+09 stars",
+    "abs_magnitude_v": "-16.47 mag",
+    "abs_magnitude_g": "-16.63 mag"
   },
   {
     "id": "medina2024",
@@ -318,19 +396,25 @@
       "Model": "Broken Power Law",
       "Break Radius (r_break)": "18.1 kpc",
       "Core Radius (r_core)": "1.0 kpc",
-      "Inner Slope (α_in)": "2.05",
-      "Outer Slope (α_out)": "4.47",
-      "Flattening (q)": "1.0"
+      "Inner Slope (\u03b1_in)": "2.05",
+      "Outer Slope (\u03b1_out)": "4.47",
+      "Flattening (q)": "1.0",
+      "Total Stars (N_stars)": "4.30e+09 stars",
+      "Abs. Visual Mag (M_V)": "-16.75 mag",
+      "Abs. G-Band Mag (M_G)": "-16.91 mag"
     },
     "range": {
       "min": 5,
       "max": 200
     },
-    "luminosity": "4.30e+08 L⊙",
+    "luminosity": "4.30e+08 L\u2299",
     "paper_url": "https://ui.adsabs.harvard.edu/abs/2024MNRAS.531.4762M/abstract",
     "plot_url": "assets/medina2024_density_profile.png",
     "eqn_url": "assets/medina2024_eqn.png",
-    "code_url": "assets/medina2024_density_model.py"
+    "code_url": "assets/medina2024_density_model.py",
+    "total_stars": "4.30e+09 stars",
+    "abs_magnitude_v": "-16.75 mag",
+    "abs_magnitude_g": "-16.91 mag"
   },
   {
     "id": "stringer2021",
@@ -342,19 +426,25 @@
       "Model": "Broken Power Law",
       "Break Radius (r_break)": "32.1 kpc",
       "Core Radius (r_core)": "1.0 kpc",
-      "Inner Slope (α_in)": "2.54",
-      "Outer Slope (α_out)": "5.42",
-      "Flattening (q)": "0.7"
+      "Inner Slope (\u03b1_in)": "2.54",
+      "Outer Slope (\u03b1_out)": "5.42",
+      "Flattening (q)": "0.7",
+      "Total Stars (N_stars)": "3.50e+09 stars",
+      "Abs. Visual Mag (M_V)": "-16.53 mag",
+      "Abs. G-Band Mag (M_G)": "-16.69 mag"
     },
     "range": {
       "min": 9,
       "max": 100
     },
-    "luminosity": "3.50e+08 L⊙",
+    "luminosity": "3.50e+08 L\u2299",
     "paper_url": "https://ui.adsabs.harvard.edu/abs/2021ApJ...911..109S/abstract",
     "plot_url": "assets/stringer2021_density_profile.png",
     "eqn_url": "assets/stringer2021_eqn.png",
-    "code_url": "assets/stringer2021_density_model.py"
+    "code_url": "assets/stringer2021_density_model.py",
+    "total_stars": "3.50e+09 stars",
+    "abs_magnitude_v": "-16.53 mag",
+    "abs_magnitude_g": "-16.69 mag"
   },
   {
     "id": "suzuki2026",
@@ -366,19 +456,25 @@
       "Model": "Broken Power Law",
       "Break Radius (r_break)": "17.4 kpc",
       "Core Radius (r_core)": "1.0 kpc",
-      "Inner Slope (α_in)": "3.3",
-      "Outer Slope (α_out)": "4.8",
-      "Flattening (q)": "1.0"
+      "Inner Slope (\u03b1_in)": "3.3",
+      "Outer Slope (\u03b1_out)": "4.8",
+      "Flattening (q)": "1.0",
+      "Total Stars (N_stars)": "5.68e+09 stars",
+      "Abs. Visual Mag (M_V)": "-17.06 mag",
+      "Abs. G-Band Mag (M_G)": "-17.22 mag"
     },
     "range": {
       "min": 5,
       "max": 100
     },
-    "luminosity": "5.68e+08 L⊙",
+    "luminosity": "5.68e+08 L\u2299",
     "paper_url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260410280S/abstract",
     "plot_url": "assets/suzuki2026_density_profile.png",
     "eqn_url": "assets/suzuki2026_eqn.png",
-    "code_url": "assets/suzuki2026_density_model.py"
+    "code_url": "assets/suzuki2026_density_model.py",
+    "total_stars": "5.68e+09 stars",
+    "abs_magnitude_v": "-17.06 mag",
+    "abs_magnitude_g": "-17.22 mag"
   },
   {
     "id": "wu2025",
@@ -388,19 +484,25 @@
     "tracer": "BHB Stars",
     "parameters": {
       "Model": "Single Power Law",
-      "Power-law index (α)": "4.65",
+      "Power-law index (\u03b1)": "4.65",
       "Core Radius (r_core)": "1.0 kpc",
-      "Flattening (q)": "0.4 (inner) to 0.8 (outer)"
+      "Flattening (q)": "0.4 (inner) to 0.8 (outer)",
+      "Total Stars (N_stars)": "1.50e+10 stars",
+      "Abs. Visual Mag (M_V)": "-18.11 mag",
+      "Abs. G-Band Mag (M_G)": "-18.27 mag"
     },
     "range": {
       "min": 5,
       "max": 30
     },
-    "luminosity": "1.50e+09 L⊙",
+    "luminosity": "1.50e+09 L\u2299",
     "paper_url": "https://ui.adsabs.harvard.edu/abs/2025A%26A...700A.244W/abstract",
     "plot_url": "assets/wu2025_density_profile.png",
     "eqn_url": "assets/wu2025_eqn.png",
-    "code_url": "assets/wu2025_density_model.py"
+    "code_url": "assets/wu2025_density_model.py",
+    "total_stars": "1.50e+10 stars",
+    "abs_magnitude_v": "-18.11 mag",
+    "abs_magnitude_g": "-18.27 mag"
   },
   {
     "id": "wu2022",
@@ -412,19 +514,25 @@
       "Model": "Sum Of Two Simple Power-Laws",
       "Equidensity Radius": "20.1 kpc",
       "Core Radius (r_core)": "1.0 kpc",
-      "Power-law index (α1)": "4.92",
-      "Power-law index (α2)": "4.25",
-      "Flattening (q)": "0.4 (inner) to 0.8 (outer)"
+      "Power-law index (\u03b11)": "4.92",
+      "Power-law index (\u03b12)": "4.25",
+      "Flattening (q)": "0.4 (inner) to 0.8 (outer)",
+      "Total Stars (N_stars)": "1.50e+10 stars",
+      "Abs. Visual Mag (M_V)": "-18.11 mag",
+      "Abs. G-Band Mag (M_G)": "-18.27 mag"
     },
     "range": {
       "min": 5,
       "max": 120
     },
-    "luminosity": "1.83e+09 L⊙",
+    "luminosity": "1.83e+09 L\u2299",
     "paper_url": "https://ui.adsabs.harvard.edu/abs/2022AJ....164...41W/abstract",
     "plot_url": "assets/wu2022_density_profile.png",
     "eqn_url": "assets/wu2022_eqn.png",
-    "code_url": "assets/wu2022_density_model.py"
+    "code_url": "assets/wu2022_density_model.py",
+    "total_stars": "1.50e+10 stars",
+    "abs_magnitude_v": "-18.11 mag",
+    "abs_magnitude_g": "-18.27 mag"
   },
   {
     "id": "rix2022",
@@ -434,18 +542,24 @@
     "tracer": "Aurora (In Situ)",
     "parameters": {
       "Model": "Gaussian density falloff",
-      "Sigma (σ)": "2.7 kpc",
-      "Flattening (q)": "1.0"
+      "Sigma (\u03c3)": "2.7 kpc",
+      "Flattening (q)": "1.0",
+      "Total Stars (N_stars)": "5.77e+09 stars",
+      "Abs. Visual Mag (M_V)": "-17.07 mag",
+      "Abs. G-Band Mag (M_G)": "-17.23 mag"
     },
     "range": {
       "min": 0,
       "max": 5
     },
-    "luminosity": "5.77e+08 L⊙",
+    "luminosity": "5.77e+08 L\u2299",
     "paper_url": "https://ui.adsabs.harvard.edu/abs/2022ApJ...941...45R/abstract",
     "plot_url": "assets/rix2022_density_profile.png",
     "eqn_url": "assets/rix2022_eqn.png",
-    "code_url": "assets/rix2022_density_model.py"
+    "code_url": "assets/rix2022_density_model.py",
+    "total_stars": "5.77e+09 stars",
+    "abs_magnitude_v": "-17.07 mag",
+    "abs_magnitude_g": "-17.23 mag"
   },
   {
     "id": "cavieres2025",
@@ -457,20 +571,26 @@
       "Model": "Triaxial Broken Power Law",
       "Break Radius (r_break)": "67.5 kpc",
       "Core Radius (r_core)": "1.0 kpc",
-      "Inner Slope (α_in)": "3.13",
-      "Outer Slope (α_out)": "7.46",
+      "Inner Slope (\u03b1_in)": "3.13",
+      "Outer Slope (\u03b1_out)": "7.46",
       "Flattening (p)": "1.0",
-      "Flattening (q)": "0.98"
+      "Flattening (q)": "0.98",
+      "Total Stars (N_stars)": "5.79e+09 stars",
+      "Abs. Visual Mag (M_V)": "-17.08 mag",
+      "Abs. G-Band Mag (M_G)": "-17.24 mag"
     },
     "range": {
       "min": 20,
       "max": 100
     },
-    "luminosity": "5.79e+08 L⊙",
+    "luminosity": "5.79e+08 L\u2299",
     "paper_url": "https://ui.adsabs.harvard.edu/abs/2025ApJ...983...83C/abstract",
     "plot_url": "assets/cavieres2025_density_profile.png",
     "eqn_url": "assets/cavieres2025_eqn.png",
-    "code_url": "assets/cavieres2025_density_model.py"
+    "code_url": "assets/cavieres2025_density_model.py",
+    "total_stars": "5.79e+09 stars",
+    "abs_magnitude_v": "-17.08 mag",
+    "abs_magnitude_g": "-17.24 mag"
   },
   {
     "id": "feng2024",
@@ -480,19 +600,25 @@
     "tracer": "RR Lyrae",
     "parameters": {
       "Model": "Single Power Law",
-      "Power-law index (α)": "4.09",
+      "Power-law index (\u03b1)": "4.09",
       "Core Radius (r_core)": "1.0 kpc",
-      "Flattening (q)": "1.0"
+      "Flattening (q)": "1.0",
+      "Total Stars (N_stars)": "1.51e+10 stars",
+      "Abs. Visual Mag (M_V)": "-18.12 mag",
+      "Abs. G-Band Mag (M_G)": "-18.28 mag"
     },
     "range": {
       "min": 20,
       "max": 300
     },
-    "luminosity": "1.52e+09 L⊙",
+    "luminosity": "1.52e+09 L\u2299",
     "paper_url": "https://ui.adsabs.harvard.edu/abs/2024ApJ...966..159F/abstract",
     "plot_url": "assets/feng2024_density_profile.png",
     "eqn_url": "assets/feng2024_eqn.png",
-    "code_url": "assets/feng2024_density_model.py"
+    "code_url": "assets/feng2024_density_model.py",
+    "total_stars": "1.51e+10 stars",
+    "abs_magnitude_v": "-18.12 mag",
+    "abs_magnitude_g": "-18.28 mag"
   },
   {
     "id": "fukushima2025",
@@ -504,21 +630,26 @@
       "Model": "Broken Power Law",
       "Break Radius (r_break)": "184.0 kpc",
       "Core Radius (r_core)": "1.0 kpc",
-      "Inner Slope (α_in)": "3.90",
-      "Outer Slope (α_out)": "9.1",
-      "Flattening (q)": "1.56 (Prolate)"
+      "Inner Slope (\u03b1_in)": "3.90",
+      "Outer Slope (\u03b1_out)": "9.1",
+      "Flattening (q)": "1.56 (Prolate)",
+      "Total Stars (N_stars)": "1.82e+10 stars",
+      "Abs. Visual Mag (M_V)": "-18.32 mag",
+      "Abs. G-Band Mag (M_G)": "-18.48 mag"
     },
     "range": {
       "min": 36,
       "max": 575
     },
-    "luminosity": "1.82e+09 L⊙",
+    "luminosity": "1.82e+09 L\u2299",
     "paper_url": "https://ui.adsabs.harvard.edu/abs/2025PASJ...77..178F/abstract",
     "plot_url": "assets/fukushima2025_density_profile.png",
     "eqn_url": "assets/fukushima2025_eqn.png",
-    "code_url": "assets/fukushima2025_density_model.py"
+    "code_url": "assets/fukushima2025_density_model.py",
+    "total_stars": "1.82e+10 stars",
+    "abs_magnitude_v": "-18.32 mag",
+    "abs_magnitude_g": "-18.48 mag"
   },
-
   {
     "id": "tao2026",
     "title": "Tao et al. (2026)",
@@ -527,19 +658,25 @@
     "tracer": "Integrated Light",
     "parameters": {
       "Model": "Single Power Law",
-      "Power-law index (α)": "3.5",
+      "Power-law index (\u03b1)": "3.5",
       "Core Radius (r_core)": "1.0 kpc",
-      "Flattening (q)": "0.8 (Median)"
+      "Flattening (q)": "0.8 (Median)",
+      "Total Stars (N_stars)": "6.25e+09 stars",
+      "Abs. Visual Mag (M_V)": "-17.16 mag",
+      "Abs. G-Band Mag (M_G)": "-17.32 mag"
     },
     "range": {
       "min": 10,
       "max": 100
     },
-    "luminosity": "6.50e+08 L⊙",
+    "luminosity": "6.50e+08 L\u2299",
     "paper_url": "https://ui.adsabs.harvard.edu/abs/2026ApJS..284...31T/abstract",
     "plot_url": "assets/tao2026_density_profile.png",
     "eqn_url": "assets/tao2026_eqn.png",
-    "code_url": "assets/tao2026_density_model.py"
+    "code_url": "assets/tao2026_density_model.py",
+    "total_stars": "6.25e+09 stars",
+    "abs_magnitude_v": "-17.16 mag",
+    "abs_magnitude_g": "-17.32 mag"
   },
   {
     "id": "medina2018",
@@ -549,19 +686,25 @@
     "tracer": "RR Lyrae",
     "parameters": {
       "Model": "Single Power Law",
-      "Power-law index (α)": "4.17",
+      "Power-law index (\u03b1)": "4.17",
       "Core Radius (r_core)": "1.0 kpc",
-      "Flattening (q)": "1.0"
+      "Flattening (q)": "1.0",
+      "Total Stars (N_stars)": "4.30e+09 stars",
+      "Abs. Visual Mag (M_V)": "-16.75 mag",
+      "Abs. G-Band Mag (M_G)": "-16.91 mag"
     },
     "range": {
       "min": 10,
       "max": 200
     },
-    "luminosity": "1.70e+09 L⊙",
+    "luminosity": "1.70e+09 L\u2299",
     "paper_url": "https://ui.adsabs.harvard.edu/abs/2018ApJ...855...43M/abstract",
     "plot_url": "assets/medina2018_density_profile.png",
     "eqn_url": "assets/medina2018_eqn.png",
-    "code_url": "assets/medina2018_density_model.py"
+    "code_url": "assets/medina2018_density_model.py",
+    "total_stars": "4.30e+09 stars",
+    "abs_magnitude_v": "-16.75 mag",
+    "abs_magnitude_g": "-16.91 mag"
   },
   {
     "id": "deason2011",
@@ -573,43 +716,55 @@
       "Model": "Broken Power Law",
       "Break Radius (r_break)": "27.0 kpc",
       "Core Radius (r_core)": "1.0 kpc",
-      "Inner Slope (α_in)": "2.3",
-      "Outer Slope (α_out)": "4.6",
-      "Flattening (q)": "0.59"
+      "Inner Slope (\u03b1_in)": "2.3",
+      "Outer Slope (\u03b1_out)": "4.6",
+      "Flattening (q)": "0.59",
+      "Total Stars (N_stars)": "3.17e+09 stars",
+      "Abs. Visual Mag (M_V)": "-16.42 mag",
+      "Abs. G-Band Mag (M_G)": "-16.58 mag"
     },
     "range": {
       "min": 1,
       "max": 40
     },
-    "luminosity": "3.17e+08 L⊙",
+    "luminosity": "3.17e+08 L\u2299",
     "paper_url": "https://ui.adsabs.harvard.edu/abs/2011MNRAS.416.2903D/abstract",
     "plot_url": "assets/deason2011_density_profile.png",
     "eqn_url": "assets/deason2011_eqn.png",
-    "code_url": "assets/deason2011_density_model.py"
+    "code_url": "assets/deason2011_density_model.py",
+    "total_stars": "3.17e+09 stars",
+    "abs_magnitude_v": "-16.42 mag",
+    "abs_magnitude_g": "-16.58 mag"
   },
   {
     "id": "thomas2018",
     "title": "Thomas et al. (2018)",
-    "subtitle": "A-type stars in the Canada–France Imaging Survey I. The stellar halo of the Milky Way traced to large radius by blue horizontal branch stars",
+    "subtitle": "A-type stars in the Canada\u2013France Imaging Survey I. The stellar halo of the Milky Way traced to large radius by blue horizontal branch stars",
     "summary": "This study uses deep u-band imaging from CFIS to trace BHB stars out to 220 kpc. It finds a broken power-law profile where the inner profile is steeper than the outer profile. This model version includes a 1 kpc constant density core.",
     "tracer": "BHB Stars",
     "parameters": {
       "Model": "Broken Power Law",
       "Break Radius (r_break)": "41.4 kpc",
       "Core Radius (r_core)": "1.0 kpc",
-      "Inner Slope (α_in)": "4.24",
-      "Outer Slope (α_out)": "3.21",
-      "Flattening (q)": "0.86"
+      "Inner Slope (\u03b1_in)": "4.24",
+      "Outer Slope (\u03b1_out)": "3.21",
+      "Flattening (q)": "0.86",
+      "Total Stars (N_stars)": "9.57e+09 stars",
+      "Abs. Visual Mag (M_V)": "-17.62 mag",
+      "Abs. G-Band Mag (M_G)": "-17.78 mag"
     },
     "range": {
       "min": 15,
       "max": 220
     },
-    "luminosity": "1.65e+09 L⊙",
+    "luminosity": "1.65e+09 L\u2299",
     "paper_url": "https://ui.adsabs.harvard.edu/abs/2018MNRAS.481.5223T/abstract",
     "plot_url": "assets/thomas2018_density_profile.png",
     "eqn_url": "assets/thomas2018_eqn.png",
-    "code_url": "assets/thomas2018_density_model.py"
+    "code_url": "assets/thomas2018_density_model.py",
+    "total_stars": "9.57e+09 stars",
+    "abs_magnitude_v": "-17.62 mag",
+    "abs_magnitude_g": "-17.78 mag"
   },
   {
     "id": "li2026",
@@ -621,18 +776,24 @@
       "Model": "Triple Power Law",
       "Break Radii (rb1, rb2)": "16.0, 76.3 kpc",
       "Core Radius (r_core)": "1.0 kpc",
-      "Slopes (α1, α2, α3)": "1.50, 3.45, 5.20",
-      "Flattening (p, q)": "0.85, 0.74"
+      "Slopes (\u03b11, \u03b12, \u03b13)": "1.50, 3.45, 5.20",
+      "Flattening (p, q)": "0.85, 0.74",
+      "Total Stars (N_stars)": "3.92e+09 stars",
+      "Abs. Visual Mag (M_V)": "-16.65 mag",
+      "Abs. G-Band Mag (M_G)": "-16.81 mag"
     },
     "range": {
       "min": 10,
       "max": 100
     },
-    "luminosity": "4.10e+08 L⊙",
+    "luminosity": "4.10e+08 L\u2299",
     "paper_url": "https://ui.adsabs.harvard.edu/abs/2026ApJ...999..108L/abstract",
     "plot_url": "assets/li2026_density_profile.png",
     "eqn_url": "assets/li2026_eqn.png",
-    "code_url": "assets/li2026_density_model.py"
+    "code_url": "assets/li2026_density_model.py",
+    "total_stars": "3.92e+09 stars",
+    "abs_magnitude_v": "-16.65 mag",
+    "abs_magnitude_g": "-16.81 mag"
   },
   {
     "id": "yu2024",
@@ -643,18 +804,24 @@
     "parameters": {
       "Model": "Single Power Law",
       "Core Radius (r_core)": "1.0 kpc",
-      "Slope (α)": "4.34",
-      "Flattening (q)": "1.0"
+      "Slope (\u03b1)": "4.34",
+      "Flattening (q)": "1.0",
+      "Total Stars (N_stars)": "1.55e+10 stars",
+      "Abs. Visual Mag (M_V)": "-18.15 mag",
+      "Abs. G-Band Mag (M_G)": "-18.31 mag"
     },
     "range": {
       "min": 20,
       "max": 70
     },
-    "luminosity": "2.22e+09 L⊙",
+    "luminosity": "2.22e+09 L\u2299",
     "paper_url": "https://ui.adsabs.harvard.edu/abs/2024ApJ...975...81Y/abstract",
     "plot_url": "assets/yu2024_density_profile.png",
     "eqn_url": "assets/yu2024_eqn.png",
-    "code_url": "assets/yu2024_density_model.py"
+    "code_url": "assets/yu2024_density_model.py",
+    "total_stars": "1.55e+10 stars",
+    "abs_magnitude_v": "-18.15 mag",
+    "abs_magnitude_g": "-18.31 mag"
   },
   {
     "id": "ablimit2018",
@@ -666,19 +833,25 @@
       "Model": "Broken Power Law",
       "Break Radius (r_break)": "21.0 kpc",
       "Core Radius (r_core)": "1.0 kpc",
-      "Inner Slope (α_in)": "2.8",
-      "Outer Slope (α_out)": "4.8",
-      "Flattening (q)": "1.0"
+      "Inner Slope (\u03b1_in)": "2.8",
+      "Outer Slope (\u03b1_out)": "4.8",
+      "Flattening (q)": "1.0",
+      "Total Stars (N_stars)": "2.86e+09 stars",
+      "Abs. Visual Mag (M_V)": "-16.31 mag",
+      "Abs. G-Band Mag (M_G)": "-16.47 mag"
     },
     "range": {
       "min": 9,
       "max": 50
     },
-    "luminosity": "4.40e+08 L⊙",
+    "luminosity": "4.40e+08 L\u2299",
     "paper_url": "https://ui.adsabs.harvard.edu/abs/2018ApJ...855..126A/abstract",
     "plot_url": "assets/ablimit2018_density_profile.png",
     "eqn_url": "assets/ablimit2018_eqn.png",
-    "code_url": "assets/ablimit2018_density_model.py"
+    "code_url": "assets/ablimit2018_density_model.py",
+    "total_stars": "2.86e+09 stars",
+    "abs_magnitude_v": "-16.31 mag",
+    "abs_magnitude_g": "-16.47 mag"
   },
   {
     "id": "ye2023",
@@ -689,21 +862,27 @@
     "parameters": {
       "Model": "6-Segment Power Law",
       "Core Radius (r_core)": "1.0 kpc",
-      "Inner Slope (α_in)": "2.1",
-      "Outer Slope (α_out)": "3.8",
+      "Inner Slope (\u03b1_in)": "2.1",
+      "Outer Slope (\u03b1_out)": "3.8",
       "Flattening (q)": "0.68 - 0.91 (variable)",
       "Breaks (r_break)": "24.0, 31.0, 43.0, 57.0, 91.0, 107.0 kpc",
-      "Slope Variations (δ_n)": "0.5, 0.5, -0.3, 0.2, 0.2, 0.4"
+      "Slope Variations (\u03b4_n)": "0.5, 0.5, -0.3, 0.2, 0.2, 0.4",
+      "Total Stars (N_stars)": "3.93e+09 stars",
+      "Abs. Visual Mag (M_V)": "-16.66 mag",
+      "Abs. G-Band Mag (M_G)": "-16.82 mag"
     },
     "range": {
       "min": 6,
       "max": 116
     },
-    "luminosity": "3.93e+08 L⊙",
+    "luminosity": "3.93e+08 L\u2299",
     "paper_url": "https://ui.adsabs.harvard.edu/abs/2023MNRAS.525.2472Y/abstract",
     "plot_url": "assets/ye2023_density_profile.png",
     "eqn_url": "assets/ye2023_eqn.png",
-    "code_url": "assets/ye2023_density_model.py"
+    "code_url": "assets/ye2023_density_model.py",
+    "total_stars": "3.93e+09 stars",
+    "abs_magnitude_v": "-16.66 mag",
+    "abs_magnitude_g": "-16.82 mag"
   },
   {
     "id": "bird2026",
@@ -715,18 +894,24 @@
       "Model": "Broken Power Law",
       "Break Radius (r_break)": "20.0 kpc",
       "Core Radius (r_core)": "1.0 kpc",
-      "Inner Slope (α_in)": "2.5",
-      "Outer Slope (α_out)": "4.0",
-      "Flattening (q)": "1.0"
+      "Inner Slope (\u03b1_in)": "2.5",
+      "Outer Slope (\u03b1_out)": "4.0",
+      "Flattening (q)": "1.0",
+      "Total Stars (N_stars)": "4.87e+09 stars",
+      "Abs. Visual Mag (M_V)": "-16.89 mag",
+      "Abs. G-Band Mag (M_G)": "-17.05 mag"
     },
     "range": {
       "min": 0.1,
       "max": 100
     },
-    "luminosity": "4.87e+08 L⊙",
+    "luminosity": "4.87e+08 L\u2299",
     "paper_url": "#",
     "plot_url": "assets/bird2026_density_profile.png",
     "eqn_url": "assets/bird2026_eqn.png",
-    "code_url": "assets/bird2026_density_model.py"
+    "code_url": "assets/bird2026_density_model.py",
+    "total_stars": "4.87e+09 stars",
+    "abs_magnitude_v": "-16.89 mag",
+    "abs_magnitude_g": "-17.05 mag"
   }
 ]

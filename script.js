@@ -53,6 +53,29 @@ function formatLuminosity(val) {
     return val.toExponential(2).replace('e+', 'e') + ' L⊙';
 }
 
+function getTotalStarsValue(model) {
+    const L = getLuminosityValue(model);
+    return L * 10.0;
+}
+
+function formatTotalStars(val) {
+    return val.toExponential(2).replace('e+', 'e') + ' stars';
+}
+
+function getAbsMagnitudeV(model) {
+    const L = getLuminosityValue(model);
+    return 4.83 - 2.5 * Math.log10(L);
+}
+
+function formatAbsMagnitudeV(val) {
+    return val.toFixed(2) + ' mag';
+}
+
+function getAbsMagnitudeG(model) {
+    const L = getLuminosityValue(model);
+    return 4.67 - 2.5 * Math.log10(L);
+}
+
 function renderCoreSelectorHTML() {
     const active1 = ModelPhysics.currentCoreRadius === 1.0 ? 'active' : '';
     const active3 = ModelPhysics.currentCoreRadius === 3.0 ? 'active' : '';
@@ -787,6 +810,8 @@ function renderHome() {
                         <th class="${getSortClass('model_type')}" onclick="sortData('model_type')">Model Type</th>
                         <th class="${getSortClass('range')}" onclick="sortData('range')">Valid Range</th>
                         <th class="${getSortClass('luminosity')}" onclick="sortData('luminosity')">Luminosity</th>
+                        <th class="${getSortClass('total_stars')}" onclick="sortData('total_stars')">Total Stars</th>
+                        <th class="${getSortClass('abs_mag')}" onclick="sortData('abs_mag')">Abs. Mag (M<sub>V</sub>)</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -798,6 +823,8 @@ function renderHome() {
                             <td>${model.parameters.Model}</td>
                             <td>${model.range ? `${model.range.min} - ${model.range.max} kpc` : 'N/A'}</td>
                             <td>${formatLuminosity(getLuminosityValue(model))}</td>
+                            <td>${formatTotalStars(getTotalStarsValue(model))}</td>
+                            <td>${formatAbsMagnitudeV(getAbsMagnitudeV(model))}</td>
                             <td><a href="#/model/${model.id}" class="btn">Explore Model</a></td>
                         </tr>
                     `).join('')}
@@ -885,6 +912,14 @@ function performSort(col, skipRender = false) {
             valA = getLuminosityValue(a);
             valB = getLuminosityValue(b);
         }
+        else if (col === 'total_stars') {
+            valA = getTotalStarsValue(a);
+            valB = getTotalStarsValue(b);
+        }
+        else if (col === 'abs_mag') {
+            valA = getAbsMagnitudeV(a);
+            valB = getAbsMagnitudeV(b);
+        }
         if (valA < valB) return currentSort.asc ? -1 : 1;
         if (valA > valB) return currentSort.asc ? 1 : -1;
         return 0;
@@ -932,13 +967,21 @@ function renderDetail(id) {
                         <table class="parameters-table">
                             <tr><th>Tracer Stars</th><td>${model.tracer || 'N/A'}</td></tr>
                             <tr><th>${model.id === 'bird2026' ? 'Model Extrapolation Range' : 'Valid Data Range'}</th><td>${model.range ? `${model.range.min} - ${model.range.max} kpc` : 'N/A'}</td></tr>
+                            <tr><th>Total Stars (N<sub>stars</sub>)</th><td><strong>${formatTotalStars(getTotalStarsValue(model))}</strong></td></tr>
+                            <tr><th>Abs. Visual Mag (M<sub>V</sub>)</th><td><strong>${formatAbsMagnitudeV(getAbsMagnitudeV(model))}</strong></td></tr>
+                            <tr><th>Abs. G-Band Mag (M<sub>G</sub>)</th><td><strong>${getAbsMagnitudeG(model).toFixed(2)} mag</strong></td></tr>
                             ${paramRows}
                         </table>
                         <div class="luminosity-highlight">
-                            <h3>Total Halo Luminosity</h3>
+                            <h3>Total Halo Luminosity & Population Properties</h3>
                             <div style="margin-bottom: 12px;">
                                 <p style="margin-bottom: 2px;">Local norm: 1.7E-5 L<sub>&odot;</sub>/pc<sup>3</sup> at R=${model.id === 'han2022' ? '8.122' : '8.275'} kpc</p>
                                 <div class="luminosity-value">${formatLuminosity(getLuminosityValue(model))}</div>
+                                <div style="display: flex; gap: 15px; margin-top: 10px; font-size: 0.95rem; flex-wrap: wrap; background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 6px;">
+                                    <div><strong>Total Stars:</strong> ${formatTotalStars(getTotalStarsValue(model))}</div>
+                                    <div><strong>M<sub>V</sub>:</strong> ${formatAbsMagnitudeV(getAbsMagnitudeV(model))}</div>
+                                    <div><strong>M<sub>G</sub>:</strong> ${getAbsMagnitudeG(model).toFixed(2)} mag</div>
+                                </div>
                             </div>
                             <div style="border-top: 1px dashed rgba(255,255,255,0.3); padding-top: 8px; margin-top: 8px;">
                                 <p style="margin-bottom: 2px;">Assuming R = 8.0 kpc (local norm at R = 8.0 kpc):</p>
@@ -947,32 +990,44 @@ function renderDetail(id) {
                             ${model.id !== 'rix2022' ? `
                             <div class="core-sensitivity-container" style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 15px;">
                                 <h4 style="font-size: 0.95rem; margin-bottom: 10px; color: var(--accent-color);">Sensitivity to Core Radius (R<sub>core</sub>)</h4>
-                                <table class="sensitivity-table" style="width:100%; font-size:0.9rem; text-align:left; border-collapse:collapse; color:white;">
+                                <table class="sensitivity-table" style="width:100%; font-size:0.8rem; text-align:left; border-collapse:collapse; color:white;">
                                     <thead>
                                         <tr style="border-bottom:1px solid rgba(255,255,255,0.2); font-weight:bold;">
-                                            <th style="padding:6px 0;">Core Radius</th>
-                                            <th style="padding:6px 0;">Total Luminosity</th>
-                                            <th style="padding:6px 0; text-align:right;">Change</th>
+                                            <th style="padding:6px 3px;">R<sub>core</sub></th>
+                                            <th style="padding:6px 3px;">Luminosity</th>
+                                            <th style="padding:6px 3px;">N<sub>stars</sub></th>
+                                            <th style="padding:6px 3px;">M<sub>V</sub></th>
+                                            <th style="padding:6px 3px;">M<sub>G</sub></th>
+                                            <th style="padding:6px 3px; text-align:right;">Change</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         ${model.id === 'bird2026' ? `
                                             <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
-                                                <td style="padding:6px 0; font-style: italic;">0.01 - 100 kpc (no core)</td>
-                                                <td style="padding:6px 0;">${formatLuminosity(ModelPhysics.calculateBirdNoCoreLuminosity(ModelPhysics.currentRsun))}</td>
-                                                <td style="padding:6px 0; text-align:right; color:#ff9f43;">—</td>
+                                                <td style="padding:6px 3px; font-style: italic;">no core</td>
+                                                <td style="padding:6px 3px;">${formatLuminosity(ModelPhysics.calculateBirdNoCoreLuminosity(ModelPhysics.currentRsun))}</td>
+                                                <td style="padding:6px 3px;">${formatTotalStars(ModelPhysics.calculateBirdNoCoreLuminosity(ModelPhysics.currentRsun) * 10.0)}</td>
+                                                <td style="padding:6px 3px;">${(4.83 - 2.5 * Math.log10(ModelPhysics.calculateBirdNoCoreLuminosity(ModelPhysics.currentRsun))).toFixed(2)}</td>
+                                                <td style="padding:6px 3px;">${(4.67 - 2.5 * Math.log10(ModelPhysics.calculateBirdNoCoreLuminosity(ModelPhysics.currentRsun))).toFixed(2)}</td>
+                                                <td style="padding:6px 3px; text-align:right; color:#ff9f43;">—</td>
                                             </tr>
                                         ` : ''}
                                         ${[1.0, 3.0, 5.0].map(c => {
                                             const val = ModelPhysics.calculateLuminosity(model.id, c);
                                             const baseVal = ModelPhysics.calculateLuminosity(model.id, 1.0);
+                                            const stars = val * 10.0;
+                                            const mv = 4.83 - 2.5 * Math.log10(val);
+                                            const mg = 4.67 - 2.5 * Math.log10(val);
                                             const pct = c === 1.0 ? '—' : ((val - baseVal) / baseVal * 100).toFixed(1) + '%';
                                             const isActive = ModelPhysics.currentCoreRadius === c ? 'font-weight:bold; color:var(--accent-color);' : '';
                                             return `
                                                 <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); ${isActive}">
-                                                    <td style="padding:6px 0;">${c} kpc ${ModelPhysics.currentCoreRadius === c ? '★' : ''}</td>
-                                                    <td style="padding:6px 0;">${formatLuminosity(val)}</td>
-                                                    <td style="padding:6px 0; text-align:right; color:${c === 1.0 ? 'white' : '#ff9f43'};">${pct}</td>
+                                                    <td style="padding:6px 3px;">${c} kpc ${ModelPhysics.currentCoreRadius === c ? '★' : ''}</td>
+                                                    <td style="padding:6px 3px;">${formatLuminosity(val)}</td>
+                                                    <td style="padding:6px 3px;">${formatTotalStars(stars)}</td>
+                                                    <td style="padding:6px 3px;">${mv.toFixed(2)}</td>
+                                                    <td style="padding:6px 3px;">${mg.toFixed(2)}</td>
+                                                    <td style="padding:6px 3px; text-align:right; color:${c === 1.0 ? 'white' : '#ff9f43'};">${pct}</td>
                                                 </tr>
                                             `;
                                         }).join('')}
